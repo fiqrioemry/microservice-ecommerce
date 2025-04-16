@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fiqrioemry/microservice-ecommerce/pkg/config"
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
 
 	gomail "gopkg.in/gomail.v2"
 )

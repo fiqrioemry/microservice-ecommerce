@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fiqrioemry/microservice_ecommerce/pkg/config"
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
 
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
 )

@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/fiqrioemry/microservice-ecommerce/pkg/config"
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
 
 	"github.com/gin-gonic/gin"
 )
