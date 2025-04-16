@@ -1,28 +1,29 @@
-package controllers
+package handlers
 
 import (
 	"fmt"
 	"net/http"
 	"strings"
 	"time"
+
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/dto"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/services"
-	
-	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
+
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-type AuthController struct {
+type AuthHandler struct {
 	Service services.AuthServiceInterface
 }
 
-func NewAuthController(service services.AuthServiceInterface) *AuthController {
-	return &AuthController{Service: service}
+func NewAuthHandler(service services.AuthServiceInterface) *AuthHandler {
+	return &AuthHandler{Service: service}
 }
 
-func (ctrl *AuthController) Register(c *gin.Context) {
+func (ctrl *AuthHandler) Register(c *gin.Context) {
 	var req dto.RegisterRequest
 	if !utils.BindAndValidateJSON(c, &req) {
 		return
@@ -34,7 +35,7 @@ func (ctrl *AuthController) Register(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Registration successful"})
 }
 
-func (ctrl *AuthController) Login(c *gin.Context) {
+func (ctrl *AuthHandler) Login(c *gin.Context) {
 	var req dto.LoginRequest
 	if !utils.BindAndValidateJSON(c, &req) {
 		return
@@ -48,7 +49,7 @@ func (ctrl *AuthController) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "user": user})
 }
 
-func (ctrl *AuthController) Me(c *gin.Context) {
+func (ctrl *AuthHandler) Me(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 
 	user, err := ctrl.Service.GetUserByID(userID)
@@ -62,7 +63,7 @@ func (ctrl *AuthController) Me(c *gin.Context) {
 	})
 }
 
-func (ctrl *AuthController) ForgotPassword(c *gin.Context) {
+func (ctrl *AuthHandler) ForgotPassword(c *gin.Context) {
 	var req dto.ForgotPasswordRequest
 	if !utils.BindAndValidateJSON(c, &req) {
 		return
@@ -93,7 +94,7 @@ func (ctrl *AuthController) ForgotPassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "OTP sent to your email"})
 }
 
-func (ctrl *AuthController) ResetPassword(c *gin.Context) {
+func (ctrl *AuthHandler) ResetPassword(c *gin.Context) {
 	var req dto.ResetPasswordRequest
 	if !utils.BindAndValidateJSON(c, &req) {
 		return
@@ -123,7 +124,7 @@ func (ctrl *AuthController) ResetPassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Password reset successfully"})
 }
 
-func (ctrl *AuthController) ChangePassword(c *gin.Context) {
+func (ctrl *AuthHandler) ChangePassword(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 
 	var req dto.ChangePasswordRequest
@@ -139,7 +140,7 @@ func (ctrl *AuthController) ChangePassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Password updated successfully"})
 }
 
-func (ctrl *AuthController) GetAllUsers(c *gin.Context) {
+func (ctrl *AuthHandler) GetAllUsers(c *gin.Context) {
 	search := c.Query("search")
 	page := utils.GetQueryInt(c, "page", 1)
 	limit := utils.GetQueryInt(c, "limit", 10)
@@ -160,7 +161,7 @@ func (ctrl *AuthController) GetAllUsers(c *gin.Context) {
 	})
 }
 
-func (ctrl *AuthController) GetUserByIDAdmin(c *gin.Context) {
+func (ctrl *AuthHandler) GetUserByIDAdmin(c *gin.Context) {
 	id := c.Param("id")
 
 	user, err := ctrl.Service.GetUserByID(id)

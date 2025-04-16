@@ -1,4 +1,4 @@
-package controllers
+package Handlers
 
 import (
 	"net/http"
@@ -11,15 +11,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AddressController struct {
+type AddressHandler struct {
 	Service services.AddressServiceInterface
 }
 
-func NewAddressController(service services.AddressServiceInterface) *AddressController {
-	return &AddressController{Service: service}
+func NewAddressHandler(service services.AddressServiceInterface) *AddressHandler {
+	return &AddressHandler{Service: service}
 }
 
-func (ctrl *AddressController) GetAddresses(c *gin.Context) {
+func (ctrl *AddressHandler) GetAddresses(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 
 	addresses, err := ctrl.Service.GetAddresses(userID)
@@ -31,7 +31,7 @@ func (ctrl *AddressController) GetAddresses(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"addresses": addresses})
 }
 
-func (ctrl *AddressController) AddAddress(c *gin.Context) {
+func (ctrl *AddressHandler) AddAddress(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 
 	var req dto.AddressRequest
@@ -47,7 +47,7 @@ func (ctrl *AddressController) AddAddress(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Address added successfully"})
 }
 
-func (ctrl *AddressController) UpdateAddress(c *gin.Context) {
+func (ctrl *AddressHandler) UpdateAddress(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 	addressID := c.Param("id")
 
@@ -64,7 +64,7 @@ func (ctrl *AddressController) UpdateAddress(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Address updated successfully"})
 }
 
-func (ctrl *AddressController) DeleteAddress(c *gin.Context) {
+func (ctrl *AddressHandler) DeleteAddress(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 	addressID := c.Param("id")
 
@@ -76,7 +76,7 @@ func (ctrl *AddressController) DeleteAddress(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Address deleted successfully"})
 }
 
-func (ctrl *AddressController) SetMainAddress(c *gin.Context) {
+func (ctrl *AddressHandler) SetMainAddress(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 	addressID := c.Param("id")
 
