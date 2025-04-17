@@ -2,10 +2,11 @@ package services
 
 import (
 	"errors"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/dto"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/models"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/repositories"
+
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/dto"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/models"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/repositories"
 
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -27,6 +28,10 @@ type AuthServiceInterface interface {
 	ResetPassword(email string, newPassword string) error
 	ChangePassword(userID string, oldPassword, newPassword string) error
 	GetAllUsersPaginated(search string, page int, limit int) ([]models.User, int64, error)
+}
+
+func (s *AuthService) GetUserByID(userID string) (*models.User, error) {
+	return s.Repo.GetUserByID(userID)
 }
 
 func (s *AuthService) RegisterUser(req dto.RegisterRequest) error {
@@ -65,10 +70,6 @@ func (s *AuthService) LoginUser(req dto.LoginRequest) (*models.User, error) {
 	}
 
 	return user, nil
-}
-
-func (s *AuthService) GetUserByID(userID string) (*models.User, error) {
-	return s.Repo.GetUserByID(userID)
 }
 
 func (s *AuthService) FindUserByEmail(email string) (*models.User, error) {

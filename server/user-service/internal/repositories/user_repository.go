@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/config"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/models"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/config"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/models"
 
 	"gorm.io/gorm"
 )
@@ -19,11 +19,7 @@ type userRepo struct {
 	db *gorm.DB
 }
 
-func NewUserRepository() UserRepository {
-	return &userRepo{}
-}
-
-func NewUserRepositoryWithDB(db *gorm.DB) UserRepository {
+func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepo{db: db}
 }
 
@@ -41,7 +37,7 @@ func (r *userRepo) FindUserByEmail(email string) (*models.User, error) {
 
 func (r *userRepo) GetUserByID(userID string) (*models.User, error) {
 	var user models.User
-	if err := config.DB.Preload("Profile").Preload("Addresses").First(&user, userID).Error; err != nil {
+	if err := config.DB.Preload("Profile").Preload("Addresses").First(&user, "id = ?", userID).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

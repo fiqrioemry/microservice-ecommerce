@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/dto"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/services"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/dto"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/services"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
@@ -45,8 +45,26 @@ func (ctrl *AuthHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
 		return
 	}
-	utils.SetSessionCookie(c, user.ID.String())
+	utils.SetSessionCookie(c, user.ID.String(), user.Role)
+
 	c.JSON(http.StatusOK, gin.H{"message": "Login successful", "user": user})
+}
+
+func (ctrl *AuthHandler) Logout(c *gin.Context) {
+	sessionID, err := c.Cookie("session_id")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "No session found"})
+		return
+	}
+
+	if err := config.RedisClient.Del(config.Ctx, sessionID).Err(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to logout"})
+		return
+	}
+
+	c.SetCookie("session_id", "", -1, "/", "", false, true)
+
+	c.JSON(http.StatusOK, gin.H{"message": "Logout successful"})
 }
 
 func (ctrl *AuthHandler) Me(c *gin.Context) {

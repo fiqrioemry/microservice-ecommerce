@@ -48,7 +48,7 @@ func DeleteFromCloudinary(imageURL string) error {
 		PublicID: os.Getenv("CLOUDINARY_FOLDER_NAME") + "/" + publicID,
 	})
 	if err != nil {
-		log.Printf("Failed to delete file from Cloudinary: %v", err)
+		log.Printf("failed to delete file from Cloudinary: %v", err)
 		return errors.New("failed to delete asset from Cloudinary")
 	}
 
@@ -77,12 +77,12 @@ func extractPublicID(imageURL string) (string, error) {
 
 func ValidateImageFile(file *multipart.FileHeader) error {
 	if file.Size > MaxFileSize {
-		return errors.New("File size is too large, Maximum 1MB")
+		return errors.New("file size is too large, Maximum 1MB")
 	}
 
 	fileType := file.Header.Get("Content-Type")
 	if !isAllowedImageType(fileType) {
-		return errors.New("Invalid File format, only JPG, PNG, GIF, and WEBP are allowed")
+		return errors.New("invalid File format, only JPG, PNG, GIF, and WEBP are allowed")
 	}
 
 	return nil

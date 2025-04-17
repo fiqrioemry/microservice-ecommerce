@@ -1,9 +1,9 @@
 package services
 
 import (
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/dto"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/models"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/repositories"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/dto"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/models"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/repositories"
 
 	"github.com/google/uuid"
 )

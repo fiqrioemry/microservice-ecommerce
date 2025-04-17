@@ -2,10 +2,11 @@ package services
 
 import (
 	"mime/multipart"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/dto"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/models"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/repositories"
+
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/dto"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/models"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/repositories"
 )
 
 type ProfileServiceInterface interface {
@@ -31,9 +32,7 @@ func (s *ProfileService) UpdateProfile(userID string, req dto.ProfileRequest, fi
 		return err
 	}
 
-	// Handle avatar jika ada upload file
 	if file != nil {
-		// validasi file
 		if err := utils.ValidateImageFile(file); err != nil {
 			return err
 		}
@@ -50,7 +49,6 @@ func (s *ProfileService) UpdateProfile(userID string, req dto.ProfileRequest, fi
 			return err
 		}
 
-		// hapus gambar lama kalau berbeda dan bukan dari dicebear
 		if user.Profile.Avatar != "" && user.Profile.Avatar != newAvatarURL && !isDiceBear(user.Profile.Avatar) {
 			_ = utils.DeleteFromCloudinary(user.Profile.Avatar)
 		}

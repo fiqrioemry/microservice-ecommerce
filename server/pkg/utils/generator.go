@@ -3,6 +3,9 @@ package utils
 import (
 	"fmt"
 	"math/rand"
+	"regexp"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -19,11 +22,36 @@ func RandomUserAvatar() string {
 }
 
 func GenerateOTP(length int) string {
-	rand.Seed(time.Now().UnixNano())
 	digits := "0123456789"
-	otp := ""
+	var sb strings.Builder
+
 	for i := 0; i < length; i++ {
-		otp += string(digits[rand.Intn(len(digits))])
+		sb.WriteByte(digits[rand.Intn(len(digits))])
 	}
-	return otp
+
+	return sb.String()
+}
+
+func GenerateSlug(input string) string {
+
+	slug := strings.ToLower(input)
+	re := regexp.MustCompile(`[^a-z0-9]+`)
+	slug = re.ReplaceAllString(slug, "-")
+	slug = strings.Trim(slug, "-")
+
+	suffix := strconv.Itoa(rand.Intn(1_000_000))
+	slug = slug + "-" + leftPad(suffix, "0", 6)
+
+	return slug
+}
+
+func leftPad(s string, pad string, length int) string {
+	for len(s) < length {
+		s = pad + s
+	}
+	return s
+}
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
 }

@@ -1,10 +1,10 @@
-package Handlers
+package handlers
 
 import (
 	"net/http"
 
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/dto"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/services"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/dto"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/services"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 

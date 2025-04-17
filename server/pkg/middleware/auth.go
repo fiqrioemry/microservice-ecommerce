@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
 
@@ -17,14 +18,23 @@ func AuthRequired() gin.HandlerFunc {
 			return
 		}
 
-		userID, err := config.RedisClient.Get(config.Ctx, sessionID).Result()
+		val, err := config.RedisClient.Get(config.Ctx, sessionID).Result()
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized: invalid session"})
 			c.Abort()
 			return
 		}
 
-		c.Set("userID", userID)
+		parts := strings.Split(val, ":")
+		if len(parts) != 2 {
+			c.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized: session format invalid"})
+			c.Abort()
+			return
+		}
+
+		c.Set("userID", parts[0])
+		c.Set("role", parts[1])
 		c.Next()
+
 	}
 }

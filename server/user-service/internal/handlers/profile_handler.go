@@ -1,24 +1,24 @@
-package controllers
+package handlers
 
 import (
 	"net/http"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/dto"
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/services"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/dto"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
 
-type ProfileController struct {
+type ProfileHandler struct {
 	Service services.ProfileServiceInterface
 }
 
-func NewProfileController(service services.ProfileServiceInterface) *ProfileController {
-	return &ProfileController{Service: service}
+func NewProfileHandler(service services.ProfileServiceInterface) *ProfileHandler {
+	return &ProfileHandler{Service: service}
 }
 
-func (ctrl *ProfileController) GetProfile(c *gin.Context) {
+func (ctrl *ProfileHandler) GetProfile(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 
 	user, err := ctrl.Service.GetUserByID(userID)
@@ -30,7 +30,7 @@ func (ctrl *ProfileController) GetProfile(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"profile": user.Profile})
 }
 
-func (ctrl *ProfileController) UpdateProfile(c *gin.Context) {
+func (ctrl *ProfileHandler) UpdateProfile(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 
 	var req dto.ProfileRequest

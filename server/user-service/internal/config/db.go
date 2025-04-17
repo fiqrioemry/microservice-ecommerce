@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/models"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

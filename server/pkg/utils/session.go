@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"os"
+	"log"
 	"time"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
@@ -9,13 +9,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetSessionCookie(c *gin.Context, userID string) {
-	if config.RedisClient == nil || os.Getenv("TEST_MODE") == "true" {
-		return
+func SetSessionCookie(c *gin.Context, userID string, role string) {
+	sessionID := "sess:user:" + userID
+	value := userID + ":" + role
+
+	err := config.RedisClient.Set(config.Ctx, sessionID, value, 24*time.Hour).Err()
+	if err != nil {
+		log.Println("failed to store session in Redis:", err)
+	} else {
+		log.Println("stored session:", sessionID, "→", value)
 	}
 
-	sessionID := "sess:user:" + userID
-
-	config.RedisClient.Set(config.Ctx, sessionID, userID, 24*time.Hour)
 	c.SetCookie("session_id", sessionID, 3600*24, "/", "", false, true)
 }

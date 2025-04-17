@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/handlers"
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/middleware"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/handlers"
 
 	"github.com/gin-gonic/gin"
 )
 
-func UserRoutes(router *gin.Engine, controller *handlers.ProfileController, addHandler *handlers.AddressController) {
+func UserRoutes(router *gin.Engine, handler *handlers.ProfileHandler, addHandler *handlers.AddressHandler) {
 	user := router.Group("/api/user")
 	user.Use(middleware.AuthRequired())
 
