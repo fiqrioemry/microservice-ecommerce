@@ -9,15 +9,15 @@ import (
 
 func ProductRoutes(r *gin.Engine, h *handlers.ProductHandler) {
 	product := r.Group("/api/products")
-	{
-		product.GET("", h.GetAllProducts)
-		product.GET("/:slug", h.GetProductBySlug)
 
-		product.Use(middleware.AuthRequired(), middleware.AdminOnly())
-		{
-			product.POST("", h.CreateProduct)
-			product.PUT("/:id", h.UpdateProduct)
-			product.DELETE("/:id", h.DeleteProduct)
-		}
-	}
+	//  Admin routes
+	admin := product.Group("/admin")
+	admin.Use(middleware.AuthRequired(), middleware.AdminOnly())
+	admin.POST("", h.CreateProduct)
+	admin.PUT("/:id", h.UpdateProduct)
+	admin.DELETE("/:id", h.DeleteProduct)
+
+	//  Public routes
+	product.GET("", h.GetAllProducts)
+	product.GET("/:slug", h.GetProductBySlug)
 }

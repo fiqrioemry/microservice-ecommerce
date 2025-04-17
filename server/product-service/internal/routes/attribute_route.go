@@ -7,18 +7,15 @@ import (
 )
 
 func AttributeRoutes(r *gin.Engine, h *handlers.AttributeHandler) {
-	attr := r.Group("/api/attributes")
-	{
-		attr.GET("", h.GetAll)
-		attr.GET("/:id/values", h.GetValues)
+	// Public
+	r.GET("/api/attributes", h.GetAll)
+	r.GET("/api/attributes/:id/values", h.GetValues)
 
-		attr.Use(middleware.AuthRequired(), middleware.AdminOnly())
-		{
-			attr.POST("", h.Create)
-			attr.PUT("/:id", h.Update)
-			attr.DELETE("/:id", h.Delete)
-			attr.POST("/values", h.CreateValue)
-
-		}
-	}
+	// Admin
+	admin := r.Group("/api/admin/attributes")
+	admin.Use(middleware.AuthRequired(), middleware.AdminOnly())
+	admin.POST("", h.Create)
+	admin.PUT("/:id", h.Update)
+	admin.DELETE("/:id", h.Delete)
+	admin.POST("/values", h.CreateValue)
 }
