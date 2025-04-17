@@ -42,5 +42,17 @@ services:
     depends_on:
       - db
 
+  cart-service:
+    build:
+      context: .
+      dockerfile: ./cart-service/Dockerfile
+    container_name: cart-service
+    env_file:
+      - ./cart-service/.env
+    ports:
+      - "5003:5000"
+    depends_on:
+      - db
+
 volumes:
   mysql-data:
