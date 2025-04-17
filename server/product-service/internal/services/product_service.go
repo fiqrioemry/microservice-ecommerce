@@ -68,15 +68,14 @@ func (s *ProductService) Update(id uuid.UUID, req dto.UpdateProductRequest) erro
 
 	return s.Repo.Update(product)
 }
+
 func (s *ProductService) Delete(id uuid.UUID) error {
-	// 🔥 Hapus semua gambar Cloudinary
 	images, _ := s.Repo.FindImagesByProductID(id)
 	for _, img := range images {
 		_ = utils.DeleteFromCloudinary(img.URL)
 	}
 	_ = s.Repo.DeleteImagesByProductID(id)
 
-	// Hapus produk dari DB
 	return s.Repo.Delete(id)
 }
 
@@ -130,7 +129,6 @@ func (s *ProductService) UpdateWithImages(id uuid.UUID, req dto.UpdateProductReq
 	}
 
 	if len(imageURLs) > 0 {
-		// 🔥 Hapus semua gambar lama dari Cloudinary
 		oldImages, _ := s.Repo.FindImagesByProductID(product.ID)
 		for _, img := range oldImages {
 			_ = utils.DeleteFromCloudinary(img.URL)
