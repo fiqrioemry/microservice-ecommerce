@@ -11,6 +11,7 @@ import (
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/handlers"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/repositories"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/routes"
+	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/seeders"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/services"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,11 @@ func main() {
 	global.InitCloudinary()
 
 	db := config.DB
+
+	//  size
+	sizeRepo := repositories.NewSizeRepository(db)
+	sizeService := services.NewSizeService(sizeRepo)
+	sizeHandler := handlers.NewSizeHandler(sizeService)
 
 	// color
 	colorRepo := repositories.NewColorRepository(db)
@@ -47,10 +53,17 @@ func main() {
 	r := gin.Default()
 	r.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
 
+	routes.SizeRoutes(r, sizeHandler)
 	routes.ColorRoutes(r, colorHandler)
 	routes.ProductRoutes(r, productHandler)
 	routes.CategoryRoutes(r, categoryHandler)
 	routes.SubcategoryRoutes(r, subcategoryHandler)
+
+	seeders.SeedProductData(db)
+	seeders.SeedProductOptions(db)
+
+	seeders.SeedVariantsAndAttributes(db)
+
 	// Jalankan server
 	port := os.Getenv("PORT")
 	if port == "" {

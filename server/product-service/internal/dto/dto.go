@@ -58,3 +58,42 @@ type ProductResponse struct {
 	Category    any      `json:"category"`
 	Subcategory any      `json:"subcategory"`
 }
+
+type CreateSizeRequest struct {
+	Name string `json:"name" binding:"required"`
+}
+
+type UpdateSizeRequest struct {
+	Name string `json:"name" binding:"required"`
+}
+
+type CreateProductVariantRequest struct {
+	ProductID string  `json:"productId" binding:"required"`
+	ColorID   *uint   `json:"colorId"`
+	SizeID    *uint   `json:"sizeId"`
+	SKU       string  `json:"sku" binding:"required"`
+	Price     float64 `json:"price" binding:"required"`
+	Stock     int     `json:"stock" binding:"required"`
+	IsActive  bool    `json:"isActive"`
+}
+
+type UpdateProductVariantRequest struct {
+	ColorID  *uint   `json:"colorId"`
+	SizeID   *uint   `json:"sizeId"`
+	Price    float64 `json:"price" binding:"required"`
+	Stock    int     `json:"stock" binding:"required"`
+	IsActive bool    `json:"isActive"`
+}
+
+type CreateAttributeRequest struct {
+	Name string `json:"name" binding:"required"`
+}
+
+type UpdateAttributeRequest struct {
+	Name string `json:"name" binding:"required"`
+}
+
+type CreateAttributeValueRequest struct {
+	AttributeID uint   `json:"attributeId" binding:"required"`
+	Value       string `json:"value" binding:"required"`
+}

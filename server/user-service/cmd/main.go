@@ -9,6 +9,7 @@ import (
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/middleware"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/config"
+	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/seeders"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/handlers"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/repositories"
@@ -27,8 +28,8 @@ func main() {
 	db := config.DB
 
 	// router initiate
-	router := gin.Default()
-	router.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
+	r := gin.Default()
+	r.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
 
 	// service & handler dependency
 	userRepo := repositories.NewUserRepository(db)
@@ -43,14 +44,15 @@ func main() {
 	addressHandler := handlers.NewAddressHandler(addressService)
 
 	// Routing dependency injection
-	routes.AuthRoutes(router, authHandler)
-	routes.AdminRoutes(router, authHandler)
-	routes.UserRoutes(router, profileHandler, addressHandler)
+	routes.AuthRoutes(r, authHandler)
+	routes.AdminRoutes(r, authHandler)
+	routes.UserRoutes(r, profileHandler, addressHandler)
 
-	// Jalankan server
+	seeders.SeedUsers(db)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "5000"
 	}
-	log.Fatal(router.Run(":" + port))
+	log.Fatal(r.Run(":" + port))
 }
