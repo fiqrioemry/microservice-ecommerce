@@ -97,3 +97,9 @@ type CreateAttributeValueRequest struct {
 	AttributeID uint   `json:"attributeId" binding:"required"`
 	Value       string `json:"value" binding:"required"`
 }
+
+type AddProductAttributeValueRequest struct {
+	ProductID        string `json:"productId" binding:"required"`
+	AttributeID      uint   `json:"attributeId" binding:"required"`
+	AttributeValueID uint   `json:"attributeValueId" binding:"required"`
+}

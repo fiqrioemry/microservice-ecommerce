@@ -1,6 +1,7 @@
 package seeders
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -200,7 +201,6 @@ func SeedVariantsAndAttributes(db *gorm.DB) {
 	var materialAttr models.Attribute
 	var brandAVal, materialCottonVal models.AttributeValue
 
-	// Ambil semua data yang dibutuhkan
 	db.Find(&products)
 	db.Find(&colors)
 	db.Find(&sizes)
@@ -236,7 +236,6 @@ func SeedVariantsAndAttributes(db *gorm.DB) {
 			db.Create(&variant2)
 		}
 
-		// Tambahkan attribute values ke produk
 		attr1 := models.ProductAttributeValue{
 			ProductID:        product.ID,
 			AttributeID:      brandAttr.ID,
@@ -250,6 +249,89 @@ func SeedVariantsAndAttributes(db *gorm.DB) {
 		db.Create(&attr1)
 		db.Create(&attr2)
 
-		log.Printf("✅ Variant & attributes added for product #%d: %s\n", i+1, product.Name)
+		log.Printf("variant & attributes added for product #%d: %s\n", i+1, product.Name)
+	}
+}
+
+func SeedAdditionalProducts(db *gorm.DB) {
+	dummyImage := "https://placehold.co/400x400"
+
+	var subcategories []models.Subcategory
+	db.Find(&subcategories)
+	if len(subcategories) == 0 {
+		log.Println("no subcategories found. Skip seeding additional products.")
+		return
+	}
+
+	for i := 1; i <= 10; i++ {
+
+		slug := fmt.Sprintf("extra-product-%d", i)
+		var count int64
+		db.Model(&models.Product{}).Where("slug = ?", slug).Count(&count)
+		if count > 0 {
+			continue
+		}
+
+		sub := subcategories[i%len(subcategories)]
+
+		product := models.Product{
+			ID:            uuid.New(),
+			Name:          fmt.Sprintf("Extra Product %d", i),
+			Slug:          slug,
+			Description:   fmt.Sprintf("This is product #%d for testing", i),
+			Price:         100000 + float64(i*10000),
+			Stock:         50,
+			CategoryID:    sub.CategoryID,
+			SubcategoryID: &sub.ID,
+			IsFeatured:    i%2 == 0,
+			IsActive:      true,
+			CreatedAt:     time.Now(),
+			UpdatedAt:     time.Now(),
+			ProductImage: []models.ProductImage{
+				{ID: uuid.New(), URL: dummyImage, IsPrimary: true},
+			},
+		}
+		db.Create(&product)
+		log.Printf("added product: %s\n", product.Name)
+	}
+}
+
+func SeedAdditionalVariants(db *gorm.DB) {
+	var products []models.Product
+	var colors []models.Color
+	var sizes []models.Size
+	db.Where("slug LIKE ?", "extra-product-%").Find(&products)
+	db.Find(&colors)
+	db.Find(&sizes)
+
+	if len(colors) == 0 || len(sizes) == 0 {
+		log.Println("colors or Sizes not available")
+		return
+	}
+
+	for _, p := range products {
+		v1 := models.ProductVariant{
+			ID:        uuid.New(),
+			ProductID: p.ID,
+			ColorID:   &colors[0].ID,
+			SizeID:    &sizes[0].ID,
+			SKU:       p.Slug + "-R-S",
+			Price:     p.Price,
+			Stock:     25,
+			IsActive:  true,
+		}
+		v2 := models.ProductVariant{
+			ID:        uuid.New(),
+			ProductID: p.ID,
+			ColorID:   &colors[1].ID,
+			SizeID:    &sizes[1].ID,
+			SKU:       p.Slug + "-B-M",
+			Price:     p.Price + 5000,
+			Stock:     25,
+			IsActive:  true,
+		}
+		db.Create(&v1)
+		db.Create(&v2)
+		log.Printf("✅ Added variants for: %s\n", p.Name)
 	}
 }

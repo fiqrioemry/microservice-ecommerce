@@ -61,6 +61,10 @@ func main() {
 	attrService := services.NewAttributeService(attrRepo, valRepo)
 	attrHandler := handlers.NewAttributeHandler(attrService)
 
+	pavRepo := repositories.NewProductAttributeValueRepository(db)
+	pavService := services.NewProductAttributeValueService(pavRepo)
+	pavHandler := handlers.NewProductAttributeValueHandler(pavService)
+
 	r := gin.Default()
 	r.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
 
@@ -71,11 +75,13 @@ func main() {
 	routes.VariantRoutes(r, variantHandler)
 	routes.CategoryRoutes(r, categoryHandler)
 	routes.SubcategoryRoutes(r, subcategoryHandler)
+	routes.ProductAttributeValueRoutes(r, pavHandler)
 
 	seeders.SeedProductData(db)
 	seeders.SeedProductOptions(db)
-
 	seeders.SeedVariantsAndAttributes(db)
+	seeders.SeedAdditionalProducts(db)
+	seeders.SeedAdditionalVariants(db)
 
 	// Jalankan server
 	port := os.Getenv("PORT")

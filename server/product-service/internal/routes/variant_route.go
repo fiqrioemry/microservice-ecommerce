@@ -7,11 +7,10 @@ import (
 )
 
 func VariantRoutes(r *gin.Engine, h *handlers.ProductVariantHandler) {
-	v := r.Group("/api/products/:productId/variants")
-	v.GET("", h.GetByProduct)
+	variant := r.Group("/api/products/:productId/variants")
+	variant.GET("", h.GetByProduct)
 
-	vAdmin := r.Group("/variants")
-	vAdmin.Use(middleware.AuthRequired(), middleware.AdminOnly())
+	vAdmin := variant.Use(middleware.AuthRequired(), middleware.AdminOnly())
 	vAdmin.POST("", h.Create)
 	vAdmin.PUT("/:id", h.Update)
 	vAdmin.DELETE("/:id", h.Delete)
