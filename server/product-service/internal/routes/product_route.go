@@ -7,17 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ProductRoutes(r *gin.Engine, handler *handlers.ProductHandler) {
+func ProductRoutes(r *gin.Engine, h *handlers.ProductHandler) {
 	product := r.Group("/api/products")
 	{
-		product.GET("", handler.GetAllProducts)
-		product.GET("/:slug", handler.GetProductBySlug)
+		product.GET("", h.GetAllProducts)
+		product.GET("/:slug", h.GetProductBySlug)
 
 		product.Use(middleware.AuthRequired(), middleware.AdminOnly())
 		{
-			product.POST("", handler.CreateProduct)
-			product.PUT("/:id", handler.UpdateProduct)
-			product.DELETE("/:id", handler.DeleteProduct)
+			product.POST("", h.CreateProduct)
+			product.PUT("/:id", h.UpdateProduct)
+			product.DELETE("/:id", h.DeleteProduct)
 		}
 	}
 }

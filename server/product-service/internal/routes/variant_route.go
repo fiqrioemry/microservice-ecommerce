@@ -6,11 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ProductVariantRoutes(router *gin.RouterGroup, h *handlers.ProductVariantHandler) {
-	v := router.Group("/products/:productId/variants")
+func VariantRoutes(r *gin.Engine, h *handlers.ProductVariantHandler) {
+	v := r.Group("/api/products/:productId/variants")
 	v.GET("", h.GetByProduct)
 
-	vAdmin := router.Group("/variants")
+	vAdmin := r.Group("/variants")
 	vAdmin.Use(middleware.AuthRequired(), middleware.AdminOnly())
 	vAdmin.POST("", h.Create)
 	vAdmin.PUT("/:id", h.Update)

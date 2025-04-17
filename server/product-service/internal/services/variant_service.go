@@ -18,7 +18,7 @@ type variantService struct {
 	repo repositories.ProductVariantRepository
 }
 
-func NewProductVariantService(r repositories.ProductVariantRepository) ProductVariantService {
+func NewVariantService(r repositories.ProductVariantRepository) ProductVariantService {
 	return &variantService{r}
 }
 

@@ -50,12 +50,25 @@ func main() {
 	subcategoryService := services.NewSubcategoryService(subcategoryRepo)
 	subcategoryHandler := handlers.NewSubcategoryHandler(subcategoryService)
 
+	// variant
+	variantRepo := repositories.NewVariantRepository(db)
+	variantService := services.NewVariantService(variantRepo)
+	variantHandler := handlers.NewVariantHandler(variantService)
+
+	// attribute
+	attrRepo := repositories.NewAttributeRepository(db)
+	valRepo := repositories.NewAttributeValueRepository(db)
+	attrService := services.NewAttributeService(attrRepo, valRepo)
+	attrHandler := handlers.NewAttributeHandler(attrService)
+
 	r := gin.Default()
 	r.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
 
 	routes.SizeRoutes(r, sizeHandler)
 	routes.ColorRoutes(r, colorHandler)
+	routes.AttributeRoutes(r, attrHandler)
 	routes.ProductRoutes(r, productHandler)
+	routes.VariantRoutes(r, variantHandler)
 	routes.CategoryRoutes(r, categoryHandler)
 	routes.SubcategoryRoutes(r, subcategoryHandler)
 

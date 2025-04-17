@@ -15,7 +15,7 @@ type ProductVariantRepository interface {
 
 type variantRepo struct{ db *gorm.DB }
 
-func NewProductVariantRepository(db *gorm.DB) ProductVariantRepository {
+func NewVariantRepository(db *gorm.DB) ProductVariantRepository {
 	return &variantRepo{db}
 }
 
