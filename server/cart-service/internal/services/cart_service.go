@@ -7,11 +7,13 @@ import (
 	"github.com/fiqrioemry/microservice-ecommerce/server/cart-service/internal/models"
 	"github.com/fiqrioemry/microservice-ecommerce/server/cart-service/internal/repositories"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type CartService interface {
 	GetUserCart(userID string) (*models.Cart, error)
 	AddToCart(userID string, req dto.AddToCartRequest, productSnapshot dto.ProductSnapshot) error
+
 	UpdateCartItem(itemID uuid.UUID, req dto.UpdateCartItemRequest) error
 	RemoveCartItem(itemID uuid.UUID) error
 	ClearUserCart(userID string) error
@@ -29,24 +31,33 @@ func (s *cartService) GetUserCart(userID string) (*models.Cart, error) {
 	return s.repo.GetCartWithItems(userID)
 }
 
-func (s *cartService) AddToCart(userID string, req dto.AddToCartRequest, product dto.ProductSnapshot) error {
+func (s *cartService) AddToCart(userID string, req dto.AddToCartRequest, snapshot dto.ProductSnapshot) error {
 	cart, err := s.repo.GetOrCreateCart(userID)
 	if err != nil {
 		return err
 	}
 
-	item := &models.CartItem{
-		ID:          uuid.New(),
-		CartID:      cart.ID,
-		ProductID:   req.ProductID,
-		VariantID:   req.VariantID,
-		ProductName: product.Name,
-		ImageURL:    product.ImageURL,
-		Price:       product.Price,
-		Quantity:    req.Quantity,
-		IsChecked:   true,
+	existing, err := s.repo.FindItemByCartProductVariant(cart.ID, req.ProductID, req.VariantID)
+	if err == nil {
+		existing.Quantity += req.Quantity
+		return s.repo.UpdateItem(existing)
 	}
-	return s.repo.AddItem(item)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		newItem := &models.CartItem{
+			ID:          uuid.New(),
+			CartID:      cart.ID,
+			ProductID:   req.ProductID,
+			VariantID:   req.VariantID,
+			ProductName: snapshot.Name,
+			ImageURL:    snapshot.ImageURL,
+			Price:       snapshot.Price,
+			Quantity:    req.Quantity,
+			IsChecked:   true,
+		}
+		return s.repo.AddItem(newItem)
+	}
+
+	return err
 }
 
 func (s *cartService) UpdateCartItem(itemID uuid.UUID, req dto.UpdateCartItemRequest) error {

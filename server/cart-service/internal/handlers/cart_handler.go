@@ -44,7 +44,12 @@ func (h *CartHandler) AddToCart(c *gin.Context) {
 		return
 	}
 
-	productResp, err := h.GRPCClient.GetProductSnapshot(req.ProductID.String(), req.VariantID.String())
+	var variantIDStr string
+	if req.VariantID != nil {
+		variantIDStr = req.VariantID.String()
+	}
+
+	productResp, err := h.GRPCClient.GetProductSnapshot(req.ProductID.String(), variantIDStr)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to fetch product info"})
 		return

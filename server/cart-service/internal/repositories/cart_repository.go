@@ -15,6 +15,7 @@ type CartRepository interface {
 	DeleteItem(itemID uuid.UUID) error
 	ClearCart(cartID uuid.UUID) error
 	FindItemByID(itemID uuid.UUID) (*models.CartItem, error)
+	FindItemByCartProductVariant(cartID, productID uuid.UUID, variantID *uuid.UUID) (*models.CartItem, error)
 }
 
 type cartRepository struct {
@@ -39,6 +40,19 @@ func (r *cartRepository) GetOrCreateCart(userID string) (*models.Cart, error) {
 		return &cart, nil
 	}
 	return &cart, err
+}
+
+func (r *cartRepository) FindItemByCartProductVariant(
+	cartID, productID uuid.UUID, variantID *uuid.UUID,
+) (*models.CartItem, error) {
+	var item models.CartItem
+	err := r.db.
+		Where("cart_id = ? AND product_id = ? AND variant_id IS NOT DISTINCT FROM ?", cartID, productID, variantID).
+		First(&item).Error
+	if err != nil {
+		return nil, err
+	}
+	return &item, nil
 }
 
 func (r *cartRepository) GetCartWithItems(userID string) (*models.Cart, error) {

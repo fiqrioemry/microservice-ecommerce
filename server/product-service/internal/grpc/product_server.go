@@ -39,3 +39,40 @@ func (s *ProductGRPCServer) GetProductSnapshot(ctx context.Context, req *product
 		Price:    product.Price,
 	}, nil
 }
+
+// func (s *ProductGRPCServer) GetProductSnapshot(ctx context.Context, req *productpb.GetProductRequest) (*productpb.ProductSnapshotResponse, error) {
+// 	productID, err := uuid.Parse(req.GetProductId())
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	product, err := s.Repo.FindByID(productID)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	// Default: pakai harga global
+// 	price := product.Price
+
+// 	// Cek jika variantId diberikan
+// 	if req.VariantId != "" {
+// 		variantID, err := uuid.Parse(req.VariantId)
+// 		if err == nil {
+// 			variant, err := s.Repo.FindVariantByID(variantID)
+// 			if err == nil && variant.IsActive {
+// 				price = variant.Price // override harga dari variant
+// 			}
+// 		}
+// 	}
+
+// 	imageURL := ""
+// 	if len(product.ProductImage) > 0 {
+// 		imageURL = product.ProductImage[0].URL
+// 	}
+
+// 	return &productpb.ProductSnapshotResponse{
+// 		Name:     product.Name,
+// 		ImageUrl: imageURL,
+// 		Price:    price,
+// 	}, nil
+// }
