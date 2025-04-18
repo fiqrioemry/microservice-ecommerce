@@ -25,7 +25,7 @@ type Product struct {
 	Category              Category                `json:"category"`
 	Subcategory           *Subcategory            `json:"subcategory"`
 	ProductImage          []ProductImage          `gorm:"foreignKey:ProductID" json:"images"`
-	ProductVariant        []ProductVariant        `gorm:"foreignKey:ProductID" json:"variants"`
+	ProductVariant        []*ProductVariant       `gorm:"foreignKey:ProductID" json:"variants"`
 	ProductAttributeValue []ProductAttributeValue `gorm:"foreignKey:ProductID" json:"attributes"`
 }
 
@@ -72,22 +72,22 @@ type Size struct {
 type ProductVariant struct {
 	ID        uuid.UUID `gorm:"type:char(36);primaryKey" json:"id"`
 	ProductID uuid.UUID `gorm:"type:char(36);not null" json:"-"`
-	ColorID   *uint     `gorm:"index" json:"-"`
-	SizeID    *uint     `gorm:"index" json:"-"`
+	ColorID   *uint     `gorm:"index" json:"colorId"`
+	SizeID    *uint     `gorm:"index" json:"sizeId"`
 	SKU       string    `gorm:"type:varchar(100);uniqueIndex" json:"sku"`
 	Price     float64   `gorm:"type:decimal(10,2);not null" json:"price"`
 	Stock     int       `gorm:"default:0" json:"stock"`
 	IsActive  bool      `gorm:"default:true" json:"isActive"`
 
-	Color Color `gorm:"foreignKey:colorId" json:"color"`
-	Size  Size  `gorm:"foreignKey:sizeId" json:"size"`
+	Color Color `gorm:"foreignKey:ColorID;references:ID" json:"color"`
+	Size  Size  `gorm:"foreignKey:SizeID;references:ID" json:"size"`
 }
 
 type Attribute struct {
 	ID   uint   `gorm:"primaryKey" json:"id"`
 	Name string `gorm:"type:varchar(100);unique;not null" json:"name"`
 
-	AttributeValue []AttributeValue `gorm:"foreignKey:attributeId" json:"values"`
+	AttributeValue []AttributeValue `gorm:"foreignKey:AttributeID" json:"values"`
 }
 
 type AttributeValue struct {
@@ -98,11 +98,12 @@ type AttributeValue struct {
 
 type ProductAttributeValue struct {
 	ID               uint      `gorm:"primaryKey" json:"id"`
-	ProductID        uuid.UUID `gorm:"type:char(36);not null" json:"-"`
+	ProductID        uuid.UUID `gorm:"type:char(36);not null" json:"productId"`
 	AttributeID      uint      `gorm:"not null" json:"attributeId"`
 	AttributeValueID uint      `gorm:"not null" json:"attributeValueId"`
 
-	Attribute []Attribute `gorm:"foreignKey:attributeId" json:"attribute"`
+	Attribute      Attribute      `gorm:"foreignKey:AttributeID" json:"attribute"`
+	AttributeValue AttributeValue `gorm:"foreignKey:AttributeValueID" json:"value"`
 }
 
 func (p *Category) BeforeCreate(tx *gorm.DB) (err error) {

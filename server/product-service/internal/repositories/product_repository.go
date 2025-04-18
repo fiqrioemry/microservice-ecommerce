@@ -46,7 +46,7 @@ func (r *productRepo) FindBySlug(slug string) (*models.Product, error) {
 
 func (r *productRepo) FindByID(id uuid.UUID) (*models.Product, error) {
 	var product models.Product
-	err := r.db.First(&product, "id = ?", id).Error
+	err := r.db.Preload("ProductImage").First(&product, "id = ?", id).Error
 	if err != nil {
 		return nil, err
 	}
