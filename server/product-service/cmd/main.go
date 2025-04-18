@@ -86,7 +86,7 @@ func main() {
 	// Jalankan server
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "5000"
+		port = "5002"
 	}
 	log.Fatal(r.Run(":" + port))
 }

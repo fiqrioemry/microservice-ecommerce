@@ -4,24 +4,28 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type Cart struct {
-	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
-	UserID    uuid.UUID `gorm:"type:char(36);not null;index"` // didapat dari auth/session
+	ID        uuid.UUID  `gorm:"type:char(36);primaryKey"`
+	UserID    uuid.UUID  `gorm:"type:char(36);index"`
+	Items     []CartItem `gorm:"foreignKey:CartID"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Items     []CartItem `gorm:"foreignKey:CartID"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
 type CartItem struct {
-	ID        uuid.UUID  `gorm:"type:char(36);primaryKey"`
-	CartID    uuid.UUID  `gorm:"type:char(36);not null;index"`
-	ProductID uuid.UUID  `gorm:"type:char(36);not null"` // dari product-service
-	VariantID *uuid.UUID `gorm:"type:char(36)"`          // opsional jika ada variasi
-	Quantity  int        `gorm:"not null;default:1"`
-	Price     float64    `gorm:"not null"`     // harga saat dimasukkan ke cart
-	IsChecked bool       `gorm:"default:true"` // untuk keperluan checkout parsial
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID          uuid.UUID  `gorm:"type:char(36);primaryKey"`
+	CartID      uuid.UUID  `gorm:"type:char(36);index"`
+	ProductID   uuid.UUID  `gorm:"type:char(36)"`
+	VariantID   *uuid.UUID `gorm:"type:char(36)"`
+	ProductName string     `gorm:"type:varchar(255)"`
+	ImageURL    string     `gorm:"type:varchar(255)"`
+	Price       float64    `gorm:"not null"`
+	Quantity    int        `gorm:"default:1"`
+	IsChecked   bool       `gorm:"default:true"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }

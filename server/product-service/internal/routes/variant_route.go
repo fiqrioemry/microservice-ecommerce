@@ -8,7 +8,7 @@ import (
 
 func VariantRoutes(r *gin.Engine, h *handlers.ProductVariantHandler) {
 	// Public routes
-	r.GET("/api/products/:productId/variants", h.GetByProduct)
+	r.GET("/api/products/:slug/variants", h.GetByProduct)
 
 	// Admin routes
 	admin := r.Group("/api/admin/variants")

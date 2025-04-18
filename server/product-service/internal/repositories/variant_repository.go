@@ -6,7 +6,7 @@ import (
 )
 
 type ProductVariantRepository interface {
-	GetByProduct(productID string) ([]models.ProductVariant, error)
+	GetByProduct(slug string) ([]models.ProductVariant, error)
 	Create(v *models.ProductVariant) error
 	Update(v *models.ProductVariant) error
 	Delete(id string) error
@@ -19,9 +19,9 @@ func NewVariantRepository(db *gorm.DB) ProductVariantRepository {
 	return &variantRepo{db}
 }
 
-func (r *variantRepo) GetByProduct(productID string) ([]models.ProductVariant, error) {
+func (r *variantRepo) GetByProduct(slug string) ([]models.ProductVariant, error) {
 	var result []models.ProductVariant
-	err := r.db.Where("product_id = ?", productID).Find(&result).Error
+	err := r.db.Where("slug = ?", slug).Find(&result).Error
 	return result, err
 }
 
