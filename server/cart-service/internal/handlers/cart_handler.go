@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/cart-service/internal/dto"
+	"github.com/fiqrioemry/microservice-ecommerce/server/cart-service/internal/grpc"
 	"github.com/fiqrioemry/microservice-ecommerce/server/cart-service/internal/services"
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 	"github.com/gin-gonic/gin"
@@ -11,11 +12,15 @@ import (
 )
 
 type CartHandler struct {
-	Service services.CartService
+	Service    services.CartService
+	GRPCClient grpc.ProductGRPCClient
 }
 
-func NewCartHandler(service services.CartService) *CartHandler {
-	return &CartHandler{Service: service}
+func NewCartHandler(service services.CartService, grpcClient grpc.ProductGRPCClient) *CartHandler {
+	return &CartHandler{
+		Service:    service,
+		GRPCClient: grpcClient,
+	}
 }
 
 // GET /api/cart
@@ -39,15 +44,19 @@ func (h *CartHandler) AddToCart(c *gin.Context) {
 		return
 	}
 
-	// Simulasi ambil snapshot dari product-service
-	// Real-nya: HTTP call ke product-service
-	product := dto.ProductSnapshot{
-		Name:     "Contoh Produk",
-		ImageURL: "https://example.com/image.jpg",
-		Price:    120000,
+	productResp, err := h.GRPCClient.GetProductSnapshot(req.ProductID.String(), req.VariantID.String())
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to fetch product info"})
+		return
 	}
 
-	if err := h.Service.AddToCart(userID, req, product); err != nil {
+	snapshot := dto.ProductSnapshot{
+		Name:     productResp.Name,
+		ImageURL: productResp.ImageUrl,
+		Price:    productResp.Price,
+	}
+
+	if err := h.Service.AddToCart(userID, req, snapshot); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to add to cart", "error": err.Error()})
 		return
 	}

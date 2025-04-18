@@ -1,7 +1,8 @@
 package repositories
 
 import (
-	"github.com/fiqrioemry/microservice-ecommerce/server/cart-service/internal/models"
+	"cart-service/internal/models"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

@@ -5,9 +5,10 @@ import (
 	"os"
 
 	global "github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
-	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
-
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/middleware"
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
+	"github.com/gin-gonic/gin"
+
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/config"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/seeders"
 
@@ -15,8 +16,6 @@ import (
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/repositories"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/routes"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/services"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -24,12 +23,9 @@ func main() {
 	config.InitDatabase()
 	global.InitRedis()
 	global.InitMailer()
+	global.InitCloudinary()
 
 	db := config.DB
-
-	// router initiate
-	r := gin.Default()
-	r.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
 
 	// service & handler dependency
 	userRepo := repositories.NewUserRepository(db)
@@ -43,6 +39,10 @@ func main() {
 	addressService := services.NewAddressService(addressRepo)
 	addressHandler := handlers.NewAddressHandler(addressService)
 
+	// router initiate
+	r := gin.Default()
+	r.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
+
 	// Routing dependency injection
 	routes.AuthRoutes(r, authHandler)
 	routes.AdminRoutes(r, authHandler)
@@ -51,8 +51,6 @@ func main() {
 	seeders.SeedUsers(db)
 
 	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5001"
-	}
+	log.Println("user service running on port:", port)
 	log.Fatal(r.Run(":" + port))
 }

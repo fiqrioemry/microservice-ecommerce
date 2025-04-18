@@ -50,7 +50,7 @@ func main() {
 	subcategoryService := services.NewSubcategoryService(subcategoryRepo)
 	subcategoryHandler := handlers.NewSubcategoryHandler(subcategoryService)
 
-	// variant
+	// varianta
 	variantRepo := repositories.NewVariantRepository(db)
 	variantService := services.NewVariantService(variantRepo)
 	variantHandler := handlers.NewVariantHandler(variantService)
@@ -85,8 +85,6 @@ func main() {
 
 	// Jalankan server
 	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5002"
-	}
+	log.Println("product service running on port:", port)
 	log.Fatal(r.Run(":" + port))
 }

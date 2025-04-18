@@ -8,7 +8,7 @@ import (
 
 func ProductAttributeValueRoutes(r *gin.Engine, h *handlers.ProductAttributeValueHandler) {
 	// Public routes
-	r.GET("/api/products/:productId/attributes", h.GetByProduct)
+	r.GET("/api/products/:slug/attributes", h.GetByProduct)
 
 	// Admin routes
 	admin := r.Group("/api/admin/product-attributes")
