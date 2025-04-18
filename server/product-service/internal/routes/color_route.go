@@ -8,11 +8,11 @@ import (
 
 func ColorRoutes(r *gin.Engine, handler *handlers.ColorHandler) {
 	// Public
-	r.GET("/api/colors", handler.GetAll)
 
 	// Admin only
 	admin := r.Group("/api/admin/colors")
 	admin.Use(middleware.AuthRequired(), middleware.AdminOnly())
+	admin.GET("", handler.GetAll)
 	admin.POST("", handler.Create)
 	admin.PUT("/:id", handler.Update)
 	admin.DELETE("/:id", handler.Delete)

@@ -7,12 +7,10 @@ import (
 )
 
 func SizeRoutes(r *gin.Engine, handler *handlers.SizeHandler) {
-	// Public
-	r.GET("/api/sizes", handler.GetAll)
 
-	// Admin
 	admin := r.Group("/api/admin/sizes")
 	admin.Use(middleware.AuthRequired(), middleware.AdminOnly())
+	admin.GET("", handler.Create)
 	admin.POST("", handler.Create)
 	admin.PUT("/:id", handler.Update)
 	admin.DELETE("/:id", handler.Delete)

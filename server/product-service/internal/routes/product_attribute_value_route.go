@@ -7,12 +7,10 @@ import (
 )
 
 func ProductAttributeValueRoutes(r *gin.Engine, h *handlers.ProductAttributeValueHandler) {
-	// Public routes
-	r.GET("/api/products/:slug/attributes", h.GetByProduct)
-
 	// Admin routes
-	admin := r.Group("/api/admin/product-attributes")
+	admin := r.Group("/api/admin/products")
 	admin.Use(middleware.AuthRequired(), middleware.AdminOnly())
-	admin.POST("", h.Add)
-	admin.DELETE("/:id", h.Delete)
+	admin.GET("/:id/attributes", h.GetByProduct)
+	admin.POST("/:id/attributes", h.Add)
+	admin.DELETE("/:id/attributes", h.Delete)
 }

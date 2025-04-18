@@ -6,7 +6,7 @@ import (
 )
 
 type ProductAttributeValueRepository interface {
-	GetByProduct(slug string) ([]models.ProductAttributeValue, error)
+	GetByProduct(productId string) ([]models.ProductAttributeValue, error)
 	Add(pav *models.ProductAttributeValue) error
 	Delete(id uint) error
 }
@@ -17,9 +17,9 @@ func NewProductAttributeValueRepository(db *gorm.DB) ProductAttributeValueReposi
 	return &pavRepo{db}
 }
 
-func (r *pavRepo) GetByProduct(slug string) ([]models.ProductAttributeValue, error) {
+func (r *pavRepo) GetByProduct(productId string) ([]models.ProductAttributeValue, error) {
 	var result []models.ProductAttributeValue
-	err := r.db.Where("slug = ?", slug).Find(&result).Error
+	err := r.db.Where("productId = ?", productId).Find(&result).Error
 	return result, err
 }
 

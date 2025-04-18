@@ -76,9 +76,9 @@ func main() {
 	routes.ColorRoutes(r, colorHandler)
 	routes.AttributeRoutes(r, attrHandler)
 	routes.ProductRoutes(r, productHandler)
-	routes.VariantRoutes(r, variantHandler)
 	routes.CategoryRoutes(r, categoryHandler)
 	routes.SubcategoryRoutes(r, subcategoryHandler)
+	routes.ProductVariantRoutes(r, variantHandler)
 	routes.ProductAttributeValueRoutes(r, pavHandler)
 
 	seeders.SeedProductData(db)

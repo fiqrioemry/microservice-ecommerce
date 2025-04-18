@@ -6,14 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func VariantRoutes(r *gin.Engine, h *handlers.ProductVariantHandler) {
-	// Public routes
-	r.GET("/api/products/:slug/variants", h.GetByProduct)
+func ProductVariantRoutes(r *gin.Engine, h *handlers.ProductVariantHandler) {
 
 	// Admin routes
-	admin := r.Group("/api/admin/variants")
+	admin := r.Group("/api/admin/products/:id/variants")
 	admin.Use(middleware.AuthRequired(), middleware.AdminOnly())
-	admin.POST("", h.Create)
+	admin.GET("", h.GetByProduct)
 	admin.POST("", h.Create)
 	admin.PUT("/:id", h.Update)
 	admin.DELETE("/:id", h.Delete)

@@ -8,7 +8,7 @@ import (
 )
 
 type ProductAttributeValueService interface {
-	GetByProduct(slug string) ([]models.ProductAttributeValue, error)
+	GetByProduct(productId string) ([]models.ProductAttributeValue, error)
 	Add(req dto.AddProductAttributeValueRequest) error
 	Delete(id uint) error
 }
@@ -21,8 +21,8 @@ func NewProductAttributeValueService(r repositories.ProductAttributeValueReposit
 	return &pavService{r}
 }
 
-func (s *pavService) GetByProduct(slug string) ([]models.ProductAttributeValue, error) {
-	return s.repo.GetByProduct(slug)
+func (s *pavService) GetByProduct(productId string) ([]models.ProductAttributeValue, error) {
+	return s.repo.GetByProduct(productId)
 }
 
 func (s *pavService) Add(req dto.AddProductAttributeValueRequest) error {

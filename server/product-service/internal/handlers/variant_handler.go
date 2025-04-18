@@ -17,7 +17,7 @@ func NewVariantHandler(s services.ProductVariantService) *ProductVariantHandler 
 }
 
 func (h *ProductVariantHandler) GetByProduct(c *gin.Context) {
-	productId := c.Param("id")
+	productId := c.Param("productId")
 	data, err := h.Service.GetByProduct(productId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to get product variants"})
