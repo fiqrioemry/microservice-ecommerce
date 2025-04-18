@@ -1,3 +1,70 @@
+# version: "3.9"
+
+# services:
+#   db:
+#     image: mysql:8
+#     container_name: mysql-user
+#     restart: always
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root
+#     ports:
+#       - "3307:3306"
+#     volumes:
+#       - mysql-data:/var/lib/mysql
+#       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+#   redis:
+#     image: redis:7-alpine
+#     container_name: redis
+#     ports:
+#       - "6379:6379"
+
+#   user-service:
+#     build:
+#       context: ../
+#       dockerfile: ./server/user-service/Dockerfile
+#     container_name: user-service
+#     env_file:
+#       - ./user-service/.env
+#     ports:
+#       - "5001:5000"
+#     volumes:
+#       - ../proto:/app/proto
+#     depends_on:
+#       - redis
+#       - db
+
+#   product-service:
+#     build:
+#       context: ../
+#       dockerfile: ./server/product-service/Dockerfile
+#     container_name: product-service
+#     env_file:
+#       - ./product-service/.env
+#     ports:
+#       - "5002:5000"
+#     volumes:
+#       - ../proto:/app/proto
+#     depends_on:
+#       - db
+
+#   cart-service:
+#     build:
+#       context: ../
+#       dockerfile: ./server/cart-service/Dockerfile
+#     container_name: cart-service
+#     env_file:
+#       - ./cart-service/.env
+#     ports:
+#       - "5003:5000"
+#     volumes:
+#       - ../proto:/app/proto
+#     depends_on:
+#       - db
+
+# volumes:
+#   mysql-data:
+
 services:
   db:
     image: mysql:8

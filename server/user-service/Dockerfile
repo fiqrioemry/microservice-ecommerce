@@ -1,4 +1,4 @@
-FROM golang:1.23.4-alpine
+FROM golang:1.23.8-alpine
 
 RUN apk add --no-cache git
 
@@ -12,3 +12,21 @@ RUN go mod download
 RUN go build -o main ./cmd/main.go
 
 CMD ["./main"]
+
+
+
+# FROM golang:1.23.4-alpine
+
+# RUN apk add --no-cache git
+
+# WORKDIR /app
+
+# COPY . .
+
+# WORKDIR /app/server/user-service
+
+# RUN go mod tidy
+
+# RUN go build -o main ./cmd/main.go
+
+# CMD ["./main"]

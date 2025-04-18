@@ -8,7 +8,6 @@ require (
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.12
 )
-replace github.com/fiqrioemry/microservice-ecommerce/server/product-service => ../product-service
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect

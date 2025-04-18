@@ -8,7 +8,7 @@ import (
 )
 
 type ProductVariantService interface {
-	GetByProduct(slug string) ([]models.ProductVariant, error)
+	GetByProduct(productId string) ([]models.ProductVariant, error)
 	Create(req dto.CreateProductVariantRequest) error
 	Update(id string, req dto.UpdateProductVariantRequest) error
 	Delete(id string) error
@@ -22,8 +22,8 @@ func NewVariantService(r repositories.ProductVariantRepository) ProductVariantSe
 	return &variantService{r}
 }
 
-func (s *variantService) GetByProduct(slug string) ([]models.ProductVariant, error) {
-	return s.repo.GetByProduct(slug)
+func (s *variantService) GetByProduct(productId string) ([]models.ProductVariant, error) {
+	return s.repo.GetByProduct(productId)
 }
 
 func (s *variantService) Create(req dto.CreateProductVariantRequest) error {

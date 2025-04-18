@@ -8,23 +8,24 @@ import (
 )
 
 type Product struct {
-	ID            uuid.UUID      `gorm:"type:char(36);primaryKey" json:"id"`
-	CategoryID    uuid.UUID      `gorm:"type:char(36);not null" json:"-"`
-	SubcategoryID *uuid.UUID     `gorm:"type:char(36)" json:"-"`
-	Name          string         `gorm:"type:varchar(255);not null" json:"name"`
-	Slug          string         `gorm:"type:varchar(255);uniqueIndex" json:"slug"`
-	Description   string         `gorm:"type:text" json:"description"`
-	Price         float64        `gorm:"type:decimal(10,2);not null" json:"price"`
-	Stock         int            `gorm:"not null;default:0" json:"stock"`
-	Sold          int            `gorm:"default:0" json:"sold"`
-	IsFeatured    bool           `gorm:"default:false" json:"isFeatured"`
-	IsActive      bool           `gorm:"default:true" json:"isActive"`
-	CreatedAt     time.Time      `json:"createdAt"`
-	UpdatedAt     time.Time      `json:"updatedAt"`
-	DeletedAt     gorm.DeletedAt `gorm:"index" json:"-"`
-	Category      Category       `json:"category"`
-	Subcategory   *Subcategory   `json:"subcategory"`
-	ProductImage  []ProductImage `gorm:"foreignKey:ProductID" json:"images"`
+	ID             uuid.UUID        `gorm:"type:char(36);primaryKey" json:"id"`
+	CategoryID     uuid.UUID        `gorm:"type:char(36);not null" json:"-"`
+	SubcategoryID  *uuid.UUID       `gorm:"type:char(36)" json:"-"`
+	Name           string           `gorm:"type:varchar(255);not null" json:"name"`
+	Slug           string           `gorm:"type:varchar(255);uniqueIndex" json:"slug"`
+	Description    string           `gorm:"type:text" json:"description"`
+	Price          float64          `gorm:"type:decimal(10,2);not null" json:"price"`
+	Stock          int              `gorm:"not null;default:0" json:"stock"`
+	Sold           int              `gorm:"default:0" json:"sold"`
+	IsFeatured     bool             `gorm:"default:false" json:"isFeatured"`
+	IsActive       bool             `gorm:"default:true" json:"isActive"`
+	CreatedAt      time.Time        `json:"createdAt"`
+	UpdatedAt      time.Time        `json:"updatedAt"`
+	DeletedAt      gorm.DeletedAt   `gorm:"index" json:"-"`
+	Category       Category         `json:"category"`
+	Subcategory    *Subcategory     `json:"subcategory"`
+	ProductImage   []ProductImage   `gorm:"foreignKey:ProductID" json:"images"`
+	ProductVariant []ProductVariant `gorm:"foreignKey:ProductID" json:"variants"`
 }
 
 type ProductImage struct {

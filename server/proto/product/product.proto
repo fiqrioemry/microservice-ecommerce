@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package product;
+
+option go_package = "github.com/fiqrioemry/microservice-ecommerce/proto/product;productpb";
+
+service ProductService {
+  rpc GetProductSnapshot(GetProductRequest) returns (ProductSnapshotResponse);
+}
+
+message GetProductRequest {
+  string product_id = 1;
+  string variant_id = 2;
+}
+
+message ProductSnapshotResponse {
+  string name = 1;
+  string image_url = 2;
+  double price = 3;
+}

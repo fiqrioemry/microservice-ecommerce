@@ -26,9 +26,6 @@ func main() {
 	db := config.DB
 
 	grpcAddr := os.Getenv("PRODUCT_GRPC_ADDR")
-	if grpcAddr == "" {
-		grpcAddr = "localhost:50051"
-	}
 
 	// Init GRPC client
 	productGRPCClient, err := grpc.NewProductGRPCClient(grpcAddr)

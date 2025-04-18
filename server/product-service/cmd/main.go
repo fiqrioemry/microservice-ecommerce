@@ -2,17 +2,21 @@ package main
 
 import (
 	"log"
+	"net"
 	"os"
 
 	global "github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/middleware"
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/config"
+	grpcServer "github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/grpc"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/handlers"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/repositories"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/routes"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/seeders"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/services"
+	productpb "github.com/fiqrioemry/microservice-ecommerce/server/proto/product"
+	"google.golang.org/grpc"
 
 	"github.com/gin-gonic/gin"
 )
@@ -82,6 +86,21 @@ func main() {
 	seeders.SeedVariantsAndAttributes(db)
 	seeders.SeedAdditionalProducts(db)
 	seeders.SeedAdditionalVariants(db)
+
+	go func() {
+		lis, err := net.Listen("tcp", ":50051")
+		if err != nil {
+			log.Fatalf("failed to listen: %v", err)
+		}
+
+		s := grpc.NewServer()
+		productpb.RegisterProductServiceServer(s, grpcServer.NewProductGRPCServer(productRepo))
+		log.Println("gRPC server running on port 50051")
+
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("failed to serve gRPC: %v", err)
+		}
+	}()
 
 	// Jalankan server
 	port := os.Getenv("PORT")

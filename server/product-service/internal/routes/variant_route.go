@@ -14,6 +14,7 @@ func VariantRoutes(r *gin.Engine, h *handlers.ProductVariantHandler) {
 	admin := r.Group("/api/admin/variants")
 	admin.Use(middleware.AuthRequired(), middleware.AdminOnly())
 	admin.POST("", h.Create)
+	admin.POST("", h.Create)
 	admin.PUT("/:id", h.Update)
 	admin.DELETE("/:id", h.Delete)
 }

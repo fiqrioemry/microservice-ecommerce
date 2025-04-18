@@ -35,7 +35,7 @@ func (r *productRepo) FindAll() ([]models.Product, error) {
 
 func (r *productRepo) FindBySlug(slug string) (*models.Product, error) {
 	var product models.Product
-	err := r.db.Preload("Category").Preload("Subcategory").Preload("ProductImage").
+	err := r.db.Preload("Category").Preload("Subcategory").Preload("ProductImage").Preload("ProductVariant").
 		Where("slug = ?", slug).
 		First(&product).Error
 	if err != nil {
