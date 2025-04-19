@@ -31,7 +31,7 @@ func NewVariantRepository(db *gorm.DB) VariantRepository {
 
 func (r *variantRepo) GetAllTypesWithValues() ([]models.VariantOptionType, error) {
 	var types []models.VariantOptionType
-	err := r.db.Preload("VariantOptionValue").Find(&types).Error
+	err := r.db.Preload("Values").Find(&types).Error
 	return types, err
 }
 

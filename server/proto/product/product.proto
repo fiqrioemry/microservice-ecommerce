@@ -7,7 +7,9 @@ option go_package = "proto/product";
 // === REQUEST ===
 message GetProductRequest {
   string product_id = 1;
+  string variant_id = 2;
 }
+
 
 message GetMultipleProductRequest {
   repeated string product_ids = 1;
