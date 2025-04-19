@@ -2,6 +2,7 @@ package seeders
 
 import (
 	"log"
+	"time"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/models"
 	"gorm.io/gorm"
@@ -11,35 +12,34 @@ import (
 
 func SeedInitialData(db *gorm.DB) {
 	log.Println("Seeding initial product data...")
-
-	// Dummy image
 	dummyImage := "https://placehold.co/400x400"
 
-	// ====== VARIANT TYPES ======
+	// === Variant Types ===
 	sizeType := models.VariantOptionType{Name: "Size"}
 	colorType := models.VariantOptionType{Name: "Color"}
 	db.Create(&sizeType)
 	db.Create(&colorType)
 
-	// ====== VARIANT VALUES ======
-	small := models.VariantOptionValue{TypeID: sizeType.ID, Value: "S"}
-	medium := models.VariantOptionValue{TypeID: sizeType.ID, Value: "M"}
-	red := models.VariantOptionValue{TypeID: colorType.ID, Value: "Red"}
-	blue := models.VariantOptionValue{TypeID: colorType.ID, Value: "Blue"}
-	db.Create(&small)
-	db.Create(&medium)
-	db.Create(&red)
-	db.Create(&blue)
+	// === Variant Values ===
+	sizes := []models.VariantOptionValue{
+		{TypeID: sizeType.ID, Value: "L"},
+		{TypeID: sizeType.ID, Value: "XL"},
+	}
+	colors := []models.VariantOptionValue{
+		{TypeID: colorType.ID, Value: "Merah"},
+		{TypeID: colorType.ID, Value: "Biru"},
+		{TypeID: colorType.ID, Value: "Hijau"},
+	}
+	db.Create(&sizes)
+	db.Create(&colors)
 
-	// ====== CATEGORY & SUBCATEGORY ======
+	// === Category & Subcategory ===
 	catFashion := models.Category{
 		ID:    uuid.New(),
 		Name:  "Fashion",
 		Slug:  "fashion",
 		Image: dummyImage,
 	}
-	db.Create(&catFashion)
-
 	subMenClothing := models.Subcategory{
 		ID:         uuid.New(),
 		Name:       "Men Clothing",
@@ -47,9 +47,10 @@ func SeedInitialData(db *gorm.DB) {
 		CategoryID: catFashion.ID,
 		Image:      dummyImage,
 	}
+	db.Create(&catFashion)
 	db.Create(&subMenClothing)
 
-	// ====== PRODUCT ======
+	// === Product ===
 	product := models.Product{
 		ID:            uuid.New(),
 		Name:          "Cool T-Shirt",
@@ -63,55 +64,63 @@ func SeedInitialData(db *gorm.DB) {
 		Length:        20,
 		Width:         15,
 		Height:        5,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
 	}
 	db.Create(&product)
 
-	// ====== PRODUCT IMAGE ======
+	// === Product Images ===
 	images := []models.ProductImage{
 		{ID: uuid.New(), ProductID: product.ID, URL: dummyImage, IsPrimary: true},
 		{ID: uuid.New(), ProductID: product.ID, URL: dummyImage, IsPrimary: false},
 	}
 	db.Create(&images)
 
-	// ====== PRODUCT VARIANTS ======
-	variant1 := models.ProductVariant{
-		ID:        uuid.New(),
-		ProductID: product.ID,
-		SKU:       "TSHIRT-RED-S",
-		Price:     19.99,
-		Stock:     10,
-		IsActive:  true,
-		ImageURL:  dummyImage,
+	// === Mapping VariantOptionValue for lookup ===
+	var valueMap = make(map[string]uint)
+	var allValues []models.VariantOptionValue
+	db.Find(&allValues)
+	for _, v := range allValues {
+		valueMap[v.Value] = v.ID
 	}
-	variant2 := models.ProductVariant{
-		ID:        uuid.New(),
-		ProductID: product.ID,
-		SKU:       "TSHIRT-BLUE-M",
-		Price:     21.99,
-		Stock:     5,
-		IsActive:  true,
-		ImageURL:  dummyImage,
+
+	// === Product Variants ===
+	variantConfigs := []struct {
+		SKU   string
+		Size  string
+		Color string
+		Stock int
+		Price float64
+	}{
+		{"TSHIRT-L-MERAH", "L", "Merah", 2, 19.99},
+		{"TSHIRT-L-BIRU", "L", "Biru", 4, 19.99},
+		{"TSHIRT-L-HIJAU", "L", "Hijau", 5, 19.99},
+		{"TSHIRT-XL-BIRU", "XL", "Biru", 7, 21.99},
 	}
-	db.Create(&variant1)
-	db.Create(&variant2)
 
-	// ====== PRODUCT VARIANT OPTIONS (link to VariantOptionValue) ======
-	db.Create(&models.ProductVariantOption{
-		ProductVariantID: variant1.ID,
-		OptionValueID:    red.ID,
-	})
-	db.Create(&models.ProductVariantOption{
-		ProductVariantID: variant1.ID,
-		OptionValueID:    small.ID,
-	})
-	db.Create(&models.ProductVariantOption{
-		ProductVariantID: variant2.ID,
-		OptionValueID:    blue.ID,
-	})
-	db.Create(&models.ProductVariantOption{
-		ProductVariantID: variant2.ID,
-		OptionValueID:    medium.ID,
-	})
+	for _, config := range variantConfigs {
+		variant := models.ProductVariant{
+			ID:        uuid.New(),
+			ProductID: product.ID,
+			SKU:       config.SKU,
+			Price:     config.Price,
+			Stock:     config.Stock,
+			IsActive:  true,
+			ImageURL:  dummyImage,
+		}
+		db.Create(&variant)
 
-	log.Println("Seeding completed.")
+		// Link variant to option values
+		optionValues := []string{config.Size, config.Color}
+		for _, val := range optionValues {
+			optID := valueMap[val]
+			pvOpt := models.ProductVariantOption{
+				ProductVariantID: variant.ID,
+				OptionValueID:    optID,
+			}
+			db.Create(&pvOpt)
+		}
+	}
+
+	log.Println("✅ Finished seeding product variants with Size and Color combinations")
 }
