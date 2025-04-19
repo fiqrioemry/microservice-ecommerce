@@ -37,7 +37,7 @@ func (p *ProductGRPCClient) GetProductSnapshot(productID, variantID string) (*pr
 
 	resp, err := p.client.GetProductSnapshot(ctx, &productpb.GetProductRequest{
 		ProductId: productID,
-		VariantId: variantID,
+		// VariantId: variantID,
 	})
 	if err != nil {
 		log.Printf("Error calling GetProductSnapshot: %v", err)
