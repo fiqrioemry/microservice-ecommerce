@@ -59,6 +59,14 @@ func (h *CartHandler) AddToCart(c *gin.Context) {
 		Name:     productResp.Name,
 		ImageURL: productResp.ImageUrl,
 		Price:    productResp.Price,
+		Stock:    int(productResp.Stock),
+	}
+
+	if req.Quantity > snapshot.Stock {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Quantity exceeds available stock",
+		})
+		return
 	}
 
 	if err := h.Service.AddToCart(userID, req, snapshot); err != nil {

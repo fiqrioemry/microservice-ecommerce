@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/dto"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/models"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/repositories"
@@ -8,50 +10,68 @@ import (
 
 type AttributeService interface {
 	GetAll() ([]models.Attribute, error)
-	Create(req dto.CreateAttributeRequest) error
-	Update(id uint, req dto.UpdateAttributeRequest) error
+	GetByID(id uint) (*models.Attribute, error)
+	Create(attr dto.AttributeRequest) error
+	Update(id uint, attr dto.AttributeRequest) error
 	Delete(id uint) error
-	CreateValue(req dto.CreateAttributeValueRequest) error
-	GetValues(attrID uint) ([]models.AttributeValue, error)
+
+	AddValue(req dto.AttributeValueRequest) error
+	UpdateValue(id uint, newValue string) error
+	DeleteValue(id uint) error
 }
 
 type attributeService struct {
-	attrRepo repositories.AttributeRepository
-	valRepo  repositories.AttributeValueRepository
+	repo repositories.AttributeRepository
 }
 
-func NewAttributeService(a repositories.AttributeRepository, v repositories.AttributeValueRepository) AttributeService {
-	return &attributeService{a, v}
+func NewAttributeService(repo repositories.AttributeRepository) AttributeService {
+	return &attributeService{repo: repo}
 }
 
 func (s *attributeService) GetAll() ([]models.Attribute, error) {
-	return s.attrRepo.GetAll()
+	return s.repo.GetAllAttributesWithValues()
 }
 
-func (s *attributeService) Create(req dto.CreateAttributeRequest) error {
-	return s.attrRepo.Create(&models.Attribute{Name: req.Name})
+func (s *attributeService) GetByID(id uint) (*models.Attribute, error) {
+	return s.repo.GetAttributeByID(id)
 }
 
-func (s *attributeService) Update(id uint, req dto.UpdateAttributeRequest) error {
-	attr, err := s.attrRepo.FindByID(id)
+func (s *attributeService) Create(attr dto.AttributeRequest) error {
+	newAttr := &models.Attribute{Name: attr.Name}
+	return s.repo.CreateAttribute(newAttr)
+}
+
+func (s *attributeService) Update(id uint, attr dto.AttributeRequest) error {
+	existing, err := s.repo.GetAttributeByID(id)
 	if err != nil {
 		return err
 	}
-	attr.Name = req.Name
-	return s.attrRepo.Update(attr)
+	existing.Name = attr.Name
+	return s.repo.UpdateAttribute(existing)
 }
 
 func (s *attributeService) Delete(id uint) error {
-	return s.attrRepo.Delete(id)
+	return s.repo.DeleteAttribute(id)
 }
 
-func (s *attributeService) CreateValue(req dto.CreateAttributeValueRequest) error {
-	return s.valRepo.Create(&models.AttributeValue{
+func (s *attributeService) AddValue(req dto.AttributeValueRequest) error {
+	if s.repo.IsValueExist(req.AttributeID, req.Value) {
+		return errors.New("value already exists for this attribute")
+	}
+	return s.repo.CreateAttributeValue(&models.AttributeValue{
 		AttributeID: req.AttributeID,
 		Value:       req.Value,
 	})
 }
 
-func (s *attributeService) GetValues(attrID uint) ([]models.AttributeValue, error) {
-	return s.valRepo.GetByAttribute(attrID)
+func (s *attributeService) UpdateValue(id uint, newValue string) error {
+	val := &models.AttributeValue{
+		ID:    id,
+		Value: newValue,
+	}
+	return s.repo.UpdateAttributeValue(val)
+}
+
+func (s *attributeService) DeleteValue(id uint) error {
+	return s.repo.DeleteAttributeValue(id)
 }

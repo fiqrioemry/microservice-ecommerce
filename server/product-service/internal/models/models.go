@@ -7,129 +7,169 @@ import (
 	"gorm.io/gorm"
 )
 
-type Product struct {
-	ID                    uuid.UUID               `gorm:"type:char(36);primaryKey" json:"id"`
-	CategoryID            uuid.UUID               `gorm:"type:char(36);not null" json:"-"`
-	SubcategoryID         *uuid.UUID              `gorm:"type:char(36)" json:"-"`
-	Name                  string                  `gorm:"type:varchar(255);not null" json:"name"`
-	Slug                  string                  `gorm:"type:varchar(255);uniqueIndex" json:"slug"`
-	Description           string                  `gorm:"type:text" json:"description"`
-	Price                 float64                 `gorm:"type:decimal(10,2);not null" json:"price"`
-	Stock                 int                     `gorm:"not null;default:0" json:"stock"`
-	Sold                  int                     `gorm:"default:0" json:"sold"`
-	IsFeatured            bool                    `gorm:"default:false" json:"isFeatured"`
-	IsActive              bool                    `gorm:"default:true" json:"isActive"`
-	CreatedAt             time.Time               `json:"createdAt"`
-	UpdatedAt             time.Time               `json:"updatedAt"`
-	DeletedAt             gorm.DeletedAt          `gorm:"index" json:"-"`
-	Category              Category                `json:"category"`
-	Subcategory           *Subcategory            `json:"subcategory"`
-	ProductImage          []ProductImage          `gorm:"foreignKey:ProductID" json:"images"`
-	ProductVariant        []*ProductVariant       `gorm:"foreignKey:ProductID" json:"variants"`
-	ProductAttributeValue []ProductAttributeValue `gorm:"foreignKey:ProductID" json:"attributes"`
-}
-
-type ProductImage struct {
-	ID        uuid.UUID `gorm:"type:char(36);primaryKey" json:"id"`
-	ProductID uuid.UUID `gorm:"type:char(36);not null" json:"-"`
-	URL       string    `gorm:"type:varchar(255);not null" json:"url"`
-	IsPrimary bool      `gorm:"default:false" json:"isPrimary"`
-}
-
 type Category struct {
-	ID            uuid.UUID      `gorm:"type:char(36);primaryKey" json:"id"`
-	Name          string         `gorm:"type:varchar(100);not null;unique" json:"name"`
-	Slug          string         `gorm:"type:varchar(100);uniqueIndex" json:"slug"`
-	Image         string         `gorm:"type:varchar(255)" json:"image"`
-	CreatedAt     time.Time      `json:"-"`
-	UpdatedAt     time.Time      `json:"-" `
-	DeletedAt     gorm.DeletedAt `gorm:"index" json:"-"`
-	Subcategories []Subcategory  `gorm:"foreignKey:CategoryID" json:"subCategories"`
+	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
+	Name      string    `gorm:"type:varchar(100);not null;unique"`
+	Slug      string    `gorm:"type:varchar(100);uniqueIndex"`
+	Image     string    `gorm:"type:varchar(255)"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	Subcategories []Subcategory `gorm:"foreignKey:CategoryID"`
 }
 
 type Subcategory struct {
-	ID         uuid.UUID      `gorm:"type:char(36);primaryKey" json:"id"`
-	Name       string         `gorm:"type:varchar(100);not null" json:"name"`
-	Slug       string         `gorm:"type:varchar(100);uniqueIndex" json:"slug"`
-	CategoryID uuid.UUID      `gorm:"type:char(36);not null" json:"-"`
-	Image      string         `gorm:"type:varchar(255)" json:"image"`
-	CreatedAt  time.Time      `json:"-"`
-	UpdatedAt  time.Time      `json:"-"`
-	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
+	ID         uuid.UUID `gorm:"type:char(36);primaryKey"`
+	Name       string    `gorm:"type:varchar(100);not null"`
+	Slug       string    `gorm:"type:varchar(100);uniqueIndex"`
+	CategoryID uuid.UUID `gorm:"type:char(36);not null"`
+	Image      string    `gorm:"type:varchar(255)"`
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  gorm.DeletedAt `gorm:"index"`
 }
 
-type Color struct {
-	ID   uint   `gorm:"primaryKey" json:"id"`
-	Name string `gorm:"type:varchar(50);not null;unique" json:"name"`
-	Hex  string `gorm:"type:varchar(7)" json:"hex"`
+type Product struct {
+	ID            uuid.UUID  `gorm:"type:char(36);primaryKey"`
+	CategoryID    uuid.UUID  `gorm:"type:char(36);not null"`
+	SubcategoryID *uuid.UUID `gorm:"type:char(36)"`
+	Name          string     `gorm:"type:varchar(255);not null"`
+	Slug          string     `gorm:"type:varchar(255);uniqueIndex"`
+	Description   string     `gorm:"type:text"`
+	IsFeatured    bool       `gorm:"default:false"`
+	IsActive      bool       `gorm:"default:true"`
+	Weight        float64    `gorm:"default:0" json:"weight"`
+	Length        float64    `gorm:"default:0" json:"length"`
+	Width         float64    `gorm:"default:0" json:"width"`
+	Height        float64    `gorm:"default:0" json:"height"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+
+	Category              Category                `gorm:"foreignKey:CategoryID"`
+	Subcategory           *Subcategory            `gorm:"foreignKey:SubcategoryID"`
+	ProductImage          []ProductImage          `gorm:"foreignKey:ProductID"`
+	ProductVariant        []ProductVariant        `gorm:"foreignKey:ProductID"`
+	ProductAttributeValue []ProductAttributeValue `gorm:"foreignKey:ProductID"`
 }
 
-type Size struct {
-	ID   uint   `gorm:"primaryKey" json:"id"`
-	Name string `gorm:"type:varchar(50);not null;unique" json:"name"`
+type ProductImage struct {
+	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
+	ProductID uuid.UUID `gorm:"type:char(36);not null"`
+	URL       string    `gorm:"type:varchar(255);not null"`
+	IsPrimary bool      `gorm:"default:false"`
+}
+
+type VariantOptionType struct {
+	ID     uint                 `gorm:"primaryKey"`
+	Name   string               `gorm:"type:varchar(100);unique;not null"`
+	Values []VariantOptionValue `gorm:"foreignKey:TypeID"`
+}
+
+type VariantOptionValue struct {
+	ID     uint   `gorm:"primaryKey"`
+	TypeID uint   `gorm:"not null"`
+	Value  string `gorm:"type:varchar(100);not null"`
+
+	Type VariantOptionType `gorm:"references:ID;foreignKey:TypeID"`
+}
+
+type CategoryVariantType struct {
+	ID            uint      `gorm:"primaryKey"`
+	CategoryID    uuid.UUID `gorm:"type:char(36);not null"`
+	VariantTypeID uint      `gorm:"not null"`
+
+	Category Category          `gorm:"foreignKey:CategoryID"`
+	Type     VariantOptionType `gorm:"foreignKey:VariantTypeID"`
+}
+
+type SubcategoryVariantType struct {
+	ID            uint      `gorm:"primaryKey"`
+	SubcategoryID uuid.UUID `gorm:"type:char(36);not null"`
+	VariantTypeID uint      `gorm:"not null"`
+
+	Subcategory Subcategory       `gorm:"foreignKey:SubcategoryID"`
+	Type        VariantOptionType `gorm:"foreignKey:VariantTypeID"`
 }
 
 type ProductVariant struct {
-	ID        uuid.UUID `gorm:"type:char(36);primaryKey" json:"id"`
-	ProductID uuid.UUID `gorm:"type:char(36);not null" json:"-"`
-	ColorID   *uint     `gorm:"index" json:"colorId"`
-	SizeID    *uint     `gorm:"index" json:"sizeId"`
-	SKU       string    `gorm:"type:varchar(100);uniqueIndex" json:"sku"`
-	Price     float64   `gorm:"type:decimal(10,2);not null" json:"price"`
-	Stock     int       `gorm:"default:0" json:"stock"`
-	IsActive  bool      `gorm:"default:true" json:"isActive"`
+	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
+	ProductID uuid.UUID `gorm:"type:char(36);not null"`
 
-	Color Color `gorm:"foreignKey:ColorID;references:ID" json:"color"`
-	Size  Size  `gorm:"foreignKey:SizeID;references:ID" json:"size"`
+	SKU      string
+	Price    float64
+	Stock    int
+	IsActive bool
+
+	ImageURL string
+
+	VariantValues []ProductVariantOption `gorm:"foreignKey:ProductVariantID"`
+}
+
+type ProductVariantOption struct {
+	ID               uint      `gorm:"primaryKey"`
+	ProductVariantID uuid.UUID `gorm:"type:char(36);not null"`
+	OptionValueID    uint      `gorm:"not null"`
+
+	OptionValue VariantOptionValue `gorm:"foreignKey:OptionValueID"`
 }
 
 type Attribute struct {
-	ID   uint   `gorm:"primaryKey" json:"id"`
-	Name string `gorm:"type:varchar(100);unique;not null" json:"name"`
+	ID   uint   `gorm:"primaryKey"`
+	Name string `gorm:"type:varchar(100);unique;not null"`
 
-	AttributeValue []AttributeValue `gorm:"foreignKey:AttributeID" json:"values"`
+	AttributeValue []AttributeValue `gorm:"foreignKey:AttributeID"`
 }
 
 type AttributeValue struct {
-	ID          uint   `gorm:"primaryKey" json:"id"`
-	AttributeID uint   `gorm:"not null" json:"-"`
-	Value       string `gorm:"type:varchar(100);not null" json:"value"`
+	ID          uint   `gorm:"primaryKey"`
+	AttributeID uint   `gorm:"not null"`
+	Value       string `gorm:"type:varchar(100);not null"`
 }
 
 type ProductAttributeValue struct {
-	ID               uint      `gorm:"primaryKey" json:"id"`
-	ProductID        uuid.UUID `gorm:"type:char(36);not null" json:"productId"`
-	AttributeID      uint      `gorm:"not null" json:"attributeId"`
-	AttributeValueID uint      `gorm:"not null" json:"attributeValueId"`
+	ID               uint      `gorm:"primaryKey"`
+	ProductID        uuid.UUID `gorm:"type:char(36);not null"`
+	AttributeID      uint      `gorm:"not null"`
+	AttributeValueID uint      `gorm:"not null"`
 
-	Attribute      Attribute      `gorm:"foreignKey:AttributeID" json:"attribute"`
-	AttributeValue AttributeValue `gorm:"foreignKey:AttributeValueID" json:"value"`
+	Attribute      Attribute      `gorm:"foreignKey:AttributeID"`
+	AttributeValue AttributeValue `gorm:"foreignKey:AttributeValueID"`
 }
 
-func (p *Category) BeforeCreate(tx *gorm.DB) (err error) {
-	if p.ID == uuid.Nil {
-		p.ID = uuid.New()
+func (m *Category) BeforeCreate(tx *gorm.DB) error {
+	if m.ID == uuid.Nil {
+		m.ID = uuid.New()
 	}
-	return
+	return nil
 }
 
-func (p *Subcategory) BeforeCreate(tx *gorm.DB) (err error) {
-	if p.ID == uuid.Nil {
-		p.ID = uuid.New()
+func (m *Subcategory) BeforeCreate(tx *gorm.DB) error {
+	if m.ID == uuid.Nil {
+		m.ID = uuid.New()
 	}
-	return
+	return nil
 }
 
-func (a *Product) BeforeCreate(tx *gorm.DB) (err error) {
-	if a.ID == uuid.Nil {
-		a.ID = uuid.New()
+func (m *Product) BeforeCreate(tx *gorm.DB) error {
+	if m.ID == uuid.Nil {
+		m.ID = uuid.New()
 	}
-	return
+	return nil
 }
 
-func (p *ProductImage) BeforeCreate(tx *gorm.DB) (err error) {
-	if p.ID == uuid.Nil {
-		p.ID = uuid.New()
+func (m *ProductImage) BeforeCreate(tx *gorm.DB) error {
+	if m.ID == uuid.Nil {
+		m.ID = uuid.New()
 	}
-	return
+	return nil
+}
+
+func (m *ProductVariant) BeforeCreate(tx *gorm.DB) error {
+	if m.ID == uuid.Nil {
+		m.ID = uuid.New()
+	}
+	return nil
 }

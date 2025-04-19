@@ -19,14 +19,20 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProductService_GetProductSnapshot_FullMethodName = "/product.ProductService/GetProductSnapshot"
+	ProductService_GetProductSnapshot_FullMethodName          = "/product.ProductService/GetProductSnapshot"
+	ProductService_GetMultipleProductSnapshots_FullMethodName = "/product.ProductService/GetMultipleProductSnapshots"
+	ProductService_CheckProductAvailability_FullMethodName    = "/product.ProductService/CheckProductAvailability"
 )
 
 // ProductServiceClient is the client API for ProductService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+//
+// === SERVICE ===
 type ProductServiceClient interface {
 	GetProductSnapshot(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*ProductSnapshotResponse, error)
+	GetMultipleProductSnapshots(ctx context.Context, in *GetMultipleProductRequest, opts ...grpc.CallOption) (*MultipleProductSnapshotResponse, error)
+	CheckProductAvailability(ctx context.Context, in *CheckAvailabilityRequest, opts ...grpc.CallOption) (*CheckAvailabilityResponse, error)
 }
 
 type productServiceClient struct {
@@ -47,11 +53,35 @@ func (c *productServiceClient) GetProductSnapshot(ctx context.Context, in *GetPr
 	return out, nil
 }
 
+func (c *productServiceClient) GetMultipleProductSnapshots(ctx context.Context, in *GetMultipleProductRequest, opts ...grpc.CallOption) (*MultipleProductSnapshotResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MultipleProductSnapshotResponse)
+	err := c.cc.Invoke(ctx, ProductService_GetMultipleProductSnapshots_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productServiceClient) CheckProductAvailability(ctx context.Context, in *CheckAvailabilityRequest, opts ...grpc.CallOption) (*CheckAvailabilityResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckAvailabilityResponse)
+	err := c.cc.Invoke(ctx, ProductService_CheckProductAvailability_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductServiceServer is the server API for ProductService service.
 // All implementations must embed UnimplementedProductServiceServer
 // for forward compatibility.
+//
+// === SERVICE ===
 type ProductServiceServer interface {
 	GetProductSnapshot(context.Context, *GetProductRequest) (*ProductSnapshotResponse, error)
+	GetMultipleProductSnapshots(context.Context, *GetMultipleProductRequest) (*MultipleProductSnapshotResponse, error)
+	CheckProductAvailability(context.Context, *CheckAvailabilityRequest) (*CheckAvailabilityResponse, error)
 	mustEmbedUnimplementedProductServiceServer()
 }
 
@@ -64,6 +94,12 @@ type UnimplementedProductServiceServer struct{}
 
 func (UnimplementedProductServiceServer) GetProductSnapshot(context.Context, *GetProductRequest) (*ProductSnapshotResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProductSnapshot not implemented")
+}
+func (UnimplementedProductServiceServer) GetMultipleProductSnapshots(context.Context, *GetMultipleProductRequest) (*MultipleProductSnapshotResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMultipleProductSnapshots not implemented")
+}
+func (UnimplementedProductServiceServer) CheckProductAvailability(context.Context, *CheckAvailabilityRequest) (*CheckAvailabilityResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckProductAvailability not implemented")
 }
 func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
 func (UnimplementedProductServiceServer) testEmbeddedByValue()                        {}
@@ -104,6 +140,42 @@ func _ProductService_GetProductSnapshot_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductService_GetMultipleProductSnapshots_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMultipleProductRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).GetMultipleProductSnapshots(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_GetMultipleProductSnapshots_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).GetMultipleProductSnapshots(ctx, req.(*GetMultipleProductRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductService_CheckProductAvailability_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckAvailabilityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).CheckProductAvailability(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_CheckProductAvailability_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).CheckProductAvailability(ctx, req.(*CheckAvailabilityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProductService_ServiceDesc is the grpc.ServiceDesc for ProductService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +186,14 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetProductSnapshot",
 			Handler:    _ProductService_GetProductSnapshot_Handler,
+		},
+		{
+			MethodName: "GetMultipleProductSnapshots",
+			Handler:    _ProductService_GetMultipleProductSnapshots_Handler,
+		},
+		{
+			MethodName: "CheckProductAvailability",
+			Handler:    _ProductService_CheckProductAvailability_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -29,15 +29,10 @@ func main() {
 
 	db := config.DB
 
-	//  size
-	sizeRepo := repositories.NewSizeRepository(db)
-	sizeService := services.NewSizeService(sizeRepo)
-	sizeHandler := handlers.NewSizeHandler(sizeService)
-
-	// color
-	colorRepo := repositories.NewColorRepository(db)
-	colorService := services.NewColorService(colorRepo)
-	colorHandler := handlers.NewColorHandler(colorService)
+	// variant
+	variantRepo := repositories.NewVariantRepository(db)
+	variantService := services.NewVariantService(variantRepo)
+	variantHandler := handlers.NewVariantHandler(variantService)
 
 	// product
 	productRepo := repositories.NewProductRepository(db)
@@ -45,47 +40,24 @@ func main() {
 	productHandler := handlers.NewProductHandler(productService)
 
 	// Category
-	categoryRepo := repositories.NewCategoryRepository(db)
+
+	categoryRepo := repositories.NewUnifiedCategoryRepository(db)
 	categoryService := services.NewCategoryService(categoryRepo)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 
-	// subcategory
-	subcategoryRepo := repositories.NewSubcategoryRepository(db)
-	subcategoryService := services.NewSubcategoryService(subcategoryRepo)
-	subcategoryHandler := handlers.NewSubcategoryHandler(subcategoryService)
-
-	// varianta
-	variantRepo := repositories.NewVariantRepository(db)
-	variantService := services.NewVariantService(variantRepo)
-	variantHandler := handlers.NewVariantHandler(variantService)
-
-	// attribute
-	attrRepo := repositories.NewAttributeRepository(db)
-	valRepo := repositories.NewAttributeValueRepository(db)
-	attrService := services.NewAttributeService(attrRepo, valRepo)
-	attrHandler := handlers.NewAttributeHandler(attrService)
-
-	pavRepo := repositories.NewProductAttributeValueRepository(db)
-	pavService := services.NewProductAttributeValueService(pavRepo)
-	pavHandler := handlers.NewProductAttributeValueHandler(pavService)
+	attributeRepo := repositories.NewAttributeRepository(db)
+	attributeService := services.NewAttributeService(attributeRepo)
+	attributeHandler := handlers.NewAttributeHandler(attributeService)
 
 	r := gin.Default()
 	r.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
 
-	routes.SizeRoutes(r, sizeHandler)
-	routes.ColorRoutes(r, colorHandler)
-	routes.AttributeRoutes(r, attrHandler)
+	routes.VariantRoutes(r, variantHandler)
 	routes.ProductRoutes(r, productHandler)
 	routes.CategoryRoutes(r, categoryHandler)
-	routes.SubcategoryRoutes(r, subcategoryHandler)
-	routes.ProductVariantRoutes(r, variantHandler)
-	routes.ProductAttributeValueRoutes(r, pavHandler)
+	routes.AttributeRoutes(r, attributeHandler)
 
-	seeders.SeedProductData(db)
-	seeders.SeedProductOptions(db)
-	seeders.SeedVariantsAndAttributes(db)
-	seeders.SeedAdditionalProducts(db)
-	seeders.SeedAdditionalVariants(db)
+	seeders.SeedInitialData(db)
 
 	go func() {
 		lis, err := net.Listen("tcp", ":50051")

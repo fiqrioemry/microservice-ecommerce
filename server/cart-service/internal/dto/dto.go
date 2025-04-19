@@ -28,4 +28,5 @@ type ProductSnapshot struct {
 	Name     string  `json:"name"`
 	ImageURL string  `json:"imageUrl"`
 	Price    float64 `json:"price"`
+	Stock    int     `json:"stock"`
 }

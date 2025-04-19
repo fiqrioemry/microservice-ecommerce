@@ -46,9 +46,16 @@ func (r *cartRepository) FindItemByCartProductVariant(
 	cartID, productID uuid.UUID, variantID *uuid.UUID,
 ) (*models.CartItem, error) {
 	var item models.CartItem
-	err := r.db.
-		Where("cart_id = ? AND product_id = ? AND variant_id IS NOT DISTINCT FROM ?", cartID, productID, variantID).
-		First(&item).Error
+	query := r.db.Where("cart_id = ? AND product_id = ?", cartID, productID)
+
+	if variantID != nil {
+		query = query.Where("variant_id = ?", *variantID)
+	} else {
+		query = query.Where("variant_id IS NULL")
+	}
+
+	err := query.First(&item).Error
+
 	if err != nil {
 		return nil, err
 	}

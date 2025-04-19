@@ -17,7 +17,43 @@ func NewProductGRPCServer(repo repositories.ProductRepository) *ProductGRPCServe
 	return &ProductGRPCServer{Repo: repo}
 }
 
-func (s *ProductGRPCServer) GetProductSnapshot(ctx context.Context, req *productpb.GetProductRequest) (*productpb.ProductSnapshotResponse, error) {
+func (s *ProductGRPCServer) GetMultipleProductSnapshots(ctx context.Context, req *productpb.GetMultipleProductRequest) (*productpb.MultipleProductSnapshotResponse, error) {
+	var snapshots []*productpb.ProductSnapshot
+	for _, idStr := range req.GetProductIds() {
+		id, err := uuid.Parse(idStr)
+		if err != nil {
+			continue
+		}
+		product, err := s.Repo.FindByID(id)
+		if err != nil {
+			continue
+		}
+
+		price := 0.0
+		stock := int32(0)
+		imageURL := ""
+		if len(product.ProductVariant) > 0 {
+			price = product.ProductVariant[0].Price
+			stock = int32(product.ProductVariant[0].Stock)
+			imageURL = product.ProductVariant[0].ImageURL
+		} else if len(product.ProductImage) > 0 {
+			imageURL = product.ProductImage[0].URL
+		}
+
+		snapshots = append(snapshots, &productpb.ProductSnapshot{
+			Id:       product.ID.String(),
+			Name:     product.Name,
+			ImageUrl: imageURL,
+			Price:    price,
+			Stock:    stock,
+		})
+	}
+	return &productpb.MultipleProductSnapshotResponse{
+		Products: snapshots,
+	}, nil
+}
+
+func (s *ProductGRPCServer) CheckProductAvailability(ctx context.Context, req *productpb.CheckAvailabilityRequest) (*productpb.CheckAvailabilityResponse, error) {
 	productID, err := uuid.Parse(req.GetProductId())
 	if err != nil {
 		return nil, err
@@ -28,51 +64,17 @@ func (s *ProductGRPCServer) GetProductSnapshot(ctx context.Context, req *product
 		return nil, err
 	}
 
-	imageURL := ""
-	if len(product.ProductImage) > 0 {
-		imageURL = product.ProductImage[0].URL
+	// Cek apakah setidaknya satu variant punya stock > 0
+	inStock := false
+	for _, variant := range product.ProductVariant {
+		if variant.Stock > 0 {
+			inStock = true
+			break
+		}
 	}
 
-	return &productpb.ProductSnapshotResponse{
-		Name:     product.Name,
-		ImageUrl: imageURL,
-		Price:    product.Price,
+	return &productpb.CheckAvailabilityResponse{
+		IsActive: product.IsActive,
+		InStock:  inStock,
 	}, nil
 }
-
-// func (s *ProductGRPCServer) GetProductSnapshot(ctx context.Context, req *productpb.GetProductRequest) (*productpb.ProductSnapshotResponse, error) {
-// 	productID, err := uuid.Parse(req.GetProductId())
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	product, err := s.Repo.FindByID(productID)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	// Default: pakai harga global
-// 	price := product.Price
-
-// 	// Cek jika variantId diberikan
-// 	if req.VariantId != "" {
-// 		variantID, err := uuid.Parse(req.VariantId)
-// 		if err == nil {
-// 			variant, err := s.Repo.FindVariantByID(variantID)
-// 			if err == nil && variant.IsActive {
-// 				price = variant.Price // override harga dari variant
-// 			}
-// 		}
-// 	}
-
-// 	imageURL := ""
-// 	if len(product.ProductImage) > 0 {
-// 		imageURL = product.ProductImage[0].URL
-// 	}
-
-// 	return &productpb.ProductSnapshotResponse{
-// 		Name:     product.Name,
-// 		ImageUrl: imageURL,
-// 		Price:    price,
-// 	}, nil
-// }

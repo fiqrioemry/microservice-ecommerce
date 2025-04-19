@@ -42,14 +42,16 @@ func InitDatabase() {
 		&models.Subcategory{},
 		&models.Product{},
 		&models.ProductImage{},
-		&models.Color{},
-		&models.Size{},
 		&models.ProductVariant{},
+		&models.ProductVariantOption{},
+		&models.VariantOptionType{},
+		&models.VariantOptionValue{},
+		&models.CategoryVariantType{},
+		&models.SubcategoryVariantType{},
 		&models.Attribute{},
 		&models.AttributeValue{},
 		&models.ProductAttributeValue{},
 	)
-
 	if err != nil {
 		panic("Migration failed: " + err.Error())
 	}

@@ -14,9 +14,20 @@ type ProductRepository interface {
 	Create(product *models.Product) error
 	Update(product *models.Product) error
 	Delete(id uuid.UUID) error
+
+	// Images
 	SaveImages(images []models.ProductImage) error
 	DeleteImagesByProductID(productID uuid.UUID) error
 	FindImagesByProductID(productID uuid.UUID) ([]models.ProductImage, error)
+
+	// Variants
+	CreateVariant(variant *models.ProductVariant) error
+	CreateVariantOption(option *models.ProductVariantOption) error
+	FindVariantOptionValue(typeName string, value string) (*models.VariantOptionValue, error)
+
+	// Attributes
+	CreateProductAttributeValue(pav *models.ProductAttributeValue) error
+	FindVariantsByProductID(productID uuid.UUID) ([]models.ProductVariant, error)
 }
 
 type productRepo struct {
@@ -77,4 +88,30 @@ func (r *productRepo) FindImagesByProductID(productID uuid.UUID) ([]models.Produ
 	var images []models.ProductImage
 	err := r.db.Where("product_id = ?", productID).Find(&images).Error
 	return images, err
+}
+
+func (r *productRepo) CreateVariant(variant *models.ProductVariant) error {
+	return r.db.Create(variant).Error
+}
+
+func (r *productRepo) CreateVariantOption(option *models.ProductVariantOption) error {
+	return r.db.Create(option).Error
+}
+
+func (r *productRepo) FindVariantOptionValue(typeName string, value string) (*models.VariantOptionValue, error) {
+	var result models.VariantOptionValue
+	err := r.db.Joins("JOIN variant_option_types ON variant_option_types.id = variant_option_values.type_id").
+		Where("variant_option_types.name = ? AND variant_option_values.value = ?", typeName, value).
+		First(&result).Error
+	return &result, err
+}
+
+func (r *productRepo) CreateProductAttributeValue(pav *models.ProductAttributeValue) error {
+	return r.db.Create(pav).Error
+}
+
+func (r *productRepo) FindVariantsByProductID(productID uuid.UUID) ([]models.ProductVariant, error) {
+	var variants []models.ProductVariant
+	err := r.db.Where("product_id = ?", productID).Find(&variants).Error
+	return variants, err
 }

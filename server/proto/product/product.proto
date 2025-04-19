@@ -2,19 +2,49 @@ syntax = "proto3";
 
 package product;
 
-option go_package = "github.com/fiqrioemry/microservice-ecommerce/proto/product;productpb";
+option go_package = "proto/product";
 
-service ProductService {
-  rpc GetProductSnapshot(GetProductRequest) returns (ProductSnapshotResponse);
-}
-
+// === REQUEST ===
 message GetProductRequest {
   string product_id = 1;
-  string variant_id = 2;
 }
 
+message GetMultipleProductRequest {
+  repeated string product_ids = 1;
+}
+
+message CheckAvailabilityRequest {
+  string product_id = 1;
+}
+
+// === RESPONSE ===
 message ProductSnapshotResponse {
   string name = 1;
   string image_url = 2;
   double price = 3;
+  int32 stock = 4;
+}
+
+message MultipleProductSnapshotResponse {
+  repeated ProductSnapshot products = 1;
+}
+
+message ProductSnapshot {
+  string id = 1;
+  string name = 2;
+  string image_url = 3;
+  double price = 4;
+  int32 stock = 5;
+}
+
+message CheckAvailabilityResponse {
+  bool is_active = 1;
+  bool in_stock = 2;
+}
+
+// === SERVICE ===
+service ProductService {
+  rpc GetProductSnapshot(GetProductRequest) returns (ProductSnapshotResponse);
+  rpc GetMultipleProductSnapshots(GetMultipleProductRequest) returns (MultipleProductSnapshotResponse);
+  rpc CheckProductAvailability(CheckAvailabilityRequest) returns (CheckAvailabilityResponse);
 }

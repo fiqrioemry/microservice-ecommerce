@@ -1,58 +1,73 @@
 package services
 
 import (
+	"errors"
+
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/dto"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/models"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/repositories"
-	"github.com/google/uuid"
 )
 
-type ProductVariantService interface {
-	GetByProduct(productId string) ([]models.ProductVariant, error)
-	Create(req dto.CreateProductVariantRequest) error
-	Update(id string, req dto.UpdateProductVariantRequest) error
-	Delete(id string) error
+type VariantService interface {
+	GetAllTypes() ([]models.VariantOptionType, error)
+	CreateType(req dto.VariantTypeRequest) error
+	UpdateType(id uint, req dto.VariantTypeRequest) error
+	DeleteType(id uint) error
+
+	AddValue(req dto.VariantValueRequest) error
+	UpdateValue(id uint, value string) error
+	DeleteValue(id uint) error
+
+	MapToCategory(req dto.CategoryVariantTypeRequest) error
+	MapToSubcategory(req dto.SubcategoryVariantTypeRequest) error
 }
 
 type variantService struct {
-	repo repositories.ProductVariantRepository
+	repo repositories.VariantRepository
 }
 
-func NewVariantService(r repositories.ProductVariantRepository) ProductVariantService {
-	return &variantService{r}
+func NewVariantService(repo repositories.VariantRepository) VariantService {
+	return &variantService{repo: repo}
 }
 
-func (s *variantService) GetByProduct(productId string) ([]models.ProductVariant, error) {
-	return s.repo.GetByProduct(productId)
+func (s *variantService) GetAllTypes() ([]models.VariantOptionType, error) {
+	return s.repo.GetAllTypesWithValues()
 }
 
-func (s *variantService) Create(req dto.CreateProductVariantRequest) error {
-	data := models.ProductVariant{
-		ID:        uuid.New(),
-		ProductID: uuid.MustParse(req.ProductID),
-		ColorID:   req.ColorID,
-		SizeID:    req.SizeID,
-		SKU:       req.SKU,
-		Price:     req.Price,
-		Stock:     req.Stock,
-		IsActive:  req.IsActive,
+func (s *variantService) CreateType(req dto.VariantTypeRequest) error {
+	return s.repo.CreateType(&models.VariantOptionType{Name: req.Name})
+}
+
+func (s *variantService) UpdateType(id uint, req dto.VariantTypeRequest) error {
+	return s.repo.UpdateType(&models.VariantOptionType{ID: id, Name: req.Name})
+}
+
+func (s *variantService) DeleteType(id uint) error {
+	return s.repo.DeleteType(id)
+}
+
+func (s *variantService) AddValue(req dto.VariantValueRequest) error {
+	if s.repo.IsValueExist(req.TypeID, req.Value) {
+		return errors.New("value already exists")
 	}
-	return s.repo.Create(&data)
+	return s.repo.CreateValue(&models.VariantOptionValue{
+		TypeID: req.TypeID,
+		Value:  req.Value,
+	})
 }
 
-func (s *variantService) Update(id string, req dto.UpdateProductVariantRequest) error {
-	data, err := s.repo.FindByID(id)
-	if err != nil {
-		return err
-	}
-	data.ColorID = req.ColorID
-	data.SizeID = req.SizeID
-	data.Price = req.Price
-	data.Stock = req.Stock
-	data.IsActive = req.IsActive
-	return s.repo.Update(data)
+func (s *variantService) UpdateValue(id uint, value string) error {
+	return s.repo.UpdateValue(&models.VariantOptionValue{ID: id, Value: value})
 }
 
-func (s *variantService) Delete(id string) error {
-	return s.repo.Delete(id)
+func (s *variantService) DeleteValue(id uint) error {
+	return s.repo.DeleteValue(id)
+}
+
+func (s *variantService) MapToCategory(req dto.CategoryVariantTypeRequest) error {
+	return s.repo.MapToCategory(req.CategoryID, req.VariantTypeID)
+}
+
+func (s *variantService) MapToSubcategory(req dto.SubcategoryVariantTypeRequest) error {
+	return s.repo.MapToSubcategory(req.SubcategoryID, req.VariantTypeID)
 }
