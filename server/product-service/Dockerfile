@@ -1,20 +1,3 @@
-# FROM golang:1.23.4-alpine
-
-# RUN apk add --no-cache git
-
-# WORKDIR /app
-
-# COPY . .
-
-# WORKDIR /app/server/product-service
-
-# RUN go mod tidy
-
-# RUN go build -o main ./cmd/main.go
-
-# CMD ["./main"]
-
-
 FROM golang:1.23.8-alpine
 
 RUN apk add --no-cache git
