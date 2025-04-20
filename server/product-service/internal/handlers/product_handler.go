@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"path/filepath"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/dto"
@@ -26,7 +27,6 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		return
 	}
 
-	// === Upload product images ===
 	productImages := form.File["images"]
 	if len(productImages) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "At least 1 product image is required"})
@@ -52,7 +52,6 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		}
 	}
 
-	// === Upload variant images (optional) ===
 	variantImages := form.File["variantImages"]
 	uploadedVariantImages := make([]string, len(variantImages))
 	for i, fileHeader := range variantImages {
@@ -70,7 +69,6 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 		}
 	}
 
-	// === Parse product JSON data ===
 	data := c.PostForm("data")
 	var req dto.CreateFullProductRequest
 	if err := json.Unmarshal([]byte(data), &req); err != nil {
@@ -248,4 +246,48 @@ func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Product deleted successfully"})
+}
+
+func (h *ProductHandler) UploadLocalImage(c *gin.Context) {
+	fileHeader, err := c.FormFile("image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Image file is required"})
+		return
+	}
+	if err := utils.ValidateImageFile(fileHeader); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	file, err := fileHeader.Open()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to open file"})
+		return
+	}
+	defer file.Close()
+
+	path, err := utils.UploadToLocal(file, fileHeader)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to save file"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"localPath": path})
+}
+
+func (h *ProductHandler) DownloadImage(c *gin.Context) {
+	idParam := c.Param("id")
+	id, err := uuid.Parse(idParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid product ID"})
+		return
+	}
+
+	product, err := h.Service.GetProductByID(id)
+	if err != nil || len(product.ProductImage) == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Image not found"})
+		return
+	}
+
+	firstImgPath := product.ProductImage[0].URL
+	c.FileAttachment(firstImgPath, filepath.Base(firstImgPath))
 }

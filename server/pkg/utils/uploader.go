@@ -3,11 +3,14 @@ package utils
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"mime/multipart"
 	"os"
+	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
 
@@ -95,4 +98,33 @@ func isAllowedImageType(fileType string) bool {
 		}
 	}
 	return false
+}
+
+func UploadToLocal(file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
+	uploadPath := "./uploads/"
+	err := os.MkdirAll(uploadPath, os.ModePerm)
+	if err != nil {
+		return "", err
+	}
+
+	filename := fmt.Sprintf("%d_%s", time.Now().UnixNano(), fileHeader.Filename)
+	filePath := filepath.Join(uploadPath, filename)
+
+	out, err := os.Create(filePath)
+	if err != nil {
+		return "", err
+	}
+	defer out.Close()
+
+	_, err = file.Seek(0, 0)
+	if err != nil {
+		return "", err
+	}
+
+	_, err = out.ReadFrom(file)
+	if err != nil {
+		return "", err
+	}
+
+	return filePath, nil
 }

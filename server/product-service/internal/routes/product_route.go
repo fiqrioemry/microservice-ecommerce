@@ -16,6 +16,8 @@ func ProductRoutes(r *gin.Engine, h *handlers.ProductHandler) {
 	admin.POST("", h.CreateProduct)
 	admin.PUT("/:id", h.UpdateProduct)
 	admin.DELETE("/:id", h.DeleteProduct)
+	admin.POST("/upload-local", h.UploadLocalImage)
+	admin.GET("/:id/download", h.DownloadImage)
 
 	//  Public routes
 	product.GET("", h.GetAllProducts)

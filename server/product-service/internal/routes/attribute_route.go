@@ -12,7 +12,7 @@ func AttributeRoutes(r *gin.Engine, h *handlers.AttributeHandler) {
 	// Public route
 	route.GET("", h.GetAll)
 
-	// Admin-only routes
+	// Admin route
 	admin := route.Use(middleware.AuthRequired(), middleware.AdminOnly())
 	admin.POST("", h.Create)
 	admin.PUT("/:id", h.Update)

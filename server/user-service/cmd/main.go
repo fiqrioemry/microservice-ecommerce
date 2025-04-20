@@ -18,6 +18,8 @@ import (
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/services"
 )
 
+// TODO : Ganti session-based authentication ke JWT dan tambahkan oAuth2.0
+
 func main() {
 	utils.LoadEnv()
 	config.InitDatabase()
@@ -27,25 +29,26 @@ func main() {
 
 	db := config.DB
 
-	// service & handler dependency
+	// auth
 	userRepo := repositories.NewUserRepository(db)
 	authService := services.NewAuthService(userRepo)
 	authHandler := handlers.NewAuthHandler(authService)
 
+	// profile
 	profileService := services.NewProfileService(userRepo)
 	profileHandler := handlers.NewProfileHandler(profileService)
 
+	// address
 	addressRepo := repositories.NewAddressRepository(db)
 	addressService := services.NewAddressService(addressRepo)
 	addressHandler := handlers.NewAddressHandler(addressService)
 
-	// router initiate
 	r := gin.Default()
+	// TODO : Tambahkan pengaturan untuk connection pooling di database
 	r.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
 
 	// Routing dependency injection
 	routes.AuthRoutes(r, authHandler)
-	routes.AdminRoutes(r, authHandler)
 	routes.UserRoutes(r, profileHandler, addressHandler)
 
 	seeders.SeedUsers(db)

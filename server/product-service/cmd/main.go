@@ -40,11 +40,11 @@ func main() {
 	productHandler := handlers.NewProductHandler(productService)
 
 	// Category
-
 	categoryRepo := repositories.NewUnifiedCategoryRepository(db)
 	categoryService := services.NewCategoryService(categoryRepo)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 
+	// attribute
 	attributeRepo := repositories.NewAttributeRepository(db)
 	attributeService := services.NewAttributeService(attributeRepo)
 	attributeHandler := handlers.NewAttributeHandler(attributeService)

@@ -14,8 +14,9 @@ type ProductServiceInterface interface {
 	Delete(id uuid.UUID) error
 	GetAll() ([]models.Product, error)
 	GetBySlug(slug string) (*models.Product, error)
-	UpdateWithImages(id uuid.UUID, req dto.UpdateProductRequest, imageURLs []string) error
+	GetProductByID(id uuid.UUID) (*models.Product, error)
 	CreateFullProduct(req dto.CreateFullProductRequest, imageURLs []string) error
+	UpdateWithImages(id uuid.UUID, req dto.UpdateProductRequest, imageURLs []string) error
 }
 
 type ProductService struct {
@@ -44,7 +45,6 @@ func (s *ProductService) CreateFullProduct(req dto.CreateFullProductRequest, ima
 		return err
 	}
 
-	// === Save Product Images ===
 	var images []models.ProductImage
 	for i, url := range imageURLs {
 		images = append(images, models.ProductImage{
@@ -57,7 +57,6 @@ func (s *ProductService) CreateFullProduct(req dto.CreateFullProductRequest, ima
 		return err
 	}
 
-	// === Save Product Variants ===
 	for _, v := range req.Variants {
 		variant := models.ProductVariant{
 			ID:        uuid.New(),
@@ -72,7 +71,6 @@ func (s *ProductService) CreateFullProduct(req dto.CreateFullProductRequest, ima
 			return err
 		}
 
-		// === Save Variant Options ===
 		for typeName, value := range v.Options {
 			optionValue, err := s.Repo.FindVariantOptionValue(typeName, value)
 			if err != nil {
@@ -88,7 +86,6 @@ func (s *ProductService) CreateFullProduct(req dto.CreateFullProductRequest, ima
 		}
 	}
 
-	// === Save Product Attributes ===
 	for _, attr := range req.Attributes {
 		pav := models.ProductAttributeValue{
 			ProductID:        product.ID,
@@ -176,4 +173,8 @@ func (s *ProductService) Delete(id uuid.UUID) error {
 	}
 
 	return s.Repo.Delete(id)
+}
+
+func (s *ProductService) GetProductByID(id uuid.UUID) (*models.Product, error) {
+	return s.Repo.FindByID(id)
 }

@@ -27,7 +27,7 @@ func main() {
 
 	grpcAddr := os.Getenv("PRODUCT_GRPC_ADDR")
 
-	// Init GRPC client
+	// GRPC client - buat komponen client untuk memanggil service lain (antara cart - product)
 	productGRPCClient, err := grpc.NewProductGRPCClient(grpcAddr)
 	if err != nil {
 		log.Fatalf("Failed to connect to product-service gRPC: %v", err)

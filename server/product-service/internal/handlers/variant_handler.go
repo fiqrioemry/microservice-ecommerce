@@ -17,7 +17,6 @@ func NewVariantHandler(service services.VariantService) *VariantHandler {
 	return &VariantHandler{Service: service}
 }
 
-// GET /api/variants
 func (h *VariantHandler) GetAllTypes(c *gin.Context) {
 	types, err := h.Service.GetAllTypes()
 	if err != nil {
@@ -27,7 +26,6 @@ func (h *VariantHandler) GetAllTypes(c *gin.Context) {
 	c.JSON(http.StatusOK, types)
 }
 
-// POST /api/variants
 func (h *VariantHandler) CreateType(c *gin.Context) {
 	var req dto.VariantTypeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -41,7 +39,6 @@ func (h *VariantHandler) CreateType(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Variant type created"})
 }
 
-// PUT /api/variants/:id
 func (h *VariantHandler) UpdateType(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	var req dto.VariantTypeRequest
@@ -56,7 +53,6 @@ func (h *VariantHandler) UpdateType(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Variant type updated"})
 }
 
-// DELETE /api/variants/:id
 func (h *VariantHandler) DeleteType(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	if err := h.Service.DeleteType(uint(id)); err != nil {
@@ -66,7 +62,6 @@ func (h *VariantHandler) DeleteType(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Variant type deleted"})
 }
 
-// POST /api/variants/:id/values
 func (h *VariantHandler) AddValue(c *gin.Context) {
 	var req dto.VariantValueRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -80,7 +75,6 @@ func (h *VariantHandler) AddValue(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Variant value added"})
 }
 
-// PUT /api/variants/values/:valueId
 func (h *VariantHandler) UpdateValue(c *gin.Context) {
 	valueID, _ := strconv.Atoi(c.Param("valueId"))
 	var body struct {
@@ -97,7 +91,6 @@ func (h *VariantHandler) UpdateValue(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Variant value updated"})
 }
 
-// DELETE /api/variants/values/:valueId
 func (h *VariantHandler) DeleteValue(c *gin.Context) {
 	valueID, _ := strconv.Atoi(c.Param("valueId"))
 	if err := h.Service.DeleteValue(uint(valueID)); err != nil {
@@ -107,7 +100,6 @@ func (h *VariantHandler) DeleteValue(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Variant value deleted"})
 }
 
-// POST /api/variants/map/category
 func (h *VariantHandler) MapToCategory(c *gin.Context) {
 	var req dto.CategoryVariantTypeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
