@@ -17,10 +17,60 @@ func NewProductGRPCServer(repo repositories.ProductRepository) *ProductGRPCServe
 	return &ProductGRPCServer{Repo: repo}
 }
 
+func (s *ProductGRPCServer) GetProductSnapshot(ctx context.Context, req *productpb.GetProductRequest) (*productpb.ProductSnapshotResponse, error) {
+	variantIDStr := req.GetVariantId()
+
+	if variantIDStr != "" {
+		variantID, err := uuid.Parse(variantIDStr)
+		if err != nil {
+			return nil, err
+		}
+		variant, err := s.Repo.FindVariantByID(variantID)
+		if err != nil {
+			return nil, err
+		}
+		return &productpb.ProductSnapshotResponse{
+			Name:     variant.SKU,
+			ImageUrl: variant.ImageURL,
+			Price:    variant.Price,
+			Stock:    int32(variant.Stock),
+		}, nil
+	}
+
+	// fallback jika tidak ada variant
+	productID, err := uuid.Parse(req.GetProductId())
+	if err != nil {
+		return nil, err
+	}
+	product, err := s.Repo.FindByID(productID)
+	if err != nil {
+		return nil, err
+	}
+
+	price := 0.0
+	stock := 0
+	if len(product.ProductVariant) > 0 {
+		price = product.ProductVariant[0].Price
+		stock = product.ProductVariant[0].Stock
+	}
+
+	imageURL := ""
+	if len(product.ProductImage) > 0 {
+		imageURL = product.ProductImage[0].URL
+	}
+
+	return &productpb.ProductSnapshotResponse{
+		Name:     product.Name,
+		ImageUrl: imageURL,
+		Price:    price,
+		Stock:    int32(stock),
+	}, nil
+}
+
 func (s *ProductGRPCServer) GetMultipleProductSnapshots(ctx context.Context, req *productpb.GetMultipleProductRequest) (*productpb.MultipleProductSnapshotResponse, error) {
 	var snapshots []*productpb.ProductSnapshot
-	for _, idStr := range req.GetProductIds() {
-		id, err := uuid.Parse(idStr)
+	for _, item := range req.GetItems() {
+		id, err := uuid.Parse(item.GetProductId())
 		if err != nil {
 			continue
 		}
@@ -64,7 +114,6 @@ func (s *ProductGRPCServer) CheckProductAvailability(ctx context.Context, req *p
 		return nil, err
 	}
 
-	// Cek apakah setidaknya satu variant punya stock > 0
 	inStock := false
 	for _, variant := range product.ProductVariant {
 		if variant.Stock > 0 {

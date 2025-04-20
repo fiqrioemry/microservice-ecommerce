@@ -117,10 +117,6 @@ func (h *ProductHandler) GetAllProducts(c *gin.Context) {
 			Description: p.Description,
 			IsFeatured:  p.IsFeatured,
 			IsActive:    p.IsActive,
-			Weight:      p.Weight,
-			Length:      p.Length,
-			Width:       p.Width,
-			Height:      p.Height,
 			Category:    p.Category,
 			Subcategory: p.Subcategory,
 		}

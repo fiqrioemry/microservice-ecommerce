@@ -37,7 +37,7 @@ func (p *ProductGRPCClient) GetProductSnapshot(productID, variantID string) (*pr
 
 	resp, err := p.client.GetProductSnapshot(ctx, &productpb.GetProductRequest{
 		ProductId: productID,
-		// VariantId: variantID,
+		VariantId: variantID,
 	})
 	if err != nil {
 		log.Printf("Error calling GetProductSnapshot: %v", err)
@@ -64,8 +64,15 @@ func (p *ProductGRPCClient) GetMultipleSnapshots(productIDs []string) (*productp
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
+	items := []*productpb.ProductItemInput{}
+	for _, id := range productIDs {
+		items = append(items, &productpb.ProductItemInput{
+			ProductId: id,
+		})
+	}
+
 	resp, err := p.client.GetMultipleProductSnapshots(ctx, &productpb.GetMultipleProductRequest{
-		ProductIds: productIDs,
+		Items: items,
 	})
 	if err != nil {
 		log.Printf("Error calling GetMultipleProductSnapshots: %v", err)

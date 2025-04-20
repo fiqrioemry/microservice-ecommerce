@@ -28,6 +28,7 @@ type ProductRepository interface {
 	// Attributes
 	CreateProductAttributeValue(pav *models.ProductAttributeValue) error
 	FindVariantsByProductID(productID uuid.UUID) ([]models.ProductVariant, error)
+	FindVariantByID(id uuid.UUID) (*models.ProductVariant, error)
 }
 
 type productRepo struct {
@@ -40,7 +41,7 @@ func NewProductRepository(db *gorm.DB) ProductRepository {
 
 func (r *productRepo) FindAll() ([]models.Product, error) {
 	var products []models.Product
-	err := r.db.Preload("Category").Preload("Subcategory").Preload("ProductImage").Find(&products).Error
+	err := r.db.Preload("Category.Subcategory").Preload("ProductImage").Find(&products).Error
 	return products, err
 }
 
@@ -121,4 +122,10 @@ func (r *productRepo) FindVariantsByProductID(productID uuid.UUID) ([]models.Pro
 	var variants []models.ProductVariant
 	err := r.db.Where("product_id = ?", productID).Find(&variants).Error
 	return variants, err
+}
+
+func (r *productRepo) FindVariantByID(id uuid.UUID) (*models.ProductVariant, error) {
+	var variant models.ProductVariant
+	err := r.db.First(&variant, "id = ?", id).Error
+	return &variant, err
 }
