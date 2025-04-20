@@ -8,26 +8,26 @@ import (
 )
 
 type Category struct {
-	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
-	Name      string    `gorm:"type:varchar(100);not null;unique"`
-	Slug      string    `gorm:"type:varchar(100);uniqueIndex"`
-	Image     string    `gorm:"type:varchar(255)"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID        uuid.UUID      `gorm:"type:char(36);primaryKey"`
+	Name      string         `gorm:"type:varchar(100);not null;unique"`
+	Slug      string         `gorm:"type:varchar(100);uniqueIndex"`
+	Image     string         `gorm:"type:varchar(255)"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 
 	Subcategories []Subcategory `gorm:"foreignKey:CategoryID"`
 }
 
 type Subcategory struct {
-	ID         uuid.UUID `gorm:"type:char(36);primaryKey"`
-	Name       string    `gorm:"type:varchar(100);not null"`
-	Slug       string    `gorm:"type:varchar(100);uniqueIndex"`
-	CategoryID uuid.UUID `gorm:"type:char(36);not null"`
-	Image      string    `gorm:"type:varchar(255)"`
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  gorm.DeletedAt `gorm:"index"`
+	ID         uuid.UUID      `gorm:"type:char(36);primaryKey"`
+	Name       string         `gorm:"type:varchar(100);not null"`
+	Slug       string         `gorm:"type:varchar(100);uniqueIndex"`
+	CategoryID uuid.UUID      `gorm:"type:char(36);not null" json:"-"`
+	Image      string         `gorm:"type:varchar(255)"`
+	CreatedAt  time.Time      `json:"-"`
+	UpdatedAt  time.Time      `json:"-"`
+	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 type Product struct {

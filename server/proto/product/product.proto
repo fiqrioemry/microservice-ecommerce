@@ -11,9 +11,15 @@ message GetProductRequest {
 }
 
 
-message GetMultipleProductRequest {
-  repeated string product_ids = 1;
+message ProductItemInput {
+  string product_id = 1;
+  string variant_id = 2;
 }
+
+message GetMultipleProductRequest {
+  repeated ProductItemInput items = 1;
+}
+
 
 message CheckAvailabilityRequest {
   string product_id = 1;

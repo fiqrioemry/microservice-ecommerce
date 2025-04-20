@@ -84,18 +84,18 @@ services:
     ports:
       - "6379:6379"
 
-  # user-service:
-  #   build:
-  #     context: .
-  #     dockerfile: ./user-service/Dockerfile
-  #   container_name: user-service
-  #   env_file:
-  #     - ./user-service/.env
-  #   ports:
-  #     - "5001:5000"
-  #   depends_on:
-  #     - redis
-  #     - db
+  user-service:
+    build:
+      context: .
+      dockerfile: ./user-service/Dockerfile
+    container_name: user-service
+    env_file:
+      - ./user-service/.env
+    ports:
+      - "5001:5000"
+    depends_on:
+      - redis
+      - db
 
   product-service:
     build:
@@ -109,17 +109,17 @@ services:
     depends_on:
       - db
 
-  # cart-service:
-  #   build:
-  #     context: .
-  #     dockerfile: ./cart-service/Dockerfile
-  #   container_name: cart-service
-  #   env_file:
-  #     - ./cart-service/.env
-  #   ports:
-  #     - "5003:5000"
-  #   depends_on:
-  #     - db
+  cart-service:
+    build:
+      context: .
+      dockerfile: ./cart-service/Dockerfile
+    container_name: cart-service
+    env_file:
+      - ./cart-service/.env
+    ports:
+      - "5003:5000"
+    depends_on:
+      - db
 
 volumes:
   mysql-data:

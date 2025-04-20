@@ -8,12 +8,12 @@ import (
 )
 
 type Cart struct {
-	ID        uuid.UUID  `gorm:"type:char(36);primaryKey"`
-	UserID    uuid.UUID  `gorm:"type:char(36);index"`
-	Items     []CartItem `gorm:"foreignKey:CartID"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID        uuid.UUID      `gorm:"type:char(36);primaryKey"`
+	UserID    uuid.UUID      `gorm:"type:char(36);index"`
+	Items     []CartItem     `gorm:"foreignKey:CartID"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 type CartItem struct {
@@ -26,6 +26,6 @@ type CartItem struct {
 	Price       float64    `gorm:"not null"`
 	Quantity    int        `gorm:"default:1"`
 	IsChecked   bool       `gorm:"default:true"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	CreatedAt   time.Time  `json:"-"`
+	UpdatedAt   time.Time  `json:"-"`
 }
