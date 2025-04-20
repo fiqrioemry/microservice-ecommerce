@@ -18,6 +18,7 @@
 # Local development environment files
 .env
 .env.*
+.env*
 !.env.example
 
 # IDE/editor specific
