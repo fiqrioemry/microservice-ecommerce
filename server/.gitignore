@@ -17,7 +17,11 @@
 
 # Local development environment files
 .env
-.env.*\
+.env*
+/product-service/.env
+/user-service/.env
+/cart-service/.env
+.env.*
 !.env.example
 
 # IDE/editor specific

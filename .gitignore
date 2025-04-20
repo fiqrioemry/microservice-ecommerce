@@ -17,6 +17,9 @@
 
 # Local development environment files
 .env
+/server/product-service/.env
+/server/user-service/.env
+/server/cart-service/.env
 .env.*
 .env*
 !.env.example
