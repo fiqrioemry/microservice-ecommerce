@@ -22,7 +22,8 @@ type Order struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Items []OrderItem `gorm:"foreignKey:OrderID"`
+	Items    []OrderItem `gorm:"foreignKey:OrderID"`
+	Shipment Shipment    `gorm:"foreignKey:OrderID"`
 
 	// Snapshot shipping fields
 	CourierName     string `gorm:"type:varchar(255)"`
@@ -51,11 +52,23 @@ type OrderItem struct {
 type Payment struct {
 	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
 	OrderID   uuid.UUID `gorm:"type:char(36);unique;not null"`
-	Method    string    `gorm:"type:varchar(50);not null"` // e.g. midtrans, bank_transfer, cod
-	Status    string    `gorm:"type:varchar(50);not null"` // e.g. pending, success, failed
+	Method    string    `gorm:"type:varchar(50);not null"`
+	Status    string    `gorm:"type:varchar(50);not null"`
 	PaidAt    *time.Time
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+type Shipment struct {
+	ID           uuid.UUID `gorm:"type:char(36);primaryKey"`
+	OrderID      uuid.UUID `gorm:"type:char(36);unique;not null"`
+	TrackingCode string    `gorm:"type:varchar(100)"`
+	Status       string    `gorm:"type:varchar(50);default:'pending'"`
+	ShippedAt    *time.Time
+	DeliveredAt  *time.Time
+	Notes        string `gorm:"type:text"`
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 type Address struct {
@@ -98,6 +111,13 @@ func (a *Payment) BeforeCreate(tx *gorm.DB) (err error) {
 func (p *Order) BeforeCreate(tx *gorm.DB) (err error) {
 	if p.ID == uuid.Nil {
 		p.ID = uuid.New()
+	}
+	return
+}
+
+func (s *Shipment) BeforeCreate(tx *gorm.DB) (err error) {
+	if s.ID == uuid.Nil {
+		s.ID = uuid.New()
 	}
 	return
 }

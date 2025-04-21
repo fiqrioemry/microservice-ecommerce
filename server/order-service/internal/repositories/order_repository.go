@@ -13,6 +13,9 @@ type OrderRepository interface {
 	GetAllUserOrders() ([]models.Order, error)
 	GetUserOrdersByID(userID uuid.UUID) ([]models.Order, error)
 	UpsertPayment(orderID uuid.UUID, status string, method string, paidAt *time.Time) error
+	CreateShipment(shipment *models.Shipment) error
+	GetShipmentByOrderID(orderID uuid.UUID) (*models.Shipment, error)
+	UpdateShipmentStatus(orderID uuid.UUID, update map[string]interface{}) error
 }
 
 type orderRepo struct {
@@ -61,4 +64,18 @@ func (r *orderRepo) UpsertPayment(orderID uuid.UUID, status string, method strin
 	payment.UpdatedAt = time.Now()
 
 	return r.db.Save(&payment).Error
+}
+
+func (r *orderRepo) CreateShipment(shipment *models.Shipment) error {
+	return r.db.Create(shipment).Error
+}
+
+func (r *orderRepo) GetShipmentByOrderID(orderID uuid.UUID) (*models.Shipment, error) {
+	var shipment models.Shipment
+	err := r.db.First(&shipment, "order_id = ?", orderID).Error
+	return &shipment, err
+}
+
+func (r *orderRepo) UpdateShipmentStatus(orderID uuid.UUID, update map[string]interface{}) error {
+	return r.db.Model(&models.Shipment{}).Where("order_id = ?", orderID).Updates(update).Error
 }

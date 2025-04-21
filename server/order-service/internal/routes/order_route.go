@@ -9,10 +9,19 @@ import (
 func OrderRoutes(router *gin.Engine, handler *handlers.OrderHandler) {
 	order := router.Group("/api/orders")
 	order.Use(middleware.AuthRequired())
+
+	// customer
 	order.POST("", handler.Checkout)
+	order.GET("", handler.GetUserOrders)
 	order.POST("/check-shipping", handler.CheckShippingCost)
 
 	// admin
+	shipment := router.Group("/api/shipments")
+	shipment.Use(middleware.AdminOnly())
+	shipment.POST("", handler.CreateShipment)
+	shipment.GET(":orderId", handler.GetShipment)
+	shipment.PUT(":orderId", handler.UpdateShipmentStatus)
+
 	admin := router.Group("/api/admin/orders")
 	admin.Use(middleware.AdminOnly())
 	admin.GET("", handler.GetAllOrders)

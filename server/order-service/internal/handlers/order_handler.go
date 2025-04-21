@@ -121,3 +121,51 @@ func (h *OrderHandler) CheckShippingCost(c *gin.Context) {
 		"shipping_cost": cost,
 	})
 }
+func (h *OrderHandler) CreateShipment(c *gin.Context) {
+	var req dto.CreateShipmentRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	shipment, err := h.Service.CreateShipment(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, shipment)
+}
+
+func (h *OrderHandler) GetShipment(c *gin.Context) {
+	orderID, err := uuid.Parse(c.Param("orderId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order ID"})
+		return
+	}
+	shipment, err := h.Service.GetShipmentByOrderID(orderID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Shipment not found"})
+		return
+	}
+	c.JSON(http.StatusOK, shipment)
+}
+
+func (h *OrderHandler) UpdateShipmentStatus(c *gin.Context) {
+	orderID, err := uuid.Parse(c.Param("orderId"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order ID"})
+		return
+	}
+
+	var req dto.UpdateShipmentStatusRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	if err := h.Service.UpdateShipmentStatus(orderID, req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Shipment updated"})
+}

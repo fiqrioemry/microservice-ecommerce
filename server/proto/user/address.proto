@@ -5,11 +5,16 @@ package user;
 option go_package = "proto/user";
 
 service UserService {
-  rpc GetAddressByID(AddressRequest) returns (AddressResponse);
+ rpc GetMainAddress(GetMainAddressRequest) returns (AddressResponse);
+
 }
 
 message AddressRequest {
   string address_id = 1;
+}
+
+message GetMainAddressRequest {
+  string userId = 1;
 }
 
 message AddressResponse {

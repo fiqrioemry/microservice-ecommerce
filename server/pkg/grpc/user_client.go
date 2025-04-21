@@ -25,9 +25,9 @@ func NewUserGRPCClient(address string) (*UserGRPCClient, error) {
 	return &UserGRPCClient{client: userpb.NewUserServiceClient(conn)}, nil
 }
 
-func (u *UserGRPCClient) GetAddressByID(addressID string) (*userpb.AddressResponse, error) {
+func (u *UserGRPCClient) GetMainAddress(userID string) (*userpb.AddressResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	return u.client.GetAddressByID(ctx, &userpb.AddressRequest{AddressId: addressID})
+	return u.client.GetMainAddress(ctx, &userpb.GetMainAddressRequest{UserId: userID})
 }
