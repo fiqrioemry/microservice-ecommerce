@@ -10,19 +10,29 @@ import (
 	"os"
 )
 
+type ShippingOption struct {
+	Service     string  `json:"service"`
+	Description string  `json:"description"`
+	Cost        float64 `json:"cost"`
+	ETD         string  `json:"etd"`
+}
+
 type RajaOngkirCostResponse struct {
 	RajaOngkir struct {
 		Results []struct {
 			Costs []struct {
-				Cost []struct {
-					Value int `json:"value"`
+				Service     string `json:"service"`
+				Description string `json:"description"`
+				Cost        []struct {
+					Value int    `json:"value"`
+					ETD   string `json:"etd"`
 				} `json:"cost"`
 			} `json:"costs"`
 		} `json:"results"`
 	} `json:"rajaongkir"`
 }
 
-func FetchShippingCost(originID, destinationID, weight int, courier string) (float64, error) {
+func FetchShippingCost(originID, destinationID, weight int, courier string) ([]ShippingOption, error) {
 	apiKey := os.Getenv("RAJAONGKIR_API_KEY")
 
 	payload := map[string]string{
@@ -38,7 +48,7 @@ func FetchShippingCost(originID, destinationID, weight int, courier string) (flo
 
 	req, err := http.NewRequest("POST", "https://api.rajaongkir.com/starter/cost", bytes.NewBufferString(data))
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	req.Header.Set("key", apiKey)
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -46,7 +56,7 @@ func FetchShippingCost(originID, destinationID, weight int, courier string) (flo
 	client := http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
@@ -54,12 +64,24 @@ func FetchShippingCost(originID, destinationID, weight int, courier string) (flo
 
 	var response RajaOngkirCostResponse
 	if err := json.Unmarshal(body, &response); err != nil {
-		return 0, err
+		return nil, err
 	}
 
 	if len(response.RajaOngkir.Results) == 0 || len(response.RajaOngkir.Results[0].Costs) == 0 {
-		return 0, errors.New("no shipping cost returned")
+		return nil, errors.New("no shipping cost returned")
 	}
 
-	return float64(response.RajaOngkir.Results[0].Costs[0].Cost[0].Value), nil
+	var options []ShippingOption
+	for _, cost := range response.RajaOngkir.Results[0].Costs {
+		if len(cost.Cost) > 0 {
+			options = append(options, ShippingOption{
+				Service:     cost.Service,
+				Description: cost.Description,
+				Cost:        float64(cost.Cost[0].Value),
+				ETD:         cost.Cost[0].ETD,
+			})
+		}
+	}
+
+	return options, nil
 }
