@@ -28,7 +28,6 @@ services:
       - ./user-service/.env
     ports:
       - "5001:5000"
-      - "50052:50052"
     depends_on:
       - redis
       - db
@@ -42,7 +41,6 @@ services:
       - ./product-service/.env
     ports:
       - "5002:5000"
-      - "50053:50053"
     depends_on:
       - db
 
@@ -55,7 +53,6 @@ services:
       - ./cart-service/.env
     ports:
       - "5003:5000"
-      - "50051:50051" 
     depends_on:
       - db
   order-service:

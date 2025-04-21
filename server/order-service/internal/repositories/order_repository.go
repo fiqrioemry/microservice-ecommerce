@@ -10,7 +10,8 @@ import (
 
 type OrderRepository interface {
 	CreateOrder(order *models.Order) error
-	GetOrderByID(orderID uuid.UUID) (*models.Order, error)
+	GetAllUserOrders() ([]models.Order, error)
+	GetUserOrdersByID(userID uuid.UUID) ([]models.Order, error)
 	UpsertPayment(orderID uuid.UUID, status string, method string, paidAt *time.Time) error
 }
 
@@ -26,10 +27,15 @@ func (r *orderRepo) CreateOrder(order *models.Order) error {
 	return r.db.Create(order).Error
 }
 
-func (r *orderRepo) GetOrderByID(orderID uuid.UUID) (*models.Order, error) {
-	var order models.Order
-	err := r.db.Preload("Items").Preload("Address").First(&order, "id = ?", orderID).Error
-	return &order, err
+func (r *orderRepo) GetAllUserOrders() ([]models.Order, error) {
+	var orders []models.Order
+	err := r.db.Preload("Items").Preload("Address").Find(&orders).Error
+	return orders, err
+}
+func (r *orderRepo) GetUserOrdersByID(userID uuid.UUID) ([]models.Order, error) {
+	var orders []models.Order
+	err := r.db.Preload("Items").Preload("Address").Where("user_id = ?", userID).Find(&orders).Error
+	return orders, err
 }
 
 func (r *orderRepo) UpsertPayment(orderID uuid.UUID, status string, method string, paidAt *time.Time) error {

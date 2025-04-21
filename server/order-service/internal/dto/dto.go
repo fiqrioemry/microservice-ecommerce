@@ -1,7 +1,7 @@
 package dto
 
 type CheckoutRequest struct {
-	AddressID    string  `json:"addressId" binding:"required"`
+	CourierName  string  `json:"courierName" binding:"required"`
 	ShippingCost float64 `json:"shippingCost" binding:"required"`
 	Note         string  `json:"note"`
 }

@@ -8,20 +8,24 @@ import (
 )
 
 type Order struct {
-	ID           uuid.UUID `gorm:"type:char(36);primaryKey"`
-	UserID       uuid.UUID `gorm:"type:char(36);not null;index"`
-	AddressID    uuid.UUID `gorm:"type:char(36);not null"`
-	Status       string    `gorm:"type:varchar(50);default:'pending'"`
-	TotalPrice   float64   `gorm:"type:decimal(10,2);not null"`
-	ShippingCost float64   `gorm:"type:decimal(10,2);default:0"`
-	Note         string    `gorm:"type:text"`
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    gorm.DeletedAt `gorm:"index"`
+	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
+	UserID    uuid.UUID `gorm:"type:char(36);not null;index"`
+	AddressID uuid.UUID `gorm:"type:char(36);not null"`
+	Status    string    `gorm:"type:varchar(50);default:'pending'"`
+
+	TotalPrice   float64 `gorm:"type:decimal(10,2);not null"`
+	ShippingCost float64 `gorm:"type:decimal(10,2);default:0"`
+	AmountToPay  float64 `gorm:"type:decimal(10,2);not null"`
+
+	Note      string `gorm:"type:text"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 
 	Items []OrderItem `gorm:"foreignKey:OrderID"`
 
 	// Snapshot shipping fields
+	CourierName     string `gorm:"type:varchar(255)"`
 	ShippingName    string `gorm:"type:varchar(255)"`
 	ShippingAddress string `gorm:"type:text"`
 	City            string `gorm:"type:varchar(255)"`

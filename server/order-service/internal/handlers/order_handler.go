@@ -18,21 +18,26 @@ func NewOrderHandler(service services.OrderServiceInterface) *OrderHandler {
 	return &OrderHandler{Service: service}
 }
 
-// GET /api/orders/:id
-func (h *OrderHandler) GetOrder(c *gin.Context) {
-	orderID, err := uuid.Parse(c.Param("id"))
+func (h *OrderHandler) GetAllOrders(c *gin.Context) {
+	orders, err := h.Service.GetAllOrders()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid order ID"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	c.JSON(http.StatusOK, orders)
+}
 
-	order, err := h.Service.GetOrderDetail(orderID)
+// GET /api/orders
+func (h *OrderHandler) GetUserOrders(c *gin.Context) {
+	userIDStr := utils.MustGetUserID(c)
+	userID, _ := uuid.Parse(userIDStr)
+
+	orders, err := h.Service.GetUserOrdersByID(userID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "order not found"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	c.JSON(http.StatusOK, order)
+	c.JSON(http.StatusOK, orders)
 }
 
 func (h *OrderHandler) Checkout(c *gin.Context) {
@@ -49,27 +54,15 @@ func (h *OrderHandler) Checkout(c *gin.Context) {
 		return
 	}
 
-	addressID, err := uuid.Parse(req.AddressID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid address ID"})
-		return
-	}
-
 	cart, err := h.Service.GetCart(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to retrieve cart", "error": err.Error()})
 		return
 	}
 
-	order, err := h.Service.CreateOrderFromCart(userID, addressID, cart, req.Note, req.ShippingCost)
+	order, snapURL, err := h.Service.CreateOrderWithMainAddress(userID, cart, req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	snapURL, err := h.Service.GenerateSnapTransaction(order)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create Snap transaction"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 

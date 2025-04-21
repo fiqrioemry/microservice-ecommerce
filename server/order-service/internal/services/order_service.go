@@ -1,26 +1,27 @@
 package services
 
 import (
-	"errors"
 	"time"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/config"
+	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/dto"
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/models"
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/repositories"
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/grpc"
-	productpb "github.com/fiqrioemry/microservice-ecommerce/server/proto/product"
 	"github.com/google/uuid"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/snap"
 )
 
 type OrderServiceInterface interface {
-	GetCart(userID uuid.UUID) (*models.Cart, error)
-	GetOrderDetail(orderID uuid.UUID) (*models.Order, error)
+	GetCart(userID uuid.UUID) (*models.Cart, error) // komunikasi antar service via gRPC
+	GetAllOrders() ([]models.Order, error)
+	GetUserOrdersByID(userID uuid.UUID) ([]models.Order, error)
+	//
 	GenerateSnapTransaction(order *models.Order) (string, error)
 	UpdatePaymentStatus(orderID string, transactionStatus string, paymentType string) error
+	CreateOrderWithMainAddress(userID uuid.UUID, cart *models.Cart, req dto.CheckoutRequest) (*models.Order, string, error)
 	CreateOrder(userID, addressID uuid.UUID, items []models.OrderItem, note string, total float64, shippingCost float64, address models.Address) (*models.Order, error)
-	CreateOrderFromCart(userID, addressID uuid.UUID, cart *models.Cart, note string, shippingCost float64) (*models.Order, error)
 }
 
 type OrderService struct {
@@ -35,106 +36,6 @@ func NewOrderService(repo repositories.OrderRepository, cartClient *grpc.CartGRP
 		Repo: repo, CartGRPC: cartClient, UserGRPC: userClient, ProductGRPC: productClient,
 	}
 }
-
-func (s *OrderService) CreateOrderFromCart(
-	userID, addressID uuid.UUID,
-	cart *models.Cart,
-	note string,
-	shippingCost float64,
-) (*models.Order, error) {
-	var items []models.OrderItem
-	var total float64
-
-	var stockUpdates []*productpb.StockUpdateItem
-
-	for _, item := range cart.Items {
-		if item.IsChecked {
-			items = append(items, models.OrderItem{
-				ProductID:   item.ProductID,
-				VariantID:   item.VariantID,
-				ProductName: item.ProductName,
-				ImageURL:    item.ImageURL,
-				Price:       item.Price,
-				Quantity:    item.Quantity,
-			})
-			total += item.Price * float64(item.Quantity)
-
-			stockUpdates = append(stockUpdates, &productpb.StockUpdateItem{
-				ProductId: item.ProductID.String(),
-				VariantId: func() string {
-					if item.VariantID != nil {
-						return item.VariantID.String()
-					}
-					return ""
-				}(),
-				Quantity: int32(item.Quantity),
-			})
-		}
-	}
-
-	if len(items) == 0 {
-		return nil, errors.New("no items selected for checkout")
-	}
-
-	resp, err := s.UserGRPC.GetAddressByID(addressID.String())
-	if err != nil {
-		return nil, err
-	}
-
-	snapshot := models.Address{
-		Name:     resp.Name,
-		Address:  resp.Address,
-		City:     resp.City,
-		Province: resp.Province,
-		Zipcode:  resp.Zipcode,
-		Phone:    resp.Phone,
-	}
-	if err := s.ProductGRPC.ReduceStock(stockUpdates); err != nil {
-		return nil, err
-	}
-
-	order, err := s.CreateOrder(userID, addressID, items, note, total, shippingCost, snapshot)
-	if err != nil {
-		return nil, err
-	}
-
-	_ = s.CartGRPC.ClearCart(userID.String())
-
-	return order, nil
-
-}
-
-func (s *OrderService) CreateOrder(
-	userID, addressID uuid.UUID,
-	items []models.OrderItem,
-	note string,
-	total float64,
-	shippingCost float64,
-	address models.Address,
-) (*models.Order, error) {
-	order := &models.Order{
-		UserID:          userID,
-		AddressID:       addressID,
-		Status:          "pending",
-		TotalPrice:      total,
-		ShippingCost:    shippingCost,
-		Note:            note,
-		Items:           items,
-		CreatedAt:       time.Now(),
-		UpdatedAt:       time.Now(),
-		ShippingName:    address.Name,
-		ShippingAddress: address.Address,
-		City:            address.City,
-		Province:        address.Province,
-		Zipcode:         address.Zipcode,
-		Phone:           address.Phone,
-	}
-	return order, s.Repo.CreateOrder(order)
-}
-func (s *OrderService) GetOrderDetail(orderID uuid.UUID) (*models.Order, error) {
-	return s.Repo.GetOrderByID(orderID)
-}
-
 func (s *OrderService) GetCart(userID uuid.UUID) (*models.Cart, error) {
 	cartItems, err := s.CartGRPC.GetCart(userID.String())
 	if err != nil {
@@ -161,6 +62,90 @@ func (s *OrderService) GetCart(userID uuid.UUID) (*models.Cart, error) {
 	}
 
 	return &models.Cart{Items: items}, nil
+}
+
+func (s *OrderService) GetAllOrders() ([]models.Order, error) {
+	return s.Repo.GetAllUserOrders()
+}
+
+func (s *OrderService) GetUserOrdersByID(userID uuid.UUID) ([]models.Order, error) {
+	return s.Repo.GetUserOrdersByID(userID)
+}
+
+
+func (s *OrderService) CreateOrderWithMainAddress(userID uuid.UUID, cart *models.Cart, req dto.CheckoutRequest) (*models.Order, string, error) {
+	resp, err := s.UserGRPC.GetMainAddress(userID.String())
+	if err != nil {
+		return nil, "", errors.New("alamat utama tidak ditemukan, harap lengkapi alamat terlebih dahulu")
+	}
+
+	address := models.Address{ // snapshot
+		Name:     resp.Name,
+		Address:  resp.Address,
+		City:     resp.City,
+		Province: resp.Province,
+		Zipcode:  resp.Zipcode,
+		Phone:    resp.Phone,
+	}
+
+	var items []models.OrderItem
+	var total float64
+	var stockUpdates []*productpb.StockUpdateItem
+
+	for _, item := range cart.Items {
+		if item.IsChecked {
+			items = append(items, models.OrderItem{...})
+			total += item.Price * float64(item.Quantity)
+			stockUpdates = append(stockUpdates, &productpb.StockUpdateItem{...})
+		}
+	}
+
+	if len(items) == 0 {
+		return nil, "", errors.New("No Item Selected")
+	}
+	if err := s.ProductGRPC.ReduceStock(stockUpdates); err != nil {
+		return nil, "", err
+	}
+
+	order, err := s.CreateOrder(userID, items, total, req, address)
+	if err != nil {
+		return nil, "", err
+	}
+
+	_ = s.CartGRPC.ClearCart(userID.String())
+
+	snapURL, err := s.GenerateSnapTransaction(order)
+	return order, snapURL, err
+}
+
+
+func (s *OrderService) CreateOrder(
+	userID uuid.UUID,
+	items []models.OrderItem,
+	total float64,
+	req dto.CheckoutRequest,
+	address models.Address,
+) (*models.Order, error) {
+	order := &models.Order{
+		UserID:          userID,
+		AddressID:       uuid.Parse(address.ID),
+		Status:          "pending",
+		TotalPrice:      total,
+		ShippingCost:    Req.shippingCost,
+		AmountToPay : total + Req.shippingCost,
+		Note:            Req.note,
+		Items:           items,
+		CourierName : req.CourierName,
+		ShippingName:    address.Name,
+		ShippingAddress: address.Address,
+		City:            address.City,
+		Province:        address.Province,
+		Zipcode:         address.Zipcode,
+		Phone:           address.Phone,
+		CreatedAt:       time.Now(),
+		UpdatedAt:       time.Now(),
+	}
+	return order, s.Repo.CreateOrder(order)
 }
 
 func (s *OrderService) GenerateSnapTransaction(order *models.Order) (string, error) {

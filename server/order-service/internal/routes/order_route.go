@@ -9,10 +9,13 @@ import (
 func OrderRoutes(router *gin.Engine, handler *handlers.OrderHandler) {
 	order := router.Group("/api/orders")
 	order.Use(middleware.AuthRequired())
-
-	order.GET("/:id", handler.GetOrder)
 	order.POST("", handler.Checkout)
 	order.POST("/check-shipping", handler.CheckShippingCost)
+
+	// admin
+	admin := router.Group("/api/admin/orders")
+	admin.Use(middleware.AdminOnly())
+	admin.GET("", handler.GetAllOrders)
 
 	router.POST("/api/payments/midtrans-notify", handler.HandleMidtransNotification)
 }
