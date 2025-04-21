@@ -3,11 +3,9 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/dto"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/services"
-
-	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,19 +17,7 @@ func NewAddressHandler(service services.AddressServiceInterface) *AddressHandler
 	return &AddressHandler{Service: service}
 }
 
-func (ctrl *AddressHandler) GetAddresses(c *gin.Context) {
-	userID := utils.MustGetUserID(c)
-
-	addresses, err := ctrl.Service.GetAddresses(userID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to get addresses"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"addresses": addresses})
-}
-
-func (ctrl *AddressHandler) AddAddress(c *gin.Context) {
+func (h *AddressHandler) AddAddress(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 
 	var req dto.AddressRequest
@@ -39,15 +25,16 @@ func (ctrl *AddressHandler) AddAddress(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.Service.AddAddress(userID, req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to add address"})
+	err := h.Service.AddAddressWithLocation(userID, req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to add address"})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Address added successfully"})
+	c.JSON(http.StatusCreated, gin.H{"message": "address added successfully"})
 }
 
-func (ctrl *AddressHandler) UpdateAddress(c *gin.Context) {
+func (h *AddressHandler) UpdateAddress(c *gin.Context) {
 	userID := utils.MustGetUserID(c)
 	addressID := c.Param("id")
 
@@ -56,12 +43,25 @@ func (ctrl *AddressHandler) UpdateAddress(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.Service.UpdateAddress(userID, addressID, req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to update address"})
+	err := h.Service.UpdateAddressWithLocation(userID, addressID, req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to update address"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Address updated successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "address updated successfully"})
+}
+
+func (h *AddressHandler) GetAddresses(c *gin.Context) {
+	userID := utils.MustGetUserID(c)
+
+	addresses, err := h.Service.GetAddresses(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to get addresses"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"addresses": addresses})
 }
 
 func (ctrl *AddressHandler) DeleteAddress(c *gin.Context) {
@@ -69,7 +69,7 @@ func (ctrl *AddressHandler) DeleteAddress(c *gin.Context) {
 	addressID := c.Param("id")
 
 	if err := ctrl.Service.DeleteAddress(userID, addressID); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete address"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to delete address", "error": err.Error()})
 		return
 	}
 

@@ -1,6 +1,10 @@
 package repositories
 
 import (
+	"fmt"
+	"strings"
+
+	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/dto"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/models"
 
 	"github.com/google/uuid"
@@ -8,12 +12,15 @@ import (
 )
 
 type ProductRepository interface {
-	FindAll() ([]models.Product, error)
 	FindBySlug(slug string) (*models.Product, error)
 	FindByID(id uuid.UUID) (*models.Product, error)
 	Create(product *models.Product) error
 	Update(product *models.Product) error
 	Delete(id uuid.UUID) error
+
+	// search
+	FindAllWithPreload() ([]models.Product, error)
+	SearchProducts(params dto.SearchParams) ([]models.Product, int64, error)
 
 	// Images
 	SaveImages(images []models.ProductImage) error
@@ -39,9 +46,59 @@ func NewProductRepository(db *gorm.DB) ProductRepository {
 	return &productRepo{db: db}
 }
 
-func (r *productRepo) FindAll() ([]models.Product, error) {
+func (r *productRepo) SearchProducts(params dto.SearchParams) ([]models.Product, int64, error) {
+	query := r.db.Model(&models.Product{}).
+		Preload("Category").
+		Preload("Subcategory").
+		Preload("ProductImage").
+		Preload("ProductVariant")
+
+	if params.Query != "" {
+		query = query.Where("products.name LIKE ?", "%"+params.Query+"%")
+	}
+	if params.Category != "" {
+		query = query.Joins("JOIN categories ON categories.id = products.category_id").
+			Where("categories.slug = ?", params.Category)
+	}
+	if params.Subcategory != "" {
+		query = query.Joins("JOIN subcategories ON subcategories.id = products.subcategory_id").
+			Where("subcategories.slug = ?", params.Subcategory)
+	}
+	if params.InStock {
+		query = query.Joins("JOIN product_variants ON product_variants.product_id = products.id").
+			Where("product_variants.stock > 0")
+	}
+	if params.MinPrice > 0 {
+		query = query.Joins("JOIN product_variants pv1 ON pv1.product_id = products.id").
+			Where("pv1.price >= ?", params.MinPrice)
+	}
+	if params.MaxPrice > 0 {
+		query = query.Joins("JOIN product_variants pv2 ON pv2.product_id = products.id").
+			Where("pv2.price <= ?", params.MaxPrice)
+	}
+	if params.Sort != "" {
+		parts := strings.Split(params.Sort, ":")
+		if len(parts) == 2 {
+			query = query.Order(fmt.Sprintf("%s %s", parts[0], parts[1]))
+		}
+	}
+
+	var total int64
+	query.Count(&total)
+
 	var products []models.Product
-	err := r.db.Preload("Category.Subcategory").Preload("ProductImage").Find(&products).Error
+	offset := (params.Page - 1) * params.Limit
+	err := query.Offset(offset).Limit(params.Limit).Find(&products).Error
+	return products, total, err
+}
+
+func (r *productRepo) FindAllWithPreload() ([]models.Product, error) {
+	var products []models.Product
+	err := r.db.
+		Preload("Category").
+		Preload("Subcategory").
+		Preload("ProductImage").
+		Preload("ProductVariant").Find(&products).Error
 	return products, err
 }
 
@@ -51,9 +108,9 @@ func (r *productRepo) FindBySlug(slug string) (*models.Product, error) {
 		Preload("Category").
 		Preload("Subcategory").
 		Preload("ProductImage").
-		Preload("ProductVariant.VariantValues.OptionValue.Type").
 		Preload("ProductAttributeValue.Attribute").
 		Preload("ProductAttributeValue.AttributeValue").
+		Preload("ProductVariant.VariantValues.OptionValue.Type").
 		Where("slug = ?", slug).
 		First(&product).Error
 

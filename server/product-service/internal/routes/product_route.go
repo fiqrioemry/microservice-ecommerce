@@ -22,4 +22,6 @@ func ProductRoutes(r *gin.Engine, h *handlers.ProductHandler) {
 	//  Public routes
 	product.GET("", h.GetAllProducts)
 	product.GET("/:slug", h.GetProductBySlug)
+	product.GET("/search", h.SearchProducts)
+
 }

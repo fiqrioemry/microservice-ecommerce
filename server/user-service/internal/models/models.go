@@ -29,18 +29,35 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 type Address struct {
-	ID        uuid.UUID `gorm:"type:char(36);primaryKey" json:"id"`
-	UserID    uuid.UUID `gorm:"type:char(36);not null;index" json:"-"`
-	Name      string    `gorm:"type:varchar(255);not null" json:"name"`
-	IsMain    bool      `gorm:"default:false" json:"isMain"`
-	Address   string    `gorm:"type:text;not null" json:"address"`
-	Province  string    `gorm:"type:varchar(255);not null" json:"province"`
-	City      string    `gorm:"type:varchar(255);not null" json:"city"`
-	Zipcode   string    `gorm:"type:varchar(10);not null" json:"zipcode"`
-	Phone     string    `gorm:"type:varchar(20);not null" json:"phone"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	ID         uuid.UUID `gorm:"type:char(36);primaryKey" json:"id"`
+	UserID     uuid.UUID `gorm:"type:char(36);not null;index" json:"-"`
+	Name       string    `gorm:"type:varchar(255);not null" json:"name"`
+	IsMain     bool      `gorm:"default:false" json:"isMain"`
+	Address    string    `gorm:"type:text;not null" json:"address"`
+	ProvinceID uint      `gorm:"not null" json:"province_id"`
+	CityID     uint      `gorm:"not null" json:"city_id"`
+	Province   string    `gorm:"type:varchar(255);not null" json:"province"`
+	City       string    `gorm:"type:varchar(255);not null" json:"city"`
+	Zipcode    string    `gorm:"type:varchar(10);not null" json:"zipcode"`
+	Phone      string    `gorm:"type:varchar(20);not null" json:"phone"`
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
+}
+
+type Province struct {
+	ID     uint   `gorm:"primaryKey" json:"id"`
+	Name   string `gorm:"type:varchar(100);not null" json:"name"`
+	Cities []City `gorm:"foreignKey:ProvinceID" json:"-"`
+}
+
+type City struct {
+	ID         uint     `gorm:"primaryKey" json:"id"`
+	ProvinceID uint     `gorm:"not null" json:"province_id"`
+	Province   Province `gorm:"foreignKey:ProvinceID" json:"-"`
+	Type       string   `gorm:"type:varchar(20)" json:"type"`
+	Name       string   `gorm:"type:varchar(100)" json:"name"`
+	PostalCode string   `gorm:"type:varchar(20)" json:"postal_code"`
 }
 
 func (a *Address) BeforeCreate(tx *gorm.DB) (err error) {

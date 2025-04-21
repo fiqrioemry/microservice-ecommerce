@@ -39,8 +39,14 @@ func main() {
 	profileHandler := handlers.NewProfileHandler(profileService)
 
 	// address
+
+	// location
+	locationRepo := repositories.NewLocationRepository(db)
+	locationService := services.NewLocationService(locationRepo)
+	locationHandler := handlers.NewLocationHandler(locationService)
+
 	addressRepo := repositories.NewAddressRepository(db)
-	addressService := services.NewAddressService(addressRepo)
+	addressService := services.NewAddressService(addressRepo, locationRepo)
 	addressHandler := handlers.NewAddressHandler(addressService)
 
 	r := gin.Default()
@@ -49,9 +55,11 @@ func main() {
 
 	// Routing dependency injection
 	routes.AuthRoutes(r, authHandler)
+	routes.LocationRoutes(r, locationHandler)
 	routes.UserRoutes(r, profileHandler, addressHandler)
 
 	seeders.SeedUsers(db)
+	seeders.SeedProvincesAndCities(db)
 
 	port := os.Getenv("PORT")
 	log.Println("user service running on port:", port)

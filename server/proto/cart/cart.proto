@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package cart;
+
+option go_package = "proto/cart";
+
+service CartService {
+  rpc GetCartForCheckout(GetCartRequest) returns (CartResponse);
+}
+
+message GetCartRequest {
+  string user_id = 1;
+}
+
+message CartResponse {
+  repeated CartItem items = 1;
+}
+
+message CartItem {
+  string product_id = 1;
+  string variant_id = 2;
+  string product_name = 3;
+  string image_url = 4;
+  double price = 5;
+  int32 quantity = 6;
+  bool is_checked = 7;
+}

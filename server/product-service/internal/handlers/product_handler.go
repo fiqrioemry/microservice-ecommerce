@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"path/filepath"
+	"strconv"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/dto"
@@ -18,6 +19,38 @@ type ProductHandler struct {
 
 func NewProductHandler(service services.ProductServiceInterface) *ProductHandler {
 	return &ProductHandler{Service: service}
+}
+
+func (h *ProductHandler) SearchProducts(c *gin.Context) {
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	minPrice, _ := strconv.ParseFloat(c.Query("minPrice"), 64)
+	maxPrice, _ := strconv.ParseFloat(c.Query("maxPrice"), 64)
+
+	params := dto.SearchParams{
+		Query:       c.Query("q"),
+		Category:    c.Query("category"),
+		Subcategory: c.Query("subcategory"),
+		InStock:     c.Query("stock") == "true",
+		Sort:        c.DefaultQuery("sort", "name:asc"),
+		Page:        page,
+		Limit:       limit,
+		MinPrice:    minPrice,
+		MaxPrice:    maxPrice,
+	}
+
+	products, total, err := h.Service.Search(params)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Search failed"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"total":   total,
+		"page":    params.Page,
+		"pages":   (total + int64(params.Limit) - 1) / int64(params.Limit),
+		"results": products,
+	})
 }
 
 func (h *ProductHandler) CreateProduct(c *gin.Context) {

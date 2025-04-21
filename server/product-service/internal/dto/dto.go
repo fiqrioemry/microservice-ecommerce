@@ -142,3 +142,15 @@ type SubcategoryResponse struct {
 	Slug  string    `json:"slug"`
 	Image string    `json:"image"`
 }
+
+type SearchParams struct {
+	Query       string
+	Category    string
+	Subcategory string
+	InStock     bool
+	Sort        string
+	MinPrice    float64
+	MaxPrice    float64
+	Page        int
+	Limit       int
+}

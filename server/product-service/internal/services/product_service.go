@@ -17,6 +17,7 @@ type ProductServiceInterface interface {
 	GetProductByID(id uuid.UUID) (*models.Product, error)
 	CreateFullProduct(req dto.CreateFullProductRequest, imageURLs []string) error
 	UpdateWithImages(id uuid.UUID, req dto.UpdateProductRequest, imageURLs []string) error
+	Search(params dto.SearchParams) ([]models.Product, int64, error)
 }
 
 type ProductService struct {
@@ -101,7 +102,7 @@ func (s *ProductService) CreateFullProduct(req dto.CreateFullProductRequest, ima
 }
 
 func (s *ProductService) GetAll() ([]models.Product, error) {
-	return s.Repo.FindAll()
+	return s.Repo.FindAllWithPreload()
 }
 
 func (s *ProductService) GetBySlug(slug string) (*models.Product, error) {
@@ -177,4 +178,8 @@ func (s *ProductService) Delete(id uuid.UUID) error {
 
 func (s *ProductService) GetProductByID(id uuid.UUID) (*models.Product, error) {
 	return s.Repo.FindByID(id)
+}
+
+func (s *ProductService) Search(params dto.SearchParams) ([]models.Product, int64, error) {
+	return s.Repo.SearchProducts(params)
 }

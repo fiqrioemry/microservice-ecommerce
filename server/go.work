@@ -1,7 +1,10 @@
 go 1.23.4
 
+toolchain go1.24.2
+
 use (
 	./cart-service
+	./order-service
 	./pkg
 	./product-service
 	./proto

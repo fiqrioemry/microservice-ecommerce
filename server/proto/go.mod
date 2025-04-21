@@ -1,6 +1,6 @@
 module github.com/fiqrioemry/microservice-ecommerce/server/proto
 
-go 1.23.4
+go 1.23
 
 require (
 	google.golang.org/grpc v1.71.1
