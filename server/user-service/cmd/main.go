@@ -2,12 +2,14 @@ package main
 
 import (
 	"log"
+	"net"
 	"os"
 
 	global "github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/middleware"
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/config"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/seeders"
@@ -16,6 +18,9 @@ import (
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/repositories"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/routes"
 	"github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/services"
+
+	userpb "github.com/fiqrioemry/microservice-ecommerce/server/proto/user"
+	usergrpc "github.com/fiqrioemry/microservice-ecommerce/server/user-service/internal/grpc"
 )
 
 // TODO : Ganti session-based authentication ke JWT dan tambahkan oAuth2.0
@@ -38,16 +43,30 @@ func main() {
 	profileService := services.NewProfileService(userRepo)
 	profileHandler := handlers.NewProfileHandler(profileService)
 
-	// address
-
 	// location
 	locationRepo := repositories.NewLocationRepository(db)
 	locationService := services.NewLocationService(locationRepo)
 	locationHandler := handlers.NewLocationHandler(locationService)
 
+	// address
 	addressRepo := repositories.NewAddressRepository(db)
 	addressService := services.NewAddressService(addressRepo, locationRepo)
 	addressHandler := handlers.NewAddressHandler(addressService)
+
+	go func() {
+		lis, err := net.Listen("tcp", ":50052")
+		if err != nil {
+			log.Fatalf("failed to listen on port 50052: %v", err)
+		}
+
+		grpcServer := grpc.NewServer()
+		userpb.RegisterUserServiceServer(grpcServer, usergrpc.NewUserGRPCServer(addressService))
+
+		log.Println("User gRPC server running on port 50052...")
+		if err := grpcServer.Serve(lis); err != nil {
+			log.Fatalf("failed to serve gRPC server: %v", err)
+		}
+	}()
 
 	r := gin.Default()
 	// TODO : Tambahkan pengaturan untuk connection pooling di database

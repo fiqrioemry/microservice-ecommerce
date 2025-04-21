@@ -41,6 +41,7 @@ func (s *ProductService) CreateFullProduct(req dto.CreateFullProductRequest, ima
 		Length:        req.Length,
 		Width:         req.Width,
 		Height:        req.Height,
+		Discount:      req.Discount,
 	}
 	if err := s.Repo.Create(&product); err != nil {
 		return err
@@ -65,6 +66,7 @@ func (s *ProductService) CreateFullProduct(req dto.CreateFullProductRequest, ima
 			SKU:       v.SKU,
 			Price:     v.Price,
 			Stock:     v.Stock,
+			Sold:      v.Sold,
 			IsActive:  v.IsActive,
 			ImageURL:  v.ImageURL,
 		}
@@ -125,6 +127,7 @@ func (s *ProductService) UpdateWithImages(id uuid.UUID, req dto.UpdateProductReq
 	product.Length = req.Length
 	product.Width = req.Width
 	product.Height = req.Height
+	product.Discount = req.Discount
 
 	if err := s.Repo.Update(product); err != nil {
 		return err
@@ -159,7 +162,6 @@ func (s *ProductService) UpdateWithImages(id uuid.UUID, req dto.UpdateProductReq
 }
 
 func (s *ProductService) Delete(id uuid.UUID) error {
-
 	images, _ := s.Repo.FindImagesByProductID(id)
 	for _, img := range images {
 		_ = utils.DeleteFromCloudinary(img.URL)

@@ -14,7 +14,7 @@ type CartService interface {
 	GetUserCart(userID string) (*models.Cart, error)
 	AddToCart(userID string, req dto.AddToCartRequest, productSnapshot dto.ProductSnapshot) error
 
-	UpdateCartItem(itemID uuid.UUID, req dto.UpdateCartItemRequest) error
+	UpdateCartItem(itemID uuid.UUID, req dto.UpdateCartItemRequest, productSnapshot dto.ProductSnapshot) error
 	RemoveCartItem(itemID uuid.UUID) error
 	ClearUserCart(userID string) error
 }
@@ -28,7 +28,17 @@ func NewCartService(repo repositories.CartRepository) CartService {
 }
 
 func (s *cartService) GetUserCart(userID string) (*models.Cart, error) {
-	return s.repo.GetCartWithItems(userID)
+	cart, err := s.repo.GetOrCreateCart(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.repo.PreloadCartItems(cart)
+	if err != nil {
+		return nil, err
+	}
+
+	return cart, nil
 }
 
 func (s *cartService) AddToCart(userID string, req dto.AddToCartRequest, snapshot dto.ProductSnapshot) error {
@@ -39,10 +49,18 @@ func (s *cartService) AddToCart(userID string, req dto.AddToCartRequest, snapsho
 
 	existing, err := s.repo.FindItemByCartProductVariant(cart.ID, req.ProductID, req.VariantID)
 	if err == nil {
-		existing.Quantity += req.Quantity
+		totalQty := existing.Quantity + req.Quantity
+		if totalQty > snapshot.Stock {
+			return errors.New("quantity exceeds available stock")
+		}
+		existing.Quantity = totalQty
 		return s.repo.UpdateItem(existing)
 	}
+
 	if errors.Is(err, gorm.ErrRecordNotFound) {
+		if req.Quantity > snapshot.Stock {
+			return errors.New("quantity exceeds available stock")
+		}
 		newItem := &models.CartItem{
 			ID:          uuid.New(),
 			CartID:      cart.ID,
@@ -60,11 +78,16 @@ func (s *cartService) AddToCart(userID string, req dto.AddToCartRequest, snapsho
 	return err
 }
 
-func (s *cartService) UpdateCartItem(itemID uuid.UUID, req dto.UpdateCartItemRequest) error {
+func (s *cartService) UpdateCartItem(itemID uuid.UUID, req dto.UpdateCartItemRequest, snapshot dto.ProductSnapshot) error {
 	item, err := s.repo.FindItemByID(itemID)
 	if err != nil {
 		return errors.New("cart item not found")
 	}
+
+	if req.Quantity > snapshot.Stock {
+		return errors.New("quantity exceeds available stock")
+	}
+
 	item.Quantity = req.Quantity
 	item.IsChecked = req.IsChecked
 	return s.repo.UpdateItem(item)

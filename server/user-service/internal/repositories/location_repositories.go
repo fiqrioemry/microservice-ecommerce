@@ -9,7 +9,7 @@ type LocationRepository interface {
 	GetAllProvinces() ([]models.Province, error)
 	GetCitiesByProvince(provinceID uint) ([]models.City, error)
 	GetProvinceByID(id uint) (*models.Province, error)
-	GetCityByID(id uint) (*models.City, error)
+	GetCityByID(id, provinceID uint) (*models.City, error)
 }
 
 type locationRepo struct {
@@ -38,8 +38,8 @@ func (r *locationRepo) GetProvinceByID(id uint) (*models.Province, error) {
 	return &province, err
 }
 
-func (r *locationRepo) GetCityByID(id uint) (*models.City, error) {
+func (r *locationRepo) GetCityByID(id, provinceID uint) (*models.City, error) {
 	var city models.City
-	err := r.db.First(&city, id).Error
+	err := r.db.Where("province_id = ?", provinceID).First(&city, id).Error
 	return &city, err
 }

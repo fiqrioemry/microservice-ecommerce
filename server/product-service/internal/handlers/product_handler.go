@@ -133,35 +133,65 @@ func (h *ProductHandler) CreateProduct(c *gin.Context) {
 }
 
 func (h *ProductHandler) GetAllProducts(c *gin.Context) {
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
+
 	products, err := h.Service.GetAll()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to fetch products"})
 		return
 	}
+	total := len(products)
+	end := offset + limit
+	if end > total {
+		end = total
+	}
 
-	var response []dto.ProductResponse
-	for _, p := range products {
-		resp := dto.ProductResponse{
+	var response []dto.ProductMinimal
+	for _, p := range products[offset:end] {
+		item := dto.ProductMinimal{
 			ID:          p.ID.String(),
 			Name:        p.Name,
 			Slug:        p.Slug,
+			Price:       0,
 			Description: p.Description,
 			IsFeatured:  p.IsFeatured,
 			IsActive:    p.IsActive,
-			Category:    p.Category,
-			Subcategory: p.Subcategory,
+			Category: dto.CategoryMinimal{
+				ID:   p.Category.ID,
+				Name: p.Category.Name,
+				Slug: p.Category.Slug,
+			},
+		}
+
+		if p.Subcategory != nil {
+			item.Subcategory = &dto.CategoryMinimal{
+				ID:   p.Subcategory.ID,
+				Name: p.Subcategory.Name,
+				Slug: p.Subcategory.Slug,
+			}
 		}
 
 		for _, img := range p.ProductImage {
-			resp.Images = append(resp.Images, img.URL)
+			item.Images = append(item.Images, img.URL)
 		}
 
-		response = append(response, resp)
+		if len(p.ProductVariant) > 0 {
+			item.Price = p.ProductVariant[0].Price
+		}
+
+		response = append(response, item)
 	}
 
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, gin.H{
+		"page":    page,
+		"limit":   limit,
+		"total":   total,
+		"pages":   (total + limit - 1) / limit,
+		"results": response,
+	})
 }
-
 func (h *ProductHandler) GetProductBySlug(c *gin.Context) {
 	slug := c.Param("slug")
 	product, err := h.Service.GetBySlug(slug)
@@ -181,6 +211,7 @@ func (h *ProductHandler) GetProductBySlug(c *gin.Context) {
 		Length:      product.Length,
 		Width:       product.Width,
 		Height:      product.Height,
+		Discount:    product.Discount,
 		Category:    product.Category,
 		Subcategory: product.Subcategory,
 	}
@@ -195,6 +226,7 @@ func (h *ProductHandler) GetProductBySlug(c *gin.Context) {
 			SKU:      v.SKU,
 			Price:    v.Price,
 			Stock:    v.Stock,
+			Sold:     v.Sold,
 			IsActive: v.IsActive,
 			ImageURL: v.ImageURL,
 			Options:  make(map[string]string),

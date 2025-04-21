@@ -10,11 +10,11 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/config"
-	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/grpc"
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/handlers"
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/repositories"
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/routes"
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/services"
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/grpc"
 )
 
 func main() {
@@ -27,17 +27,27 @@ func main() {
 
 	orderRepo := repositories.NewOrderRepository(db)
 
-	cartGRPC, err := grpc.NewCartGRPCClient("cart-service:50051")
+	userGrcpAdd := os.Getenv("USER_GRPC_ADDR")
+	cartGrcpAdd := os.Getenv("CART_GRPC_ADDR")
+	productGrcpAdd := os.Getenv("PRODUCT_GRPC_ADDR")
+
+	productGRPC, err := grpc.NewProductGRPCClient(productGrcpAdd)
+	if err != nil {
+		log.Fatal("failed to connect to product-service:", err)
+	}
+
+	cartGRPC, err := grpc.NewCartGRPCClient(cartGrcpAdd)
 	if err != nil {
 		log.Fatal("failed to connect to cart-service:", err)
 	}
 
-	userGRPC, err := grpc.NewUserGRPCClient("user-service:50052")
+	userGRPC, err := grpc.NewUserGRPCClient(userGrcpAdd)
 	if err != nil {
 		log.Fatal("failed to connect to user-service:", err)
 	}
 
-	orderService := services.NewOrderService(orderRepo, cartGRPC, userGRPC)
+	orderService := services.NewOrderService(orderRepo, cartGRPC, userGRPC, productGRPC)
+
 	orderHandler := handlers.NewOrderHandler(orderService)
 
 	r := gin.Default()

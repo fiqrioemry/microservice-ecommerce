@@ -9,9 +9,9 @@ import (
 
 type Category struct {
 	ID        uuid.UUID      `gorm:"type:char(36);primaryKey"`
-	Name      string         `gorm:"type:varchar(100);not null;unique"`
-	Slug      string         `gorm:"type:varchar(100);uniqueIndex"`
-	Image     string         `gorm:"type:varchar(255)"`
+	Name      string         `gorm:"type:varchar(100);not null;unique" json:"name"`
+	Slug      string         `gorm:"type:varchar(100);uniqueIndex" json:"slug"`
+	Image     string         `gorm:"type:varchar(255)" json:"image"`
 	CreatedAt time.Time      `json:"-"`
 	UpdatedAt time.Time      `json:"-"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
@@ -21,8 +21,8 @@ type Category struct {
 
 type Subcategory struct {
 	ID         uuid.UUID      `gorm:"type:char(36);primaryKey"`
-	Name       string         `gorm:"type:varchar(100);not null"`
-	Slug       string         `gorm:"type:varchar(100);uniqueIndex"`
+	Name       string         `gorm:"type:varchar(100);not null;unique" json:"name"`
+	Slug       string         `gorm:"type:varchar(100);uniqueIndex" json:"slug"`
 	CategoryID uuid.UUID      `gorm:"type:char(36);not null" json:"-"`
 	Image      string         `gorm:"type:varchar(255)"`
 	CreatedAt  time.Time      `json:"-"`
@@ -43,6 +43,7 @@ type Product struct {
 	Length        float64    `gorm:"default:0" json:"length"`
 	Width         float64    `gorm:"default:0" json:"width"`
 	Height        float64    `gorm:"default:0" json:"height"`
+	Discount      *float64   `gorm:"type:decimal(10,2);default:0" json:"discount"`
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -102,6 +103,7 @@ type ProductVariant struct {
 	Price    float64
 	Stock    int
 	IsActive bool
+	Sold     int `gorm:"default:0"`
 
 	ImageURL string
 

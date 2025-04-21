@@ -4,10 +4,6 @@ package cart;
 
 option go_package = "proto/cart";
 
-service CartService {
-  rpc GetCartForCheckout(GetCartRequest) returns (CartResponse);
-}
-
 message GetCartRequest {
   string user_id = 1;
 }
@@ -24,4 +20,17 @@ message CartItem {
   double price = 5;
   int32 quantity = 6;
   bool is_checked = 7;
+}
+
+message ClearCartRequest {
+  string userId = 1;
+}
+
+message EmptyCartResponse {
+  string message = 1;
+}
+
+service CartService {
+  rpc GetCartForCheckout(GetCartRequest) returns (CartResponse);
+  rpc ClearCart(ClearCartRequest) returns (EmptyCartResponse);
 }

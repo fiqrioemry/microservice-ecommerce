@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/repositories"
 	productpb "github.com/fiqrioemry/microservice-ecommerce/server/proto/product"
@@ -126,4 +127,55 @@ func (s *ProductGRPCServer) CheckProductAvailability(ctx context.Context, req *p
 		IsActive: product.IsActive,
 		InStock:  inStock,
 	}, nil
+}
+
+func (s *ProductGRPCServer) UpdateProductStock(ctx context.Context, req *productpb.UpdateStockRequest) (*productpb.EmptyResponse, error) {
+	for _, item := range req.Items {
+		productID, err := uuid.Parse(item.ProductId)
+		if err != nil {
+			return nil, err
+		}
+
+		variantID := uuid.Nil
+		if item.VariantId != "" {
+			variantID, err = uuid.Parse(item.VariantId)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		// Ambil variant (kalau ada)
+		if variantID != uuid.Nil {
+			variant, err := s.Repo.FindVariantByID(variantID)
+			if err != nil {
+				return nil, err
+			}
+			if variant.Stock < int(item.Quantity) {
+				return nil, fmt.Errorf("insufficient stock for variant %s", variantID)
+			}
+			variant.Stock -= int(item.Quantity)
+			if err := s.Repo.UpdateVariant(variant); err != nil {
+				return nil, err
+			}
+		} else {
+			// fallback ke variant pertama dari produk
+			product, err := s.Repo.FindByID(productID)
+			if err != nil {
+				return nil, err
+			}
+			if len(product.ProductVariant) == 0 {
+				return nil, fmt.Errorf("no variant found for product %s", productID)
+			}
+			variant := &product.ProductVariant[0]
+			if variant.Stock < int(item.Quantity) {
+				return nil, fmt.Errorf("insufficient stock for product %s", productID)
+			}
+			variant.Stock -= int(item.Quantity)
+			if err := s.Repo.UpdateVariant(variant); err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	return &productpb.EmptyResponse{}, nil
 }

@@ -5,9 +5,10 @@ import (
 	"time"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/config"
-	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/grpc"
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/models"
 	"github.com/fiqrioemry/microservice-ecommerce/server/order-service/internal/repositories"
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/grpc"
+	productpb "github.com/fiqrioemry/microservice-ecommerce/server/proto/product"
 	"github.com/google/uuid"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/snap"
@@ -23,13 +24,16 @@ type OrderServiceInterface interface {
 }
 
 type OrderService struct {
-	Repo     repositories.OrderRepository
-	CartGRPC *grpc.CartGRPCClient
-	UserGRPC *grpc.UserGRPCClient
+	Repo        repositories.OrderRepository
+	CartGRPC    *grpc.CartGRPCClient
+	UserGRPC    *grpc.UserGRPCClient
+	ProductGRPC *grpc.ProductGRPCClient
 }
 
-func NewOrderService(repo repositories.OrderRepository, cartClient *grpc.CartGRPCClient, userClient *grpc.UserGRPCClient) OrderServiceInterface {
-	return &OrderService{Repo: repo, CartGRPC: cartClient, UserGRPC: userClient}
+func NewOrderService(repo repositories.OrderRepository, cartClient *grpc.CartGRPCClient, userClient *grpc.UserGRPCClient, productClient *grpc.ProductGRPCClient) OrderServiceInterface {
+	return &OrderService{
+		Repo: repo, CartGRPC: cartClient, UserGRPC: userClient, ProductGRPC: productClient,
+	}
 }
 
 func (s *OrderService) CreateOrderFromCart(
@@ -40,6 +44,8 @@ func (s *OrderService) CreateOrderFromCart(
 ) (*models.Order, error) {
 	var items []models.OrderItem
 	var total float64
+
+	var stockUpdates []*productpb.StockUpdateItem
 
 	for _, item := range cart.Items {
 		if item.IsChecked {
@@ -52,6 +58,17 @@ func (s *OrderService) CreateOrderFromCart(
 				Quantity:    item.Quantity,
 			})
 			total += item.Price * float64(item.Quantity)
+
+			stockUpdates = append(stockUpdates, &productpb.StockUpdateItem{
+				ProductId: item.ProductID.String(),
+				VariantId: func() string {
+					if item.VariantID != nil {
+						return item.VariantID.String()
+					}
+					return ""
+				}(),
+				Quantity: int32(item.Quantity),
+			})
 		}
 	}
 
@@ -72,8 +89,19 @@ func (s *OrderService) CreateOrderFromCart(
 		Zipcode:  resp.Zipcode,
 		Phone:    resp.Phone,
 	}
+	if err := s.ProductGRPC.ReduceStock(stockUpdates); err != nil {
+		return nil, err
+	}
 
-	return s.CreateOrder(userID, addressID, items, note, total, shippingCost, snapshot)
+	order, err := s.CreateOrder(userID, addressID, items, note, total, shippingCost, snapshot)
+	if err != nil {
+		return nil, err
+	}
+
+	_ = s.CartGRPC.ClearCart(userID.String())
+
+	return order, nil
+
 }
 
 func (s *OrderService) CreateOrder(

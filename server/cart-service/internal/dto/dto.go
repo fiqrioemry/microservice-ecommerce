@@ -9,8 +9,10 @@ type AddToCartRequest struct {
 }
 
 type UpdateCartItemRequest struct {
-	Quantity  int  `json:"quantity"`
-	IsChecked bool `json:"isChecked"`
+	ProductID uuid.UUID  `json:"productId" binding:"required"`
+	Quantity  int        `json:"quantity"`
+	IsChecked bool       `json:"isChecked"`
+	VariantID *uuid.UUID `json:"variantId"`
 }
 
 type CartItemResponse struct {

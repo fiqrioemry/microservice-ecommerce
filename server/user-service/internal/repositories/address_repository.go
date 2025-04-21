@@ -13,7 +13,7 @@ type AddressRepository interface {
 	DeleteAddress(addressID string, userID string) error
 	SetMainAddress(addressID string, userID string) error
 	UnsetAllMain(userID string) error
-	GetAddressByID(addressID string, userID string) (*models.Address, error)
+	GetAddressByID(addressID string) (*models.Address, error)
 }
 
 type addressRepo struct {
@@ -50,8 +50,8 @@ func (r *addressRepo) UnsetAllMain(userID string) error {
 	return r.db.Model(&models.Address{}).Where("user_id = ?", userID).Update("is_main", false).Error
 }
 
-func (r *addressRepo) GetAddressByID(addressID string, userID string) (*models.Address, error) {
+func (r *addressRepo) GetAddressByID(addressID string) (*models.Address, error) {
 	var addr models.Address
-	err := r.db.Where("id = ? AND user_id = ?", addressID, userID).First(&addr).Error
+	err := r.db.Where("id = ? ", addressID).Find(&addr).Error
 	return &addr, err
 }

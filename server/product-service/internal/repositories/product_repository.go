@@ -29,6 +29,7 @@ type ProductRepository interface {
 
 	// Variants
 	CreateVariant(variant *models.ProductVariant) error
+	UpdateVariant(variant *models.ProductVariant) error
 	CreateVariantOption(option *models.ProductVariantOption) error
 	FindVariantOptionValue(typeName string, value string) (*models.VariantOptionValue, error)
 
@@ -44,6 +45,10 @@ type productRepo struct {
 
 func NewProductRepository(db *gorm.DB) ProductRepository {
 	return &productRepo{db: db}
+}
+
+func (r *productRepo) UpdateVariant(v *models.ProductVariant) error {
+	return r.db.Save(v).Error
 }
 
 func (r *productRepo) SearchProducts(params dto.SearchParams) ([]models.Product, int64, error) {

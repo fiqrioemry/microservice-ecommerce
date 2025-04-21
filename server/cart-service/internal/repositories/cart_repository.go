@@ -14,6 +14,7 @@ type CartRepository interface {
 	UpdateItem(item *models.CartItem) error
 	DeleteItem(itemID uuid.UUID) error
 	ClearCart(cartID uuid.UUID) error
+	PreloadCartItems(cart *models.Cart) error
 	FindItemByID(itemID uuid.UUID) (*models.CartItem, error)
 	FindItemByCartProductVariant(cartID, productID uuid.UUID, variantID *uuid.UUID) (*models.CartItem, error)
 }
@@ -88,4 +89,8 @@ func (r *cartRepository) FindItemByID(itemID uuid.UUID) (*models.CartItem, error
 	var item models.CartItem
 	err := r.db.First(&item, "id = ?", itemID).Error
 	return &item, err
+}
+
+func (r *cartRepository) PreloadCartItems(cart *models.Cart) error {
+	return r.db.Preload("Items").First(cart, "id = ?", cart.ID).Error
 }

@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/cart-service/internal/dto"
-	"github.com/fiqrioemry/microservice-ecommerce/server/cart-service/internal/grpc"
 	"github.com/fiqrioemry/microservice-ecommerce/server/cart-service/internal/services"
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/grpc"
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -51,7 +51,7 @@ func (h *CartHandler) AddToCart(c *gin.Context) {
 
 	productResp, err := h.GRPCClient.GetProductSnapshot(req.ProductID.String(), variantIDStr)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to fetch product info"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to fetch product info", "error": err.Error()})
 		return
 	}
 
@@ -60,13 +60,6 @@ func (h *CartHandler) AddToCart(c *gin.Context) {
 		ImageURL: productResp.ImageUrl,
 		Price:    productResp.Price,
 		Stock:    int(productResp.Stock),
-	}
-
-	if req.Quantity > snapshot.Stock {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Quantity exceeds available stock",
-		})
-		return
 	}
 
 	if err := h.Service.AddToCart(userID, req, snapshot); err != nil {
@@ -91,8 +84,26 @@ func (h *CartHandler) UpdateCartItem(c *gin.Context) {
 		return
 	}
 
-	if err := h.Service.UpdateCartItem(itemID, req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to update cart item"})
+	var variantIDStr string
+	if req.VariantID != nil {
+		variantIDStr = req.VariantID.String()
+	}
+
+	productResp, err := h.GRPCClient.GetProductSnapshot(req.ProductID.String(), variantIDStr)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to fetch product info"})
+		return
+	}
+
+	snapshot := dto.ProductSnapshot{
+		Name:     productResp.Name,
+		ImageURL: productResp.ImageUrl,
+		Price:    productResp.Price,
+		Stock:    int(productResp.Stock),
+	}
+
+	if err := h.Service.UpdateCartItem(itemID, req, snapshot); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 

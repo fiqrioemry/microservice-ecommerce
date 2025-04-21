@@ -15,6 +15,7 @@ type AddressServiceInterface interface {
 	UpdateAddressWithLocation(userID string, addressID string, req dto.AddressRequest) error
 	DeleteAddress(userID string, addressID string) error
 	SetMainAddress(userID string, addressID string) error
+	GetAddressById(addressID string) (*models.Address, error)
 }
 
 type AddressService struct {
@@ -26,6 +27,10 @@ func NewAddressService(repo repositories.AddressRepository, locationRepo reposit
 	return &AddressService{Repo: repo, LocationRepo: locationRepo}
 }
 
+func (s *AddressService) GetAddressById(addressID string) (*models.Address, error) {
+	return s.Repo.GetAddressByID(addressID)
+}
+
 func (s *AddressService) GetAddresses(userID string) ([]models.Address, error) {
 	return s.Repo.GetAddressesByUserID(userID)
 }
@@ -35,7 +40,7 @@ func (s *AddressService) AddAddressWithLocation(userID string, req dto.AddressRe
 	if err != nil {
 		return errors.New("invalid province ID")
 	}
-	city, err := s.LocationRepo.GetCityByID(req.CityID)
+	city, err := s.LocationRepo.GetCityByID(req.CityID, province.ID)
 	if err != nil {
 		return errors.New("invalid city ID")
 	}
@@ -49,7 +54,7 @@ func (s *AddressService) AddAddressWithLocation(userID string, req dto.AddressRe
 		CityID:     req.CityID,
 		Province:   province.Name,
 		City:       city.Name,
-		Zipcode:    req.Zipcode,
+		Zipcode:    city.PostalCode,
 		Phone:      req.Phone,
 		IsMain:     req.IsMain,
 	}
@@ -62,7 +67,7 @@ func (s *AddressService) AddAddressWithLocation(userID string, req dto.AddressRe
 }
 
 func (s *AddressService) UpdateAddressWithLocation(userID string, addressID string, req dto.AddressRequest) error {
-	addr, err := s.Repo.GetAddressByID(addressID, userID)
+	addr, err := s.Repo.GetAddressByID(addressID)
 	if err != nil {
 		return err
 	}
@@ -71,7 +76,7 @@ func (s *AddressService) UpdateAddressWithLocation(userID string, addressID stri
 	if err != nil {
 		return errors.New("invalid province ID")
 	}
-	city, err := s.LocationRepo.GetCityByID(req.CityID)
+	city, err := s.LocationRepo.GetCityByID(req.CityID, province.ID)
 	if err != nil {
 		return errors.New("invalid city ID")
 	}
@@ -82,7 +87,7 @@ func (s *AddressService) UpdateAddressWithLocation(userID string, addressID stri
 	addr.CityID = req.CityID
 	addr.Province = province.Name
 	addr.City = city.Name
-	addr.Zipcode = req.Zipcode
+	addr.Zipcode = city.PostalCode
 	addr.Phone = req.Phone
 	addr.IsMain = req.IsMain
 

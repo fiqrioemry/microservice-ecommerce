@@ -18,6 +18,7 @@ type ProductResponse struct {
 	Length      float64                `json:"length"`
 	Width       float64                `json:"width"`
 	Height      float64                `json:"height"`
+	Discount    *float64               `json:"discount"`
 	Images      []string               `json:"images"`
 	Category    models.Category        `json:"category"`
 	Subcategory *models.Subcategory    `json:"subcategory,omitempty"`
@@ -30,6 +31,7 @@ type ProductVariantOutput struct {
 	SKU      string            `json:"sku"`
 	Price    float64           `json:"price"`
 	Stock    int               `json:"stock"`
+	Sold     int               `json:"sold"`
 	IsActive bool              `json:"isActive"`
 	ImageURL string            `json:"imageUrl"`
 	Options  map[string]string `json:"options"`
@@ -50,6 +52,7 @@ type CreateFullProductRequest struct {
 	Length        float64                           `json:"length"`
 	Width         float64                           `json:"width"`
 	Height        float64                           `json:"height"`
+	Discount      *float64                          `json:"discount"`
 	Variants      []CreateVariantRequest            `json:"variants"`
 	Attributes    []AddProductAttributeValueRequest `json:"attributes"`
 }
@@ -58,11 +61,11 @@ type CreateVariantRequest struct {
 	SKU      string            `json:"sku" binding:"required"`
 	Price    float64           `json:"price" binding:"required"`
 	Stock    int               `json:"stock" binding:"required"`
+	Sold     int               `json:"sold"`
 	IsActive bool              `json:"isActive"`
 	ImageURL string            `json:"imageUrl"`
 	Options  map[string]string `json:"options"`
 }
-
 type AddProductAttributeValueRequest struct {
 	AttributeID      uint `json:"attributeId" binding:"required"`
 	AttributeValueID uint `json:"attributeValueId" binding:"required"`
@@ -84,6 +87,7 @@ type UpdateProductRequest struct {
 	Length        float64                           `json:"length"`
 	Width         float64                           `json:"width"`
 	Height        float64                           `json:"height"`
+	Discount      *float64                          `json:"discount"`
 	Variants      []CreateVariantRequest            `json:"variants"`
 	Attributes    []AddProductAttributeValueRequest `json:"attributes"`
 }
@@ -153,4 +157,23 @@ type SearchParams struct {
 	MaxPrice    float64
 	Page        int
 	Limit       int
+}
+
+type CategoryMinimal struct {
+	ID   uuid.UUID `json:"ID"`
+	Name string    `json:"name"`
+	Slug string    `json:"slug"`
+}
+
+type ProductMinimal struct {
+	ID          string           `json:"id"`
+	Name        string           `json:"name"`
+	Slug        string           `json:"slug"`
+	Price       float64          `json:"price"`
+	Description string           `json:"description"`
+	IsFeatured  bool             `json:"isFeatured"`
+	IsActive    bool             `json:"isActive"`
+	Images      []string         `json:"images"`
+	Category    CategoryMinimal  `json:"category"`
+	Subcategory *CategoryMinimal `json:"subcategory,omitempty"`
 }

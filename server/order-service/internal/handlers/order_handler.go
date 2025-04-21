@@ -57,7 +57,7 @@ func (h *OrderHandler) Checkout(c *gin.Context) {
 
 	cart, err := h.Service.GetCart(userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve cart"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to retrieve cart", "error": err.Error()})
 		return
 	}
 

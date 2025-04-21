@@ -258,7 +258,7 @@ func SeedInitialData(db *gorm.DB) {
 				SubcategoryID: &sub.ID,
 				IsFeatured:    true,
 				IsActive:      true,
-				Weight:        1.0,
+				Weight:        1000.0,
 				Length:        20,
 				Width:         15,
 				Height:        5,

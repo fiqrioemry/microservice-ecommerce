@@ -33,6 +33,16 @@ message ProductSnapshotResponse {
   int32 stock = 4;
 }
 
+message UpdateStockRequest {
+  repeated StockUpdateItem items = 1;
+}
+
+message StockUpdateItem {
+  string productId = 1;
+  string variantId = 2;
+  int32 quantity = 3; // quantity to reduce
+}
+
 message MultipleProductSnapshotResponse {
   repeated ProductSnapshot products = 1;
 }
@@ -50,9 +60,15 @@ message CheckAvailabilityResponse {
   bool in_stock = 2;
 }
 
+
+
 // === SERVICE ===
 service ProductService {
   rpc GetProductSnapshot(GetProductRequest) returns (ProductSnapshotResponse);
   rpc GetMultipleProductSnapshots(GetMultipleProductRequest) returns (MultipleProductSnapshotResponse);
   rpc CheckProductAvailability(CheckAvailabilityRequest) returns (CheckAvailabilityResponse);
+  rpc UpdateProductStock(UpdateStockRequest) returns (EmptyResponse);
+
 }
+
+message EmptyResponse {}

@@ -9,7 +9,7 @@ import (
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/middleware"
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/config"
-	grpcServer "github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/grpc"
+	productServer "github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/grpc"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/handlers"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/repositories"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/routes"
@@ -66,7 +66,7 @@ func main() {
 		}
 
 		s := grpc.NewServer()
-		productpb.RegisterProductServiceServer(s, grpcServer.NewProductGRPCServer(productRepo))
+		productpb.RegisterProductServiceServer(s, productServer.NewProductGRPCServer(productRepo))
 		log.Println("gRPC server running on port 50051")
 
 		if err := s.Serve(lis); err != nil {

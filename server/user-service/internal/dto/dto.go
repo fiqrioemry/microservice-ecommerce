@@ -23,7 +23,6 @@ type AddressRequest struct {
 	Address    string `json:"address" binding:"required"`
 	ProvinceID uint   `json:"province_id" binding:"required"`
 	CityID     uint   `json:"city_id" binding:"required"`
-	Zipcode    string `json:"zipcode" binding:"required"`
 	Phone      string `json:"phone" binding:"required"`
 	IsMain     bool   `json:"isMain"`
 }
