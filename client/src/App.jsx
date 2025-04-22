@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import Layout from "./components/layout/Layout";
 import { Route, Routes } from "react-router-dom";
 import ProductDetail from "./pages/ProductDetail";
+import ProductResults from "./pages/ProductResults";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+          <Route path="/products" element={<ProductResults />} />
           <Route path="/products/:slug" element={<ProductDetail />} />
         </Route>
 
