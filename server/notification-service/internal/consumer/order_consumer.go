@@ -2,9 +2,11 @@ package consumer
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/notification-service/internal/config"
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 )
 
 type OrderCreatedPayload struct {
@@ -12,6 +14,7 @@ type OrderCreatedPayload struct {
 	UserID    string  `json:"userId"`
 	Total     float64 `json:"total"`
 	CreatedAt string  `json:"createdAt"`
+	// Optional: UserEmail string `json:"userEmail"`
 }
 
 func ConsumeOrderCreated() {
@@ -50,8 +53,17 @@ func ConsumeOrderCreated() {
 				continue
 			}
 
-			log.Printf("📩 New order.created: OrderID=%s UserID=%s Total=%.2f\n", payload.OrderID, payload.UserID, payload.Total)
-			// TODO: simpan ke DB, kirim email, dll
+			log.Printf("📩 New order.created: OrderID=%s UserID=%s Total=%.2f", payload.OrderID, payload.UserID, payload.Total)
+
+			// Sementara: kirim email ke alamat hardcoded
+			email := "user@example.com" // ganti dengan payload.UserEmail jika tersedia
+			message := fmt.Sprintf("Hi 👋, order #%s telah berhasil dibuat sebesar Rp%.0f.", payload.OrderID, payload.Total)
+			err := utils.SendEmail(email, "", message)
+			if err != nil {
+				log.Println("❌ Gagal kirim email:", err)
+			} else {
+				log.Println("✅ Email notifikasi berhasil dikirim ke:", email)
+			}
 		}
 	}()
 }

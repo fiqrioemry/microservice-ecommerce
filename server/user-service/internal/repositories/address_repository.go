@@ -13,6 +13,7 @@ type AddressRepository interface {
 	DeleteAddress(addressID string, userID string) error
 	SetMainAddress(addressID string, userID string) error
 	UnsetAllMain(userID string) error
+	GetMainAddress(userID string) (*models.Address, error)
 	GetAddressByID(addressID string) (*models.Address, error)
 }
 
@@ -53,5 +54,11 @@ func (r *addressRepo) UnsetAllMain(userID string) error {
 func (r *addressRepo) GetAddressByID(addressID string) (*models.Address, error) {
 	var addr models.Address
 	err := r.db.Where("id = ? ", addressID).Find(&addr).Error
+	return &addr, err
+}
+
+func (r *addressRepo) GetMainAddress(userID string) (*models.Address, error) {
+	var addr models.Address
+	err := r.db.Where("user_id = ? AND is_main =?", userID, true).Find(&addr).Error
 	return &addr, err
 }

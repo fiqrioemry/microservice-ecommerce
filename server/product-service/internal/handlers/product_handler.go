@@ -297,6 +297,24 @@ func (h *ProductHandler) UpdateProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Product updated successfully"})
 }
 
+func (h *ProductHandler) DeleteVariantProduct(c *gin.Context) {
+	id := c.Param("id")
+
+	variantId, err := uuid.Parse(id)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Invalid product ID"})
+		return
+	}
+
+	if err := h.Service.DeleteVariantProduct(variantId); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Product Variant deleted successfully"})
+}
+
 func (h *ProductHandler) DeleteProduct(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := uuid.Parse(idParam)

@@ -3,14 +3,15 @@ package main
 import (
 	"log"
 
-	"github.com/fiqrioemry/microservice-ecommerce/server/notification-service/internal/config"
+	global "github.com/fiqrioemry/microservice-ecommerce/server/notification-service/internal/config"
 	"github.com/fiqrioemry/microservice-ecommerce/server/notification-service/internal/consumer"
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/config"
 )
 
 func main() {
 	config.LoadEnv()
-	config.ConnectRabbitMQ()
-
+	global.ConnectRabbitMQ()
+	config.InitMailer()
 	log.Println("Starting Notification Service...")
 
 	consumer.ConsumeOrderCreated()

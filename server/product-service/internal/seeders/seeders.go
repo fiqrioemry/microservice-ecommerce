@@ -184,17 +184,17 @@ func SeedInitialData(db *gorm.DB) {
 	dummyImage := "https://placehold.co/400x400"
 
 	// === Variant Types ===
-	sizeType := models.VariantOptionType{Name: "Size"}         // Fashion, Sports
-	colorType := models.VariantOptionType{Name: "Color"}       // All
-	capacityType := models.VariantOptionType{Name: "Capacity"} // Electronics
-	coverType := models.VariantOptionType{Name: "Cover Type"}  // Books
+	sizeType := models.VariantOptionType{Name: "Size"}
+	colorType := models.VariantOptionType{Name: "Color"}
+	capacityType := models.VariantOptionType{Name: "Capacity"}
+	coverType := models.VariantOptionType{Name: "Cover Type"}
 	db.Create(&sizeType)
 	db.Create(&colorType)
 	db.Create(&capacityType)
 	db.Create(&coverType)
 
-	sizeVals := []models.VariantOptionValue{{TypeID: sizeType.ID, Value: "M"}, {TypeID: sizeType.ID, Value: "L"}}
-	colorVals := []models.VariantOptionValue{{TypeID: colorType.ID, Value: "Merah"}, {TypeID: colorType.ID, Value: "Hitam"}}
+	sizeVals := []models.VariantOptionValue{{TypeID: sizeType.ID, Value: "S"}, {TypeID: sizeType.ID, Value: "M"}, {TypeID: sizeType.ID, Value: "L"}}
+	colorVals := []models.VariantOptionValue{{TypeID: colorType.ID, Value: "Red"}, {TypeID: colorType.ID, Value: "Blue"}, {TypeID: colorType.ID, Value: "Black"}}
 	capacityVals := []models.VariantOptionValue{{TypeID: capacityType.ID, Value: "64GB"}, {TypeID: capacityType.ID, Value: "128GB"}}
 	coverVals := []models.VariantOptionValue{{TypeID: coverType.ID, Value: "Softcover"}, {TypeID: coverType.ID, Value: "Hardcover"}}
 	db.Create(&sizeVals)
@@ -210,15 +210,14 @@ func SeedInitialData(db *gorm.DB) {
 	}
 
 	categoryData := []struct {
-		Name         string
-		Variants     []string
-		SubSuffixes  []string
-		VariantPairs [][]string
+		Name        string
+		Variants    []string
+		SubSuffixes []string
 	}{
-		{"Fashion", []string{"Size", "Color"}, []string{"A1", "A2"}, [][]string{{"M", "Merah"}, {"L", "Hitam"}}},
-		{"Electronics", []string{"Capacity", "Color"}, []string{"A1", "A2"}, [][]string{{"64GB", "Hitam"}, {"128GB", "Merah"}}},
-		{"Books", []string{"Cover Type"}, []string{"A1", "A2"}, [][]string{{"Softcover"}, {"Hardcover"}}},
-		{"Sports", []string{"Size", "Color"}, []string{"A1", "A2"}, [][]string{{"M", "Merah"}, {"L", "Hitam"}}},
+		{"Fashion", []string{"Size", "Color"}, []string{"A1", "A2"}},
+		{"Electronics", []string{"Capacity", "Color"}, []string{"A1", "A2"}},
+		{"Books", []string{"Cover Type"}, []string{"A1", "A2"}},
+		{"Sports", []string{"Size", "Color"}, []string{"A1", "A2"}},
 	}
 
 	for _, catData := range categoryData {
@@ -237,7 +236,7 @@ func SeedInitialData(db *gorm.DB) {
 			})
 		}
 
-		for i, suffix := range catData.SubSuffixes {
+		for _, suffix := range catData.SubSuffixes {
 			subName := catData.Name + " Sub " + suffix
 			sub := models.Subcategory{
 				ID:         uuid.New(),
@@ -273,33 +272,67 @@ func SeedInitialData(db *gorm.DB) {
 			}
 			db.Create(&images)
 
-			variantValues := catData.VariantPairs[i]
-			variant := models.ProductVariant{
-				ID:        uuid.New(),
-				ProductID: product.ID,
-				SKU:       "SKU-" + strings.Join(variantValues, "-"),
-				Price:     49.99,
-				Stock:     10,
-				IsActive:  true,
-				ImageURL:  dummyImage,
-			}
-			db.Create(&variant)
-
-			for _, val := range variantValues {
-				pvOpt := models.ProductVariantOption{
-					ProductVariantID: variant.ID,
-					OptionValueID:    valueMap[val],
+			// === Ambil semua kombinasi (max 3) ===
+			valueSets := make([][]string, 0)
+			for _, vName := range catData.Variants {
+				var vals []string
+				for _, v := range allValues {
+					if getVariantTypeIDByName(db, vName) == v.TypeID {
+						vals = append(vals, v.Value)
+					}
 				}
-				db.Create(&pvOpt)
+				valueSets = append(valueSets, vals)
+			}
+			combinations := cartesianProduct(valueSets)
+			if len(combinations) > 3 {
+				combinations = combinations[:3] // batasi 3 varian saja
+			}
+
+			for _, combo := range combinations {
+				variant := models.ProductVariant{
+					ID:        uuid.New(),
+					ProductID: product.ID,
+					SKU:       "SKU-" + strings.Join(combo, "-"),
+					Price:     49.99,
+					Stock:     10,
+					IsActive:  true,
+					ImageURL:  dummyImage,
+				}
+				db.Create(&variant)
+
+				for _, val := range combo {
+					pvOpt := models.ProductVariantOption{
+						ProductVariantID: variant.ID,
+						OptionValueID:    valueMap[val],
+					}
+					db.Create(&pvOpt)
+				}
 			}
 		}
 	}
 
-	log.Println("✅ Finished seeding all categories, subcategories, and products with logical variants")
+	log.Println("✅ Finished seeding all categories, subcategories, and products with multiple variants")
 }
 
 func getVariantTypeIDByName(db *gorm.DB, name string) uint {
 	var v models.VariantOptionType
 	db.First(&v, "name = ?", name)
 	return v.ID
+}
+
+func cartesianProduct(sets [][]string) [][]string {
+	if len(sets) == 0 {
+		return [][]string{}
+	}
+	res := [][]string{{}}
+	for _, set := range sets {
+		var temp [][]string
+		for _, r := range res {
+			for _, v := range set {
+				temp = append(temp, append(append([]string{}, r...), v))
+			}
+		}
+		res = temp
+	}
+	return res
 }

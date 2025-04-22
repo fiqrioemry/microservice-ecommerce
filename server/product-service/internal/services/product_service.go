@@ -14,10 +14,11 @@ type ProductServiceInterface interface {
 	Delete(id uuid.UUID) error
 	GetAll() ([]models.Product, error)
 	GetBySlug(slug string) (*models.Product, error)
+	DeleteVariantProduct(variantId uuid.UUID) error
 	GetProductByID(id uuid.UUID) (*models.Product, error)
+	Search(params dto.SearchParams) ([]models.Product, int64, error)
 	CreateFullProduct(req dto.CreateFullProductRequest, imageURLs []string) error
 	UpdateWithImages(id uuid.UUID, req dto.UpdateProductRequest, imageURLs []string) error
-	Search(params dto.SearchParams) ([]models.Product, int64, error)
 }
 
 type ProductService struct {
@@ -159,6 +160,15 @@ func (s *ProductService) UpdateWithImages(id uuid.UUID, req dto.UpdateProductReq
 	}
 
 	return nil
+}
+
+func (s *ProductService) DeleteVariantProduct(variantId uuid.UUID) error {
+	v, _ := s.Repo.FindVariantByID(variantId)
+	if v.ImageURL != "" {
+		_ = utils.DeleteFromCloudinary(v.ImageURL)
+	}
+
+	return s.Repo.DeleteVariantProduct(variantId)
 }
 
 func (s *ProductService) Delete(id uuid.UUID) error {

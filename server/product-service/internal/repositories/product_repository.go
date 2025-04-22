@@ -28,6 +28,7 @@ type ProductRepository interface {
 	FindImagesByProductID(productID uuid.UUID) ([]models.ProductImage, error)
 
 	// Variants
+	DeleteVariantProduct(variantId uuid.UUID) error
 	CreateVariant(variant *models.ProductVariant) error
 	UpdateVariant(variant *models.ProductVariant) error
 	CreateVariantOption(option *models.ProductVariantOption) error
@@ -144,6 +145,10 @@ func (r *productRepo) Update(product *models.Product) error {
 
 func (r *productRepo) Delete(id uuid.UUID) error {
 	return r.db.Delete(&models.Product{}, "id = ?", id).Error
+}
+
+func (r *productRepo) DeleteVariantProduct(variantId uuid.UUID) error {
+	return r.db.Delete(&models.ProductVariant{}, "id = ?", variantId).Error
 }
 
 func (r *productRepo) SaveImages(images []models.ProductImage) error {

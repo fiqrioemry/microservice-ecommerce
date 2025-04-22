@@ -15,7 +15,7 @@ type AddressServiceInterface interface {
 	UpdateAddressWithLocation(userID string, addressID string, req dto.AddressRequest) error
 	DeleteAddress(userID string, addressID string) error
 	SetMainAddress(userID string, addressID string) error
-	GetAddressById(addressID string) (*models.Address, error)
+	GetMainAddress(userID string) (*models.Address, error)
 }
 
 type AddressService struct {
@@ -27,8 +27,8 @@ func NewAddressService(repo repositories.AddressRepository, locationRepo reposit
 	return &AddressService{Repo: repo, LocationRepo: locationRepo}
 }
 
-func (s *AddressService) GetAddressById(addressID string) (*models.Address, error) {
-	return s.Repo.GetAddressByID(addressID)
+func (s *AddressService) GetMainAddress(userID string) (*models.Address, error) {
+	return s.Repo.GetMainAddress(userID)
 }
 
 func (s *AddressService) GetAddresses(userID string) ([]models.Address, error) {
