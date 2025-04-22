@@ -5,7 +5,6 @@ export const useProductsQuery = (params = {}) =>
   useQuery({
     queryKey: ["products", params],
     queryFn: () => products.getAllProducts(params),
-    staleTime: 1000 * 60 * 5,
   });
 
 export const useProductDetailQuery = (slug) =>

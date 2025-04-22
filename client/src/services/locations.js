@@ -1,15 +1,15 @@
 // src/location.ts
-import { publicInstance } from ".";
+import { userInstance } from ".";
 
 // Get all provinces
 const getProvinces = async () => {
-  const res = await publicInstance.get("/provinces");
+  const res = await userInstance.get("/provinces");
   return res.data;
 };
 
 // Get cities by province ID
 const getCitiesByProvince = async (provinceId) => {
-  const res = await publicInstance.get(`/provinces/${provinceId}/cities`);
+  const res = await userInstance.get(`/provinces/${provinceId}/cities`);
   return res.data;
 };
 

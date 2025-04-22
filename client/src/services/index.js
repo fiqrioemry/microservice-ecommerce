@@ -9,15 +9,34 @@ export const productInstance = axios.create({
   },
 });
 
-export const authInstance = axios.create({
+export const userInstance = axios.create({
   baseURL: import.meta.env.VITE_USER_SERVICES,
   withCredentials: true,
   headers: {
     "X-API-Key": import.meta.env.VITE_API_KEY,
   },
 });
+export const cartInstance = axios.create({
+  baseURL: import.meta.env.VITE_CART_SERVICES,
+  withCredentials: true,
+  headers: {
+    "X-API-Key": import.meta.env.VITE_API_KEY,
+  },
+});
 
-authInstance.interceptors.response.use(
+cartInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      const logout = useAuthStore.getState().logout;
+      toast.error("Session expired, please login again.");
+      logout();
+    }
+    return Promise.reject(error);
+  }
+);
+
+userInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {

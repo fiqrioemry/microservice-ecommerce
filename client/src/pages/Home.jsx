@@ -1,14 +1,19 @@
 import { useEffect } from "react";
-import { useProductsQuery } from "../hooks/useProductsQuery";
+import ErrorDialog from "@/components/ui/ErrorDialog";
+import FetchLoading from "@/components/ui/FetchLoading";
+import { useProductsQuery } from "@/hooks/useProductsQuery";
 
 const Home = () => {
-  const { data: products = [], isLoading, isError } = useProductsQuery();
+  const {
+    isError,
+    refetch,
+    isLoading,
+    data: products = { results: [] },
+  } = useProductsQuery();
+  console.log(products.results);
 
-  if (isLoading) return <div className="text-center py-10">Loading...</div>;
-  if (isError)
-    return (
-      <div className="text-center py-10 text-red-500">Gagal memuat produk.</div>
-    );
+  if (isLoading) return <FetchLoading />;
+  if (isError) return <ErrorDialog onRetry={refetch} />;
 
   return (
     <section className="container h-screen mx-auto">
