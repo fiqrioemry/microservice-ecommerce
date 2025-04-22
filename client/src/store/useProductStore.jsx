@@ -1,72 +1,132 @@
-import { toast } from "sonner";
 import { create } from "zustand";
-import product from "../api/product";
+import { immer } from "zustand/middleware/immer";
+import { toast } from "sonner";
+import productApi from "@/services/product";
 
-export const useProductStore = create((set) => ({
-  categories: null,
-  provinces: null,
-  cities: null,
-  subCategories: null,
-  checkingAuth: true,
+export const useProductStore = create(
+  immer((set, get) => ({
+    products: [],
+    product: null,
+    loading: false,
 
-  submitTest: async (formData) => {
-    const content = Object.entries(formData)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join("\n");
+    // =====================
+    // PUBLIC PRODUCT METHODS
+    // =====================
 
-    toast("Result:", {
-      description: content,
-    });
-  },
+    fetchAllProducts: async (params = {}) => {
+      set((state) => {
+        state.loading = true;
+      });
+      try {
+        const data = await productApi.getAllProducts(params);
+        set((state) => {
+          state.products = data;
+        });
+      } catch (err) {
+        toast.error("Gagal memuat produk");
+      } finally {
+        set((state) => {
+          state.loading = false;
+        });
+      }
+    },
 
-  getCategories: async () => {
-    try {
-      const { categories } = await product.getCategories();
-      set({ categories });
-    } catch {
-      set({ categories: [] });
-    }
-  },
+    fetchProductBySlug: async (slug) => {
+      set((state) => {
+        state.loading = true;
+      });
+      try {
+        const data = await productApi.getProductBySlug(slug);
+        set((state) => {
+          state.product = data;
+        });
+      } catch (err) {
+        toast.error("Produk tidak ditemukan");
+      } finally {
+        set((state) => {
+          state.loading = false;
+        });
+      }
+    },
 
-  getSubCategories: async () => {
-    try {
-      const { subCategories } = await product.getsubCategories();
-      set({ subCategories });
-    } catch {
-      set({ SubCategories: [] });
-    }
-  },
+    searchProducts: async (queryParams) => {
+      try {
+        const data = await productApi.searchProducts(queryParams);
+        set((state) => {
+          state.products = data;
+        });
+      } catch (err) {
+        toast.error("Gagal mencari produk");
+      }
+    },
 
-  getProvinces: async () => {
-    try {
-      const { provinces } = await product.getProvinces();
-      set({ provinces });
-    } catch {
-      set({ provinces: [] });
-    }
-  },
+    // =====================
+    // ADMIN PRODUCT METHODS
+    // =====================
 
-  getCities: async () => {
-    try {
-      const { cities } = await product.getProvinces();
-      set({ cities });
-    } catch {
-      set({ cities: [] });
-    }
-  },
+    createProduct: async (formData) => {
+      try {
+        const { message } = await productApi.createProduct(formData);
+        toast.success(message);
+        await get().fetchAllProducts(); // refresh data
+      } catch (err) {
+        toast.error(err.message);
+      }
+    },
 
-  loadOptions: async (key, dependentValue = false) => {
-    switch (key) {
-      case "province":
-        const { provinces } = await product.getProvinces();
-        return provinces.map((p) => ({ label: p.name, value: p.id }));
-  
-      case "city":
-        if (dependentValue === true) return [];
-        const { cities } = await product.getCities(dependentValue);
-        return cities.map((c) => ({ label: c.name, value: c.id }));
-  
-      default:
-        return [];
-    }
-}));
+    updateProduct: async (id, formData) => {
+      try {
+        const { message } = await productApi.updateProduct(id, formData);
+        toast.success(message);
+        await get().fetchAllProducts();
+      } catch (err) {
+        toast.error(err.message);
+      }
+    },
+
+    deleteProduct: async (id) => {
+      try {
+        const { message } = await productApi.deleteProduct(id);
+        toast.success(message);
+        await get().fetchAllProducts();
+      } catch (err) {
+        toast.error(err.message);
+      }
+    },
+
+    uploadLocalImage: async (formData) => {
+      try {
+        const { message } = await productApi.uploadLocalImage(formData);
+        toast.success(message);
+      } catch (err) {
+        toast.error(err.message);
+      }
+    },
+
+    downloadImage: async (id) => {
+      try {
+        const blob = await productApi.downloadImage(id);
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `product-image-${id}`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      } catch (err) {
+        toast.error("Gagal mengunduh gambar");
+      }
+    },
+
+    deleteVariantProduct: async (variantId) => {
+      try {
+        const { message } = await productApi.deleteVariantProduct(variantId);
+        toast.success(message);
+        await get().fetchAllProducts();
+      } catch (err) {
+        toast.error(err.message);
+      }
+    },
+  }))
+);
