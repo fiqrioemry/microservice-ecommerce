@@ -1,32 +1,33 @@
 // src/api/cart.js
-import { instance } from ".";
+
+import { cartInstance } from ".";
 
 // =====================
 // CART (Auth Required)
 // =====================
 
 const getCart = async () => {
-  const res = await instance.get("/cart");
+  const res = await cartInstance.get("/cart");
   return res.data;
 };
 
 const addToCart = async (data) => {
-  const res = await instance.post("/cart", data);
+  const res = await cartInstance.post("/cart", data);
   return res.data;
 };
 
 const updateCartItem = async (itemId, data) => {
-  const res = await instance.put(`/cart/items/${itemId}`, data);
+  const res = await cartInstance.put(`/cart/items/${itemId}`, data);
   return res.data;
 };
 
 const removeCartItem = async (itemId) => {
-  const res = await instance.delete(`/cart/items/${itemId}`);
+  const res = await cartInstance.delete(`/cart/items/${itemId}`);
   return res.data;
 };
 
 const clearCart = async () => {
-  const res = await instance.delete("/cart");
+  const res = await cartInstance.delete("/cart");
   return res.data;
 };
 

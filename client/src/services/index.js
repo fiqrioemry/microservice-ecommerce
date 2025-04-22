@@ -16,6 +16,7 @@ export const userInstance = axios.create({
     "X-API-Key": import.meta.env.VITE_API_KEY,
   },
 });
+
 export const cartInstance = axios.create({
   baseURL: import.meta.env.VITE_CART_SERVICES,
   withCredentials: true,
@@ -49,6 +50,18 @@ userInstance.interceptors.response.use(
 );
 
 productInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      const logout = useAuthStore.getState().logout;
+      toast.error("Session expired, please login again.");
+      logout();
+    }
+    return Promise.reject(error);
+  }
+);
+
+cartInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {

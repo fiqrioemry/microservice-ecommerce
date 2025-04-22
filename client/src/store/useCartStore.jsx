@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { create } from "zustand";
-import cartApi from "@/api/cart";
+import carts from "@/services/carts";
 import { immer } from "zustand/middleware/immer";
 
 export const useCartStore = create(
@@ -26,7 +26,7 @@ export const useCartStore = create(
         state.loading = true;
       });
       try {
-        const data = await cartApi.getCart();
+        const data = await carts.getCart();
         set((state) => {
           state.items = data;
         });
@@ -42,7 +42,7 @@ export const useCartStore = create(
     // ✅ Add new item
     addItem: async (formData) => {
       try {
-        const { message } = await cartApi.addToCart(formData);
+        const { message } = await carts.addToCart(formData);
         toast.success(message);
         await get().fetchCart(); // refresh setelah add
       } catch (err) {
@@ -53,7 +53,7 @@ export const useCartStore = create(
     // ✅ Update item quantity
     updateItem: async (itemId, data) => {
       try {
-        const { message } = await cartApi.updateCartItem(itemId, data);
+        const { message } = await carts.updateCartItem(itemId, data);
         toast.success(message);
         await get().fetchCart();
       } catch (err) {
@@ -64,7 +64,7 @@ export const useCartStore = create(
     // ✅ Remove single item
     removeItem: async (itemId) => {
       try {
-        const { message } = await cartApi.removeCartItem(itemId);
+        const { message } = await carts.removeCartItem(itemId);
         toast.success(message);
         set((state) => {
           state.items = state.items.filter((i) => i.id !== itemId);
@@ -77,7 +77,7 @@ export const useCartStore = create(
     // ✅ Clear entire cart
     clearCart: async () => {
       try {
-        const { message } = await cartApi.clearCart();
+        const { message } = await carts.clearCart();
         toast.success(message);
         set((state) => {
           state.items = [];
