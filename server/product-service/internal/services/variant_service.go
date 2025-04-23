@@ -18,8 +18,6 @@ type VariantService interface {
 	UpdateValue(id uint, value string) error
 	DeleteValue(id uint) error
 
-	MapToCategory(req dto.CategoryVariantTypeRequest) error
-	MapToSubcategory(req dto.SubcategoryVariantTypeRequest) error
 }
 
 type variantService struct {
@@ -62,12 +60,4 @@ func (s *variantService) UpdateValue(id uint, value string) error {
 
 func (s *variantService) DeleteValue(id uint) error {
 	return s.repo.DeleteValue(id)
-}
-
-func (s *variantService) MapToCategory(req dto.CategoryVariantTypeRequest) error {
-	return s.repo.MapToCategory(req.CategoryID, req.VariantTypeID)
-}
-
-func (s *variantService) MapToSubcategory(req dto.SubcategoryVariantTypeRequest) error {
-	return s.repo.MapToSubcategory(req.SubcategoryID, req.VariantTypeID)
 }

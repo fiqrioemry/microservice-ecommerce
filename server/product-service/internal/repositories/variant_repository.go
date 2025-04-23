@@ -1,8 +1,9 @@
+// ✅ FINAL VERSION: Tanpa relasi ke Category & Subcategory untuk Variant
+
 package repositories
 
 import (
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/models"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -16,9 +17,6 @@ type VariantRepository interface {
 	UpdateValue(*models.VariantOptionValue) error
 	DeleteValue(id uint) error
 	IsValueExist(typeID uint, value string) bool
-
-	MapToCategory(catID uuid.UUID, typeID uint) error
-	MapToSubcategory(subID uuid.UUID, typeID uint) error
 }
 
 type variantRepo struct {
@@ -65,18 +63,4 @@ func (r *variantRepo) IsValueExist(typeID uint, value string) bool {
 		Where("type_id = ? AND value = ?", typeID, value).
 		Count(&count)
 	return count > 0
-}
-
-func (r *variantRepo) MapToCategory(catID uuid.UUID, typeID uint) error {
-	return r.db.Create(&models.CategoryVariantType{
-		CategoryID:    catID,
-		VariantTypeID: typeID,
-	}).Error
-}
-
-func (r *variantRepo) MapToSubcategory(subID uuid.UUID, typeID uint) error {
-	return r.db.Create(&models.SubcategoryVariantType{
-		SubcategoryID: subID,
-		VariantTypeID: typeID,
-	}).Error
 }

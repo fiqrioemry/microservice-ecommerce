@@ -99,30 +99,3 @@ func (h *VariantHandler) DeleteValue(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Variant value deleted"})
 }
-
-func (h *VariantHandler) MapToCategory(c *gin.Context) {
-	var req dto.CategoryVariantTypeRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	if err := h.Service.MapToCategory(req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusCreated, gin.H{"message": "Mapped to category"})
-}
-
-// POST /api/variants/map/subcategory
-func (h *VariantHandler) MapToSubcategory(c *gin.Context) {
-	var req dto.SubcategoryVariantTypeRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	if err := h.Service.MapToSubcategory(req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	c.JSON(http.StatusCreated, gin.H{"message": "Mapped to subcategory"})
-}

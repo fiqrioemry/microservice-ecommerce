@@ -49,6 +49,12 @@ func main() {
 	attributeService := services.NewAttributeService(attributeRepo)
 	attributeHandler := handlers.NewAttributeHandler(attributeService)
 
+	// banner
+	bannerRepo := repositories.NewBannerRepository(db)
+	bannerService := services.NewBannerService(bannerRepo)
+	bannerHandler := handlers.NewBannerHandler(bannerService)
+
+
 	r := gin.Default()
 	r.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
 
@@ -56,9 +62,16 @@ func main() {
 	routes.ProductRoutes(r, productHandler)
 	routes.CategoryRoutes(r, categoryHandler)
 	routes.AttributeRoutes(r, attributeHandler)
+	routes.BannerRoutes(r, bannerHandler)
 
-	seeders.SeedInitialData(db)
 
+	seeders.SeedBanner(db)
+	seeders.SeedCategories(db)
+	seeders.SeedVariantTypes(db)
+	seeders.SeedShoesAndAccessoriesProducts(db)
+	seeders.SeedFashionApparelProducts(db)
+	seeders.SeedHatsAndCaps(db)
+	seeders.SeedWomensClothing(db)
 	go func() {
 		lis, err := net.Listen("tcp", ":50051")
 		if err != nil {

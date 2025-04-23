@@ -1,0 +1,23 @@
+id,name,slug,category_id,image,created_at,updated_at,deleted_at
+036a1fd4-38a0-4b7c-88a0-1586bd7a24cb,"Sport Nutritions",sport-nutritions,e89df527-2692-4bdb-8c29-bae948c00998,https://placehold.co/400x400,"2025-04-23 08:01:50.339","2025-04-23 08:01:50.339",NULL
+0edb82de-89f2-4f99-b9cf-a4b0cafbb963,"Energy Drink",energy-drink,be56255c-3f7f-4653-a182-5e537fdf0d68,https://placehold.co/400x400,"2025-04-23 08:01:50.364","2025-04-23 08:01:50.364",NULL
+1915dbe5-7240-4227-b276-81de8edb7cb2,"Canned Food",canned-food,be56255c-3f7f-4653-a182-5e537fdf0d68,https://placehold.co/400x400,"2025-04-23 08:01:50.390","2025-04-23 08:01:50.390",NULL
+1dfcd1dc-e535-4a16-9e52-ed204d05223b,Noodles,noodles,be56255c-3f7f-4653-a182-5e537fdf0d68,https://placehold.co/400x400,"2025-04-23 08:01:50.379","2025-04-23 08:01:50.379",NULL
+1e2ab638-ed4a-4759-90ab-c3322a4e5032,Baseball,baseball,ef71eebe-14f7-40fb-8627-1eaeceafec2b,https://placehold.co/400x400,"2025-04-23 08:01:50.477","2025-04-23 08:01:50.477",NULL
+3727463f-e073-4664-bbd4-a948f082f5b2,Collagen,collagen,e89df527-2692-4bdb-8c29-bae948c00998,https://placehold.co/400x400,"2025-04-23 08:01:50.313","2025-04-23 08:01:50.313",NULL
+46b58632-c585-4c6f-b041-66b6a2546813,"Women's Clothing",women's-clothing,5b49ec0d-c227-4556-b242-5f75a86b3c45,https://placehold.co/400x400,"2025-04-23 08:01:50.537","2025-04-23 08:01:50.537",NULL
+5226bfa7-0b23-459d-9058-f0995044cda8,"Hair Extention",hair-extention,9efd681c-34bb-45dd-8d88-f9c79c5a6fe0,https://placehold.co/400x400,"2025-04-23 08:01:50.427","2025-04-23 08:01:50.427",NULL
+58889a78-6308-48a9-b71f-4240b60e0451,"Walking Style Shoes",walking-style-shoes,a4de7180-0813-4321-8e2a-43ae25fa98b8,https://placehold.co/400x400,"2025-04-23 08:01:50.213","2025-04-23 08:01:50.213",NULL
+62c544b9-58ca-479e-ab14-96fe3043b692,"Mobile Phones",mobile-phones,b580897a-64ba-40b1-b583-a5ac93d7451b,https://placehold.co/400x400,"2025-04-23 08:01:50.252","2025-04-23 08:01:50.252",NULL
+77a08deb-877c-4ad3-855a-39bd64283233,"Digital Camera",digital-camera,b580897a-64ba-40b1-b583-a5ac93d7451b,https://placehold.co/400x400,"2025-04-23 08:01:50.275","2025-04-23 08:01:50.275",NULL
+7df9ef16-cb2b-4a7a-9dc9-f77d1ea06ef6,Vitamin,vitamin,e89df527-2692-4bdb-8c29-bae948c00998,https://placehold.co/400x400,"2025-04-23 08:01:50.326","2025-04-23 08:01:50.326",NULL
+8082d643-cc98-4781-9067-5bd1fd74a35b,Earphones,earphones,b580897a-64ba-40b1-b583-a5ac93d7451b,https://placehold.co/400x400,"2025-04-23 08:01:50.288","2025-04-23 08:01:50.288",NULL
+8d2ecf49-17c7-43ff-97d0-fde3290a3f29,"Smart TV",smart-tv,b580897a-64ba-40b1-b583-a5ac93d7451b,https://placehold.co/400x400,"2025-04-23 08:01:50.263","2025-04-23 08:01:50.263",NULL
+8f4aeac0-e6e5-4286-90b9-ae8185fc7758,"Lip Gloss",lip-gloss,9efd681c-34bb-45dd-8d88-f9c79c5a6fe0,https://placehold.co/400x400,"2025-04-23 08:01:50.414","2025-04-23 08:01:50.414",NULL
+a0f828c6-4a91-492a-93c5-a902ff90832c,"Roller Wheels",roller-wheels,ef71eebe-14f7-40fb-8627-1eaeceafec2b,https://placehold.co/400x400,"2025-04-23 08:01:50.489","2025-04-23 08:01:50.489",NULL
+a797055e-40a7-449d-9128-49eedcf6aeb8,Sandals,sandals,a4de7180-0813-4321-8e2a-43ae25fa98b8,https://placehold.co/400x400,"2025-04-23 08:01:50.200","2025-04-23 08:01:50.200",NULL
+b0217593-386a-4957-9ec3-9c77a361b00b,"Men's Clothing",men's-clothing,5b49ec0d-c227-4556-b242-5f75a86b3c45,https://placehold.co/400x400,"2025-04-23 08:01:50.514","2025-04-23 08:01:50.514",NULL
+b6ce07ae-c655-4931-a6eb-d24e6d960569,"Make Up",make-up,9efd681c-34bb-45dd-8d88-f9c79c5a6fe0,https://placehold.co/400x400,"2025-04-23 08:01:50.439","2025-04-23 08:01:50.439",NULL
+bcd7bf4b-3802-4e11-8d3e-7aa48aaedccd,"Dress Shoes & Oxford",dress-shoes-&-oxford,a4de7180-0813-4321-8e2a-43ae25fa98b8,https://placehold.co/400x400,"2025-04-23 08:01:50.225","2025-04-23 08:01:50.225",NULL
+bd868bf0-19f5-4790-a432-bc4d93a016d9,"Cruise Bike",cruise-bike,ef71eebe-14f7-40fb-8627-1eaeceafec2b,https://placehold.co/400x400,"2025-04-23 08:01:50.463","2025-04-23 08:01:50.463",NULL
+ecc4dc08-2928-4722-abe7-ae0bd3c2343c,"Hats and Caps",hats-and-caps,5b49ec0d-c227-4556-b242-5f75a86b3c45,https://placehold.co/400x400,"2025-04-23 08:01:50.525","2025-04-23 08:01:50.525",NULL

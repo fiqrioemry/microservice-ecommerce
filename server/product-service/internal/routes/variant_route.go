@@ -20,6 +20,4 @@ func VariantRoutes(r *gin.Engine, h *handlers.VariantHandler) {
 	admin.PUT("/values/:valueId", h.UpdateValue)
 	admin.DELETE("/values/:valueId", h.DeleteValue)
 
-	admin.POST("/map/category", h.MapToCategory)
-	admin.POST("/map/subcategory", h.MapToSubcategory)
 }

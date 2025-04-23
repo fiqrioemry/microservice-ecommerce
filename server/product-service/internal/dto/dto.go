@@ -177,3 +177,13 @@ type ProductMinimal struct {
 	Category    CategoryMinimal  `json:"category"`
 	Subcategory *CategoryMinimal `json:"subcategory,omitempty"`
 }
+type BannerRequest struct {
+	Position string `form:"position" binding:"required,oneof=top side1 side2 bottom"`
+}
+
+
+type BannerResponse struct {
+	ID       string `json:"id"`
+	Position string `json:"position"`
+	ImageURL string `json:"imageUrl"`
+}

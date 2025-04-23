@@ -77,23 +77,6 @@ type VariantOptionValue struct {
 	Type VariantOptionType `gorm:"references:ID;foreignKey:TypeID"`
 }
 
-type CategoryVariantType struct {
-	ID            uint      `gorm:"primaryKey"`
-	CategoryID    uuid.UUID `gorm:"type:char(36);not null"`
-	VariantTypeID uint      `gorm:"not null"`
-
-	Category Category          `gorm:"foreignKey:CategoryID"`
-	Type     VariantOptionType `gorm:"foreignKey:VariantTypeID"`
-}
-
-type SubcategoryVariantType struct {
-	ID            uint      `gorm:"primaryKey"`
-	SubcategoryID uuid.UUID `gorm:"type:char(36);not null"`
-	VariantTypeID uint      `gorm:"not null"`
-
-	Subcategory Subcategory       `gorm:"foreignKey:SubcategoryID"`
-	Type        VariantOptionType `gorm:"foreignKey:VariantTypeID"`
-}
 
 type ProductVariant struct {
 	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
@@ -172,6 +155,23 @@ func (m *ProductImage) BeforeCreate(tx *gorm.DB) error {
 func (m *ProductVariant) BeforeCreate(tx *gorm.DB) error {
 	if m.ID == uuid.Nil {
 		m.ID = uuid.New()
+	}
+	return nil
+}
+
+
+type Banner struct {
+	ID        uuid.UUID      `gorm:"type:char(36);primaryKey"`
+	Position  string         `gorm:"type:varchar(50);not null"` 
+	ImageURL  string         `gorm:"type:varchar(255);not null"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+}
+
+func (b *Banner) BeforeCreate(tx *gorm.DB) error {
+	if b.ID == uuid.Nil {
+		b.ID = uuid.New()
 	}
 	return nil
 }
