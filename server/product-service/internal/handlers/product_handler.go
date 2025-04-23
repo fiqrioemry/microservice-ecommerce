@@ -22,7 +22,6 @@ func NewProductHandler(service services.ProductServiceInterface) *ProductHandler
 	return &ProductHandler{Service: service}
 }
 
-
 func (h *ProductHandler) SearchProducts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
@@ -52,12 +51,8 @@ func (h *ProductHandler) SearchProducts(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Search failed"})
 		return
 	}
-
-	offset := (params.Page - 1) * params.Limit
-	end := min(offset+params.Limit, len(products))
-
 	var response []dto.ProductMinimal
-	for _, p := range products[offset:end] {
+	for _, p := range products {
 		item := dto.ProductMinimal{
 			ID:          p.ID.String(),
 			Name:        p.Name,
@@ -92,6 +87,10 @@ func (h *ProductHandler) SearchProducts(c *gin.Context) {
 		response = append(response, item)
 	}
 
+	if response == nil {
+		response = []dto.ProductMinimal{}
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"page":    params.Page,
 		"limit":   params.Limit,
@@ -100,6 +99,7 @@ func (h *ProductHandler) SearchProducts(c *gin.Context) {
 		"results": response,
 	})
 }
+
 
 func (h *ProductHandler) CreateProduct(c *gin.Context) {
 	form, err := c.MultipartForm()

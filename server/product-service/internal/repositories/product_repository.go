@@ -58,10 +58,13 @@ func (r *productRepo) SearchProducts(params dto.SearchParams) ([]models.Product,
 		Preload("ProductImage").
 		Preload("ProductVariant")
 
+	// Single JOIN for price, stock filtering, and sorting
+	joinVariant := false
+
 	if params.Query != "" {
 		query = query.Where("products.name LIKE ? OR products.description LIKE ?", "%"+params.Query+"%", "%"+params.Query+"%")
 	}
-	
+
 	if params.Category != "" {
 		query = query.Joins("JOIN categories ON categories.id = products.category_id").
 			Where("categories.slug = ?", params.Category)
@@ -70,35 +73,41 @@ func (r *productRepo) SearchProducts(params dto.SearchParams) ([]models.Product,
 		query = query.Joins("JOIN subcategories ON subcategories.id = products.subcategory_id").
 			Where("subcategories.slug = ?", params.Subcategory)
 	}
+
+	if params.InStock || params.MinPrice > 0 || params.MaxPrice > 0 || strings.HasPrefix(params.Sort, "price") {
+		query = query.Joins("JOIN product_variants ON product_variants.product_id = products.id")
+		joinVariant = true
+	}
+
 	if params.InStock {
-		query = query.Joins("JOIN product_variants ON product_variants.product_id = products.id").
-			Where("product_variants.stock > 0")
+		query = query.Where("product_variants.stock > 0")
 	}
 	if params.MinPrice > 0 {
-		query = query.Joins("JOIN product_variants pv1 ON pv1.product_id = products.id").
-			Where("pv1.price >= ?", params.MinPrice)
+		query = query.Where("product_variants.price >= ?", params.MinPrice)
 	}
 	if params.MaxPrice > 0 {
-		query = query.Joins("JOIN product_variants pv2 ON pv2.product_id = products.id").
-			Where("pv2.price <= ?", params.MaxPrice)
+		query = query.Where("product_variants.price <= ?", params.MaxPrice)
 	}
+
 	if params.Sort != "" {
 		parts := strings.Split(params.Sort, ":")
 		if len(parts) == 2 {
 			column := parts[0]
 			order := parts[1]
-	
+
 			switch column {
 			case "price":
-				query = query.Joins("JOIN product_variants ON product_variants.product_id = products.id").
-					Order("product_variants.price " + order)
+				if !joinVariant {
+					query = query.Joins("JOIN product_variants ON product_variants.product_id = products.id")
+				}
+				query = query.Order("product_variants.price " + order)
 			case "createdAt":
 				query = query.Order("products.created_at " + order)
 			default:
 				query = query.Order("products." + column + " " + order)
 			}
 		}
-	}	
+	}
 
 	var total int64
 	query.Count(&total)
@@ -108,7 +117,6 @@ func (r *productRepo) SearchProducts(params dto.SearchParams) ([]models.Product,
 	err := query.Offset(offset).Limit(params.Limit).Find(&products).Error
 	return products, total, err
 }
-
 func (r *productRepo) FindAllWithPreload() ([]models.Product, error) {
 	var products []models.Product
 	err := r.db.
