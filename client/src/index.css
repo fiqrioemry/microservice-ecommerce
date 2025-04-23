@@ -88,11 +88,11 @@
   }
 
   h1 {
-    @apply text-2xl md:text-3xl font-bold capitalize;
+    @apply text-2xl md:text-3xl font-bold uppercase;
   }
 
   h2 {
-    @apply text-xl md:text-2xl font-semibold capitalize;
+    @apply text-xl md:text-2xl font-semibold uppercase;
   }
 
   h3 {

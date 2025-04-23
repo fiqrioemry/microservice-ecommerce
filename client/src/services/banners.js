@@ -1,11 +1,17 @@
 // src/category.ts
 import { productInstance } from ".";
 
-const getBanners = async (position) => {
+const getAllBanners = async () => {
+  const res = await productInstance.get(`/banners`);
+  return res.data;
+};
+
+const getBannersByPosition = async (position) => {
   const res = await productInstance.get(`/banners/${position}`);
   return res.data;
 };
 
 export default {
-  getBanners,
+  getAllBanners,
+  getBannersByPosition,
 };

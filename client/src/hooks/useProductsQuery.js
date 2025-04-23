@@ -29,9 +29,15 @@ export const useCategoriesQuery = () =>
     queryFn: c.getAllCategories,
   });
 
-export const useBannersQuery = (position) => console.log("get banner");
-useQuery({
-  queryKey: ["banners", position],
-  queryFn: () => b.getBanners(position),
-  enabled: !!position,
-});
+export const useGetAllBannersQuery = () =>
+  useQuery({
+    queryKey: ["banners"],
+    queryFn: b.getAllBanners,
+  });
+
+export const useGetBannerByPositionQuery = (position) =>
+  useQuery({
+    queryKey: ["banners", position],
+    queryFn: () => b.getBannersByPosition(position),
+    enabled: !!position,
+  });
