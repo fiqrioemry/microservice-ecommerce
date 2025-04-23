@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/dto"
@@ -21,18 +22,25 @@ func NewProductHandler(service services.ProductServiceInterface) *ProductHandler
 	return &ProductHandler{Service: service}
 }
 
+
 func (h *ProductHandler) SearchProducts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
-	minPrice, _ := strconv.ParseFloat(c.Query("minPrice"), 64)
-	maxPrice, _ := strconv.ParseFloat(c.Query("maxPrice"), 64)
+	minPrice, _ := strconv.ParseFloat(c.DefaultQuery("minPrice", "0"), 64)
+	maxPrice, _ := strconv.ParseFloat(c.DefaultQuery("maxPrice", "0"), 64)
+
+	sort := c.DefaultQuery("sort", "name:asc")
+	parts := strings.Split(sort, ":")
+	if len(parts) != 2 || (parts[1] != "asc" && parts[1] != "desc") {
+		sort = "name:asc" // fallback jika format sort tidak valid
+	}
 
 	params := dto.SearchParams{
 		Query:       c.Query("q"),
 		Category:    c.Query("category"),
 		Subcategory: c.Query("subcategory"),
 		InStock:     c.Query("stock") == "true",
-		Sort:        c.DefaultQuery("sort", "name:asc"),
+		Sort:        sort,
 		Page:        page,
 		Limit:       limit,
 		MinPrice:    minPrice,
@@ -45,11 +53,51 @@ func (h *ProductHandler) SearchProducts(c *gin.Context) {
 		return
 	}
 
+	offset := (params.Page - 1) * params.Limit
+	end := min(offset+params.Limit, len(products))
+
+	var response []dto.ProductMinimal
+	for _, p := range products[offset:end] {
+		item := dto.ProductMinimal{
+			ID:          p.ID.String(),
+			Name:        p.Name,
+			Slug:        p.Slug,
+			Price:       0,
+			Description: p.Description,
+			IsFeatured:  p.IsFeatured,
+			IsActive:    p.IsActive,
+			Category: dto.CategoryMinimal{
+				ID:   p.Category.ID,
+				Name: p.Category.Name,
+				Slug: p.Category.Slug,
+			},
+		}
+
+		if p.Subcategory != nil {
+			item.Subcategory = &dto.CategoryMinimal{
+				ID:   p.Subcategory.ID,
+				Name: p.Subcategory.Name,
+				Slug: p.Subcategory.Slug,
+			}
+		}
+
+		for _, img := range p.ProductImage {
+			item.Images = append(item.Images, img.URL)
+		}
+
+		if len(p.ProductVariant) > 0 {
+			item.Price = p.ProductVariant[0].Price
+		}
+
+		response = append(response, item)
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"total":   total,
 		"page":    params.Page,
+		"limit":   params.Limit,
+		"total":   total,
 		"pages":   (total + int64(params.Limit) - 1) / int64(params.Limit),
-		"results": products,
+		"results": response,
 	})
 }
 
@@ -143,10 +191,7 @@ func (h *ProductHandler) GetAllProducts(c *gin.Context) {
 		return
 	}
 	total := len(products)
-	end := offset + limit
-	if end > total {
-		end = total
-	}
+	end := min(offset + limit, total)
 
 	var response []dto.ProductMinimal
 	for _, p := range products[offset:end] {

@@ -176,6 +176,8 @@ import (
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/models"
 	"gorm.io/gorm"
 
+	"slices"
+
 	"github.com/google/uuid"
 )
 
@@ -311,6 +313,84 @@ func SeedInitialData(db *gorm.DB) {
 		}
 	}
 
+	// Tambahan produk dummy tambahan (4 produk × 2 variant)
+extraProducts := []string{"Test Product A", "Test Product B", "Test Product C", "Test Product D"}
+extraCombos := [][]string{{"S", "Red"}, {"M", "Blue"}}
+extraPrices := []float64{27433, 35628, 38161, 34852, 24607, 90838, 108607, 57456} // sudah diacak
+
+priceIndex := 0
+for _, name := range extraProducts {
+	cat := models.Category{
+		ID:    uuid.New(),
+		Name:  name + " Category",
+		Slug:  strings.ToLower(strings.ReplaceAll(name+" Category", " ", "-")),
+		Image: dummyImage,
+	}
+	db.Create(&cat)
+
+	sub := models.Subcategory{
+		ID:         uuid.New(),
+		Name:       name + " Sub",
+		Slug:       strings.ToLower(strings.ReplaceAll(name+" Sub", " ", "-")),
+		CategoryID: cat.ID,
+		Image:      dummyImage,
+	}
+	db.Create(&sub)
+
+	for _, variant := range []string{"Size", "Color"} {
+		db.Create(&models.CategoryVariantType{
+			CategoryID:    cat.ID,
+			VariantTypeID: getVariantTypeIDByName(db, variant),
+		})
+	}
+
+	product := models.Product{
+		ID:            uuid.New(),
+		Name:          name,
+		Slug:          strings.ToLower(strings.ReplaceAll(name, " ", "-")),
+		Description:   "Extra product " + name,
+		CategoryID:    cat.ID,
+		SubcategoryID: &sub.ID,
+		IsFeatured:    true,
+		IsActive:      true,
+		Weight:        1000,
+		Length:        10,
+		Width:         5,
+		Height:        2,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
+	}
+	db.Create(&product)
+
+	db.Create(&models.ProductImage{
+		ID:        uuid.New(),
+		ProductID: product.ID,
+		URL:       dummyImage,
+		IsPrimary: true,
+	})
+
+	for _, combo := range extraCombos {
+		variant := models.ProductVariant{
+			ID:        uuid.New(),
+			ProductID: product.ID,
+			SKU:       "SKU-" + strings.Join(combo, "-"),
+			Price:     extraPrices[priceIndex],
+			Stock:     10,
+			IsActive:  true,
+			ImageURL:  dummyImage,
+		}
+		priceIndex++
+		db.Create(&variant)
+
+		for _, val := range combo {
+			db.Create(&models.ProductVariantOption{
+				ProductVariantID: variant.ID,
+				OptionValueID:    valueMap[val],
+			})
+		}
+	}
+}
+
 	log.Println("✅ Finished seeding all categories, subcategories, and products with multiple variants")
 }
 
@@ -329,10 +409,12 @@ func cartesianProduct(sets [][]string) [][]string {
 		var temp [][]string
 		for _, r := range res {
 			for _, v := range set {
-				temp = append(temp, append(append([]string{}, r...), v))
+				temp = append(temp, append(slices.Clone(r), v))
 			}
 		}
 		res = temp
 	}
 	return res
 }
+
+

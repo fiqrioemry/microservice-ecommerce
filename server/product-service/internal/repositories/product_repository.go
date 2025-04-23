@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/dto"
@@ -60,8 +59,9 @@ func (r *productRepo) SearchProducts(params dto.SearchParams) ([]models.Product,
 		Preload("ProductVariant")
 
 	if params.Query != "" {
-		query = query.Where("products.name LIKE ?", "%"+params.Query+"%")
+		query = query.Where("products.name LIKE ? OR products.description LIKE ?", "%"+params.Query+"%", "%"+params.Query+"%")
 	}
+	
 	if params.Category != "" {
 		query = query.Joins("JOIN categories ON categories.id = products.category_id").
 			Where("categories.slug = ?", params.Category)
@@ -85,9 +85,20 @@ func (r *productRepo) SearchProducts(params dto.SearchParams) ([]models.Product,
 	if params.Sort != "" {
 		parts := strings.Split(params.Sort, ":")
 		if len(parts) == 2 {
-			query = query.Order(fmt.Sprintf("%s %s", parts[0], parts[1]))
+			column := parts[0]
+			order := parts[1]
+	
+			switch column {
+			case "price":
+				query = query.Joins("JOIN product_variants ON product_variants.product_id = products.id").
+					Order("product_variants.price " + order)
+			case "createdAt":
+				query = query.Order("products.created_at " + order)
+			default:
+				query = query.Order("products." + column + " " + order)
+			}
 		}
-	}
+	}	
 
 	var total int64
 	query.Count(&total)

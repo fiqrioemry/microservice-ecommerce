@@ -148,15 +148,15 @@ type SubcategoryResponse struct {
 }
 
 type SearchParams struct {
-	Query       string
-	Category    string
-	Subcategory string
-	InStock     bool
-	Sort        string
-	MinPrice    float64
-	MaxPrice    float64
-	Page        int
-	Limit       int
+	Query       string  `json:"q"`
+	Category    string  `json:"category"`
+	Subcategory string  `json:"subcategory"`
+	InStock     bool    `json:"stock"`
+	Sort        string  `json:"sort"`
+	Page        int     `json:"page"`
+	Limit       int     `json:"limit"`
+	MinPrice    float64 `json:"minPrice"`
+	MaxPrice    float64 `json:"maxPrice"`
 }
 
 type CategoryMinimal struct {
