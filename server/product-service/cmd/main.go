@@ -66,12 +66,10 @@ func main() {
 
 
 	seeders.SeedBanner(db)
-	seeders.SeedCategories(db)
-	seeders.SeedVariantTypes(db)
-	seeders.SeedShoesAndAccessoriesProducts(db)
-	seeders.SeedFashionApparelProducts(db)
-	seeders.SeedHatsAndCaps(db)
-	seeders.SeedWomensClothing(db)
+	seeders.SeedCategoriesAndSubcategories(db)
+	seeders.SeedVariantTypesAndValues(db)
+	seeders.SeedProductDataOne(db)
+
 	go func() {
 		lis, err := net.Listen("tcp", ":50051")
 		if err != nil {

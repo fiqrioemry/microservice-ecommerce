@@ -272,7 +272,6 @@ func (h *ProductHandler) GetProductBySlug(c *gin.Context) {
 			Price:    v.Price,
 			Stock:    v.Stock,
 			Sold:     v.Sold,
-			IsActive: v.IsActive,
 			ImageURL: v.ImageURL,
 			Options:  make(map[string]string),
 		}

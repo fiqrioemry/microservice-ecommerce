@@ -11,6 +11,7 @@ import (
 )
 
 type BannerService interface {
+	GetAll() ([]dto.BannerResponse, error)
 	Create(req dto.BannerRequest, file multipart.File) error
 	Get(position string) ([]dto.BannerResponse, error)
 	Delete(id uuid.UUID) error
@@ -35,6 +36,22 @@ func (s *bannerService) Create(req dto.BannerRequest, file multipart.File) error
 		ImageURL: url,
 	}
 	return s.repo.Create(banner)
+}
+
+func (s *bannerService) GetAll() ([]dto.BannerResponse, error) {
+	banners, err := s.repo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	var results []dto.BannerResponse
+	for _, b := range banners {
+		results = append(results, dto.BannerResponse{
+			ID:       b.ID.String(),
+			Position: b.Position,
+			ImageURL: b.ImageURL,
+		})
+	}
+	return results, nil
 }
 
 func (s *bannerService) Get(position string) ([]dto.BannerResponse, error) {

@@ -1,8 +1,0 @@
-id,name,slug,image,created_at,updated_at,deleted_at
-5b49ec0d-c227-4556-b242-5f75a86b3c45,"Fashion & Apparel",fashion-&-apparel,https://placehold.co/400x400,"2025-04-23 08:01:50.503","2025-04-23 08:01:50.503",NULL
-9efd681c-34bb-45dd-8d88-f9c79c5a6fe0,"Beauty & Skin Care",beauty-&-skin-care,https://placehold.co/400x400,"2025-04-23 08:01:50.402","2025-04-23 08:01:50.402",NULL
-a4de7180-0813-4321-8e2a-43ae25fa98b8,"Shoes & Accessories",shoes-&-accessories,https://placehold.co/400x400,"2025-04-23 08:01:50.188","2025-04-23 08:01:50.188",NULL
-b580897a-64ba-40b1-b583-a5ac93d7451b,"Gadget & Electronics",gadget-&-electronics,https://placehold.co/400x400,"2025-04-23 08:01:50.238","2025-04-23 08:01:50.238",NULL
-be56255c-3f7f-4653-a182-5e537fdf0d68,"Food & Beverage",food-&-beverage,https://placehold.co/400x400,"2025-04-23 08:01:50.351","2025-04-23 08:01:50.351",NULL
-e89df527-2692-4bdb-8c29-bae948c00998,"Health & Care",health-&-care,https://placehold.co/400x400,"2025-04-23 08:01:50.300","2025-04-23 08:01:50.300",NULL
-ef71eebe-14f7-40fb-8627-1eaeceafec2b,"Sport & Entertainment",sport-&-entertainment,https://placehold.co/400x400,"2025-04-23 08:01:50.451","2025-04-23 08:01:50.451",NULL

@@ -68,7 +68,6 @@ func (s *ProductService) CreateFullProduct(req dto.CreateFullProductRequest, ima
 			Price:     v.Price,
 			Stock:     v.Stock,
 			Sold:      v.Sold,
-			IsActive:  v.IsActive,
 			ImageURL:  v.ImageURL,
 		}
 		if err := s.Repo.CreateVariant(&variant); err != nil {

@@ -46,6 +46,16 @@ func (h *BannerHandler) UploadBanner(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "banner uploaded successfully"})
 }
 
+
+func (h *BannerHandler) GetAllBanners(c *gin.Context) {
+	results, err := h.Service.GetAll()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch banner"})
+		return
+	}
+	c.JSON(http.StatusOK, results)
+}
+
 func (h *BannerHandler) GetBanner(c *gin.Context) {
 	position := c.Param("position")
 	results, err := h.Service.Get(position)

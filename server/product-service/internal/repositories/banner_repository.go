@@ -7,6 +7,7 @@ import (
 )
 
 type BannerRepository interface {
+	GetAll() ([]models.Banner, error)
 	Create(banner *models.Banner) error
 	GetByPosition(position string) ([]models.Banner, error)
 	Delete(id uuid.UUID) error
@@ -28,6 +29,11 @@ func (r *bannerRepo) Create(banner *models.Banner) error {
 	return r.db.Create(banner).Error
 }
 
+func (r *bannerRepo) GetAll() ([]models.Banner, error) {
+	var banners []models.Banner
+	err := r.db.Find(&banners).Error
+	return banners, err
+}
 func (r *bannerRepo) GetByPosition(position string) ([]models.Banner, error) {
 	var banners []models.Banner
 	err := r.db.Where("position = ?", position).Find(&banners).Error

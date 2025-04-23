@@ -81,13 +81,10 @@ type VariantOptionValue struct {
 type ProductVariant struct {
 	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
 	ProductID uuid.UUID `gorm:"type:char(36);not null"`
-
 	SKU      string
 	Price    float64
 	Stock    int
-	IsActive bool
 	Sold     int `gorm:"default:0"`
-
 	ImageURL string
 
 	VariantValues []ProductVariantOption `gorm:"foreignKey:ProductVariantID"`
