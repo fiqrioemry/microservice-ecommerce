@@ -4,7 +4,7 @@ import Loading from "@/components/ui/Loading";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const AuthProvider = ({ children }) => {
-  const { authCheck, checkingAuth } = useAuthStore();
+  const { user, authCheck, checkingAuth } = useAuthStore();
 
   useEffect(() => {
     authCheck();

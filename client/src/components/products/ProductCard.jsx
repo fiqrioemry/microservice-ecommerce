@@ -7,6 +7,7 @@ const ProductCard = ({ product }) => {
     <div
       onClick={() => navigate(`/products/${product.slug}`)}
       className="bg-white rounded-xl border shadow-sm hover:shadow-md transition duration-300 cursor-pointer group"
+      key={product.id}
     >
       <div className="relative w-full aspect-square overflow-hidden rounded-t-xl">
         {/* Gambar utama */}
@@ -38,9 +39,7 @@ const ProductCard = ({ product }) => {
         <p className="text-sm text-gray-500 line-clamp-2">
           {product.description}
         </p>
-        <p className="text-primary font-bold text-sm mt-2">
-          ${product.price.toFixed(2)}
-        </p>
+        <p className="text-primary font-bold text-sm mt-2">${product.price}</p>
       </div>
     </div>
   );

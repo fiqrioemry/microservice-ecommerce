@@ -7,6 +7,7 @@ import { productInstance } from ".";
 // =====================
 
 const getAllProducts = async (params = {}) => {
+  console.log("getting the products", params);
   const res = await productInstance.get("/products", { params });
   return res.data;
 };
