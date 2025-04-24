@@ -18,7 +18,7 @@ const ProductCard = ({ product }) => {
         />
         {/* Gambar hover */}
         <img
-          src="https://images.tokopedia.net/img/cache/500-square/VqbcmM/2023/3/26/7ff306d3-e514-441e-9b1d-f1c2f8a9aefc.jpg.webp?ect=4g"
+          src={product.images?.[1]}
           alt={product.name}
           className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-in-out opacity-0 group-hover:opacity-100 scale-110 group-hover:scale-100"
         />
