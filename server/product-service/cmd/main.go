@@ -54,7 +54,6 @@ func main() {
 	bannerService := services.NewBannerService(bannerRepo)
 	bannerHandler := handlers.NewBannerHandler(bannerService)
 
-
 	r := gin.Default()
 	r.Use(middleware.Logger(), middleware.Recovery(), middleware.CORS(), middleware.RateLimiter(5, 10), middleware.LimitFileSize(5<<20))
 
@@ -64,11 +63,11 @@ func main() {
 	routes.AttributeRoutes(r, attributeHandler)
 	routes.BannerRoutes(r, bannerHandler)
 
-
 	seeders.SeedBanner(db)
 	seeders.SeedCategoriesAndSubcategories(db)
 	seeders.SeedVariantTypesAndValues(db)
 	seeders.SeedProductDataOne(db)
+	seeders.SeedFoodBeverage(db)
 
 	go func() {
 		lis, err := net.Listen("tcp", ":50051")

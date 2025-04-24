@@ -45,7 +45,7 @@ func SeedCategoriesAndSubcategories(db *gorm.DB) {
 		"Shoes & Accessories":       {"Sandals", "Walking Style Shoes", "Dress Shoes & Oxford"},
 		"Gadget & Electronics":      {"Mobile Phones", "Smart TV", "Digital Camera", "Earphones"},
 		"Health & Care":             {"Collagen", "Vitamin", "Sport Nutritions"},
-		"Food & Beverage":           {"Energy Drink", "Noodles", "Canned Food"},
+		"Food & Beverage":           {"Health Drink", "Noodle & Pasta", "Snack food"},
 		"Beauty & Skin Care":        {"Lip Gloss", "Hair Extention", "Make Up"},
 		"Sport & Entertainment":     {"Cruise Bike", "Baseball", "Roller Wheels"},
 	}
@@ -114,6 +114,7 @@ func SeedProductDataOne(db *gorm.DB) {
 	products := []struct {
 		Category    string
 		Subcategory string
+		Description string
 		Name        string
 		IsFeatured  bool
 		Discount    float64
@@ -129,6 +130,7 @@ func SeedProductDataOne(db *gorm.DB) {
 		{
 			Category:    "Fashion & Apparel",
 			Subcategory: "Men's Clothing",
+			Description : "Pakaian softshell merupakan pakaian serba guna. Sebagai sentuhan baru pada pakaian luar hardshell klasik, bahan ini menawarkan pengalaman yang lebih fleksibel sehingga cocok untuk olahraga, pakaian olahraga, golf, dan bahkan pakaian sehari-hari.",
 			Name:        "Men's Soft Shell Assault Jacket",
 			IsFeatured:  false,
 			Discount:    0.0,
@@ -390,6 +392,147 @@ func SeedProductDataOne(db *gorm.DB) {
 			}{
 				{"", "", 97000, 20, ""},
 			},
+		},
+	}
+
+	for _, p := range products {
+		var cat models.Category
+		db.Where("name = ?", p.Category).First(&cat)
+
+		var sub models.Subcategory
+		db.Where("name = ? AND category_id = ?", p.Subcategory, cat.ID).First(&sub)
+
+		product := models.Product{
+			ID:            uuid.New(),
+			CategoryID:    cat.ID,
+			SubcategoryID: &sub.ID,
+			Name:          p.Name,
+			Slug:          strings.ToLower(strings.ReplaceAll(p.Name, " ", "-")),
+			IsFeatured:    p.IsFeatured,
+			Discount:      &p.Discount,
+			IsActive:      true,
+		}
+		db.Create(&product)
+
+		for i, img := range p.Images {
+			db.Create(&models.ProductImage{
+				ID:        uuid.New(),
+				ProductID: product.ID,
+				URL:       img,
+				IsPrimary: i == 0,
+			})
+		}
+
+		for _, v := range p.Variants {
+			var colorVal, sizeVal models.VariantOptionValue
+			db.Where("value = ?", v.Color).First(&colorVal)
+			db.Where("value = ?", v.Size).First(&sizeVal)
+
+			variant := models.ProductVariant{
+				ID:        uuid.New(),
+				ProductID: product.ID,
+				Price:     v.Price,
+				Stock:     v.Stock,
+				ImageURL:  v.Image,
+			}
+			db.Create(&variant)
+
+			db.Create(&models.ProductVariantOption{
+				ProductVariantID: variant.ID,
+				OptionValueID:    colorVal.ID,
+			})
+			db.Create(&models.ProductVariantOption{
+				ProductVariantID: variant.ID,
+				OptionValueID:    sizeVal.ID,
+			})
+		}
+	}
+}
+
+
+
+func SeedFoodBeverage(db *gorm.DB) {
+	products := []struct {
+		Category    string
+		Subcategory string
+		Description string
+		Name        string
+		IsFeatured  bool
+		Discount    float64
+		Images      []string
+		Variants    []struct {
+			Color  string
+			Size   string
+			Price  float64
+			Stock  int
+			Image  string
+		}
+	}{
+		{
+			Category:    "Food & Beverage",
+			Subcategory: "Snack Food",
+			Name:        "HOTTO PURTO 1 POUCH 16 SACHET | Superfood Multigrain Purple Potato Oat",
+			Description : "Hotto Purto, merupakan minuman kesehatan tinggi serat yang kaya akan nutrisi dan rendah kalori. Diformulasikan secara khusus dengan bahan-bahan premium seperti ubi ungu, oat dari Swedia, serta 15 biji-bijian (multigrain). Merupakan pilihan yang tepat untuk dijadikan sarapan praktis untuk keluarga tercinta. 15 MULTIGRAIN Menurut penelitian, pola makan tidak sehat membunuh 11 juta orang di dunia pertahunnya. Kurangnya konsumsi biji-bijian dan kacang-kacangan menjadi salah satu penyebab terbesar kematiannya. Hotto mengandung 15 jenis biji-bijian yang menjadikannya sebagai sumber nutrisi, mineral, protein dan kaya akan serat. ",
+			IsFeatured:  false,
+			Discount:    0.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424592/hoto_snack_01_lf8uml.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424593/hoto_snack_02_sek5gt.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424599/hoto_snack_03_six5wh.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string 
+			}{
+				{"", "",  135000, 50, ""},
+			},
+		},
+		{
+			Category:    "Food & Beverage",
+			Subcategory: "Snack Food",
+			Name:        "Covita - Healthy Protein Bar 40 gr Gluten Free - Peanut Choco",
+			Description: "Cemilan sehat berprotein (Plant-Based) atau cemilan untuk kegiatan olahraga. Bersumber dari bahan protein alami untuk sebelum dan sesudah berolahraga. 15 MULTIGRAIN Menurut penelitian, pola makan tidak sehat membunuh 11 juta orang di dunia pertahunnya. Kurangnya konsumsi biji-bijian dan kacang-kacangan menjadi salah satu penyebab terbesar kematiannya. Hotto mengandung 15 jenis biji-bijian yang menjadikannya sebagai sumber nutrisi, mineral, protein dan kaya akan serat",
+			IsFeatured:  false,
+			Discount:    0.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424765/bars_snack_01_ghf8uj.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424766/bars_snack_02_nsbgth.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424767/bars_snack_03_vcsloc.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string 
+			}{
+				{"", "", 67000, 50, ""},
+			},
+		},
+		{
+			Category:    "Food & Beverage",
+			Subcategory: "Snack Food",
+			Name:        "Covita - Peach Gum Collagen Dessert with Tangerine",
+			Description: "Peach Gum Collagen Dessert with Tangerine adalah hidangan penutup yang populer, terutama di Cina, yang kaya akan kolagen dan manfaat kesehatan lainnya. Peach gum, yang terbuat dari getah pohon persik liar, mengandung kolagen dan asam amino yang tinggi, serta manfaat lainnya seperti melancarkan pencernaan, meningkatkan stamina, dan menjaga kesehatan kulit. Penambahan buah tangerine memberikan rasa segar dan aroma yang menyenangkan.",
+			IsFeatured:  false,
+			Discount:    0.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425054/grain_snack_01_hurkzb.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425055/grain_snack_02_cnqxkk.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425057/grain_snack_03_sm9sze.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string 
+			}{
+				{"", "", 87000, 100, ""},
+			},	
 		},
 	}
 
