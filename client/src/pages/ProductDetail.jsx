@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ErrorDialog from "@/components/ui/ErrorDialog";
 import FetchLoading from "@/components/ui/FetchLoading";
 import { useParams, useNavigate } from "react-router-dom";
@@ -79,19 +79,19 @@ const Product = () => {
     }
   };
 
+  const galleryImages = useMemo(() => {
+    const allImages = [
+      ...(product?.images || []),
+      ...(product?.variants?.map((v) => v.imageUrl.trim()).filter(Boolean) ||
+        []),
+    ];
+
+    return Array.from(new Set(allImages));
+  }, [product]);
+
   if (isLoading) return <FetchLoading />;
   if (isError) return <ErrorDialog onRetry={refetch} />;
   if (!product || !selectedVariant) return null;
-
-  // Gallery berdasarkan warna aktif (gambar unik per warna)
-  const galleryImages = Array.from(
-    new Set(
-      product.variants
-        .filter((v) => v.options?.colors === selectedOptions.colors)
-        .map((v) => v.imageUrl)
-        .filter(Boolean)
-    )
-  );
 
   return (
     <div className="container mx-auto p-6 grid md:grid-cols-2 gap-8">
