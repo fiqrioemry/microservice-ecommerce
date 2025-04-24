@@ -1,11 +1,6 @@
 const SearchDropdown = ({ search, isLoading, results, onClick }) => {
-  const getPrimaryImage = (images = []) => {
-    const primary = images.find((img) => img.IsPrimary);
-    return primary?.URL || "https://placehold.co/50x50?text=No+Image";
-  };
-
   if (!search) return null;
-
+  console.log(results);
   return (
     <div className="absolute top-full left-0 right-0 bg-white border mt-1 rounded-md shadow-md max-h-80 overflow-y-auto z-50">
       {isLoading ? (
@@ -14,19 +9,19 @@ const SearchDropdown = ({ search, isLoading, results, onClick }) => {
         results.map((item) => (
           <div
             key={item.ID}
-            onClick={() => onClick(item.Slug)}
+            onClick={() => onClick(item.slug)}
             className="flex items-center gap-3 p-2 hover:bg-gray-100 cursor-pointer"
           >
             <img
-              src={getPrimaryImage(item.ProductImage)}
-              alt={item.Name}
+              src={item.images[0]}
+              alt={item.name}
               className="w-10 h-10 object-cover rounded"
             />
-            <span className="text-sm">{item.Name}</span>
+            <span className="text-sm">{item.name}</span>
           </div>
         ))
       ) : (
-        <div className="p-3 text-sm text-gray-500">No result</div>
+        <div className="p-2 text-sm text-gray-500">No result</div>
       )}
     </div>
   );

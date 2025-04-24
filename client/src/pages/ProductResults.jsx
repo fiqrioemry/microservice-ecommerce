@@ -124,11 +124,11 @@ const ProductResults = () => {
           <div className="col-span-4 md:col-span-1 space-y-4">
             {/* Category Filter with Checkbox and Scrollable */}
             <div className="space-y-2">
-              <p className="font-semibold">Categories</p>
-              <div className="h-64 overflow-y-auto border p-2 rounded">
+              <h3 className="text-lg font-semibold text-gray-700">Kategori</h3>
+              <div className="h-64 overflow-y-auto border rounded-lg p-3 shadow-sm bg-white">
                 {categories.map((cat) => (
-                  <div key={cat.ID}>
-                    <label className="flex items-center gap-2">
+                  <div key={cat.ID} className="mb-3">
+                    <label className="flex items-center gap-2 font-medium cursor-pointer">
                       <input
                         type="checkbox"
                         checked={searchParams.get("category") === cat.slug}
@@ -140,41 +140,45 @@ const ProductResults = () => {
                               : cat.slug
                           )
                         }
+                        className="accent-primary"
                       />
-                      <span className="font-medium">{cat.name}</span>
+                      {cat.name}
                     </label>
-                    <div className="ml-5 space-y-1">
-                      {cat.Subcategories?.map((sub) => (
-                        <label
-                          key={sub.slug}
-                          className="flex items-center gap-2 text-sm text-muted-foreground"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={
-                              searchParams.get("subcategory") === sub.slug
-                            }
-                            onChange={() =>
-                              handleFilterChange(
-                                "subcategory",
-                                sub.slug === searchParams.get("subcategory")
-                                  ? ""
-                                  : sub.slug
-                              )
-                            }
-                          />
-                          <span>{sub.name}</span>
-                        </label>
-                      ))}
-                    </div>
+                    {cat.Subcategories?.length > 0 && (
+                      <div className="ml-6 mt-1 space-y-1">
+                        {cat.Subcategories.map((sub) => (
+                          <label
+                            key={sub.slug}
+                            className="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={
+                                searchParams.get("subcategory") === sub.slug
+                              }
+                              onChange={() =>
+                                handleFilterChange(
+                                  "subcategory",
+                                  sub.slug === searchParams.get("subcategory")
+                                    ? ""
+                                    : sub.slug
+                                )
+                              }
+                              className="accent-primary"
+                            />
+                            {sub.name}
+                          </label>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Price Filter */}
-            <div className="mt-6 space-y-2">
-              <p className="font-semibold">Price</p>
+            <div className="space-y-3 pt-6 border-t">
+              <h3 className="text-lg font-semibold text-gray-700">Harga</h3>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -183,7 +187,7 @@ const ProductResults = () => {
                   onChange={(e) =>
                     handlePriceInputChange("minPrice", e.target.value)
                   }
-                  className="border rounded px-2 py-1 w-full"
+                  className="border rounded px-3 py-2 w-full text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="Min"
                 />
                 <input
@@ -193,15 +197,15 @@ const ProductResults = () => {
                   onChange={(e) =>
                     handlePriceInputChange("maxPrice", e.target.value)
                   }
-                  className="border rounded px-2 py-1 w-full"
+                  className="border rounded px-3 py-2 w-full text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                   placeholder="Max"
                 />
               </div>
               <button
                 onClick={applyPriceFilter}
-                className="bg-primary text-white text-sm rounded px-4 py-1"
+                className="bg-primary hover:bg-primary/90 text-white text-sm rounded-md px-4 py-2 w-full transition"
               >
-                Apply
+                Terapkan Filter
               </button>
             </div>
           </div>

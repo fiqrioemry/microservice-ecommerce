@@ -94,21 +94,24 @@ const Product = () => {
   if (!product || !selectedVariant) return null;
 
   return (
-    <div className="container mx-auto p-6 grid md:grid-cols-2 gap-8">
-      <ProductGallery
-        images={galleryImages}
-        selectedImage={selectedImage}
-        onSelectImage={setSelectedImage}
-      />
-
-      <div className="space-y-4">
-        <ProductInfo product={product} selectedVariant={selectedVariant} />
-        <ProductVariantSelector
-          product={product}
-          selectedVariant={selectedVariant}
-          selectedOptions={selectedOptions}
-          onOptionChange={handleVariantOptionChange}
+    <div className="container mx-auto py-8 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <ProductGallery
+          images={galleryImages}
+          selectedImage={selectedImage}
+          onSelectImage={setSelectedImage}
         />
+        <div className="flex flex-col justify-between">
+          <div className="space-y-6">
+            <ProductInfo product={product} selectedVariant={selectedVariant} />
+            <ProductVariantSelector
+              product={product}
+              selectedVariant={selectedVariant}
+              selectedOptions={selectedOptions}
+              onOptionChange={handleVariantOptionChange}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

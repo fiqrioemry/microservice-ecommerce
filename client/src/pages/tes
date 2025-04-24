@@ -1,0 +1,7 @@
+           <SwiperSlide key={banner.id}>
+              <img
+                src={banner.imageUrl}
+                alt={banner.position}
+                className="h-96 w-full object-center rounded-xl"
+              />
+            </SwiperSlide>

@@ -1,7 +1,12 @@
+import { formatRupiah } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
+  const hasDiscount = product.discount > 0;
+  const finalPrice = hasDiscount
+    ? product.price * (1 - product.discount)
+    : product.price;
 
   return (
     <div
@@ -24,22 +29,41 @@ const ProductCard = ({ product }) => {
         />
         {product.isFeatured && (
           <span className="absolute top-2 left-2 text-xs font-semibold bg-yellow-400 text-black px-2 py-1 rounded">
-            ⭐ Featured
+            Featured
+          </span>
+        )}
+        {hasDiscount && (
+          <span className="absolute top-2 right-2 text-xs font-semibold bg-red-500 text-white px-2 py-1 rounded">
+            -{Math.round(product.discount * 100)}%
           </span>
         )}
       </div>
 
       <div className="p-4 space-y-1">
-        <h2 className="text-base font-semibold text-gray-900">
-          {product.name}
-        </h2>
+        <h3 className="text-base font-semibold text-gray-900">
+          {product.name.length > 25
+            ? product.name.slice(0, 25) + "..."
+            : product.name}
+        </h3>
         <p className="text-xs text-muted-foreground">
           {product.subcategory?.name} — {product.category?.name}
         </p>
-        <p className="text-sm text-gray-500 line-clamp-2">
-          {product.description}
-        </p>
-        <p className="text-primary font-bold text-sm mt-2">${product.price}</p>
+        <div className="mt-2 text-sm">
+          {hasDiscount ? (
+            <div className="flex items-center gap-2">
+              <span className="text-red-600 font-semibold">
+                {formatRupiah(finalPrice)}
+              </span>
+              <span className="line-through text-gray-400 text-xs">
+                {formatRupiah(product.price)}
+              </span>
+            </div>
+          ) : (
+            <span className="text-gray-900 font-semibold">
+              {formatRupiah(product.price)}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

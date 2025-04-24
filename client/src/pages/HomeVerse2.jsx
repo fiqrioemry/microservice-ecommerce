@@ -20,7 +20,7 @@ const Home = () => {
     data: banners = { results: [] },
   } = useGetAllBannersQuery();
   const { data: products = { results: [] } } = useProductsQuery({ limit: 50 });
-  const { data: { categories } = { results: [] } } = useCategoriesQuery({
+  const { data: categories = { results: [] } } = useCategoriesQuery({
     limit: 50,
   });
 
@@ -65,32 +65,6 @@ const Home = () => {
           </Swiper>
         </div>
       )}
-      {/* Browse by Category */}
-      {categories.length > 0 && (
-        <section className="mb-8">
-          <h2 className="text-lg font-semibold mb-4">🛍️ Browse by Category</h2>
-          <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar">
-            {categories.map((cat) => (
-              <div
-                key={cat.ID}
-                onClick={() =>
-                  (window.location.href = `/products?category=${cat.slug}`)
-                }
-                className="min-w-[140px] cursor-pointer rounded-xl border shadow hover:shadow-md transition bg-background"
-              >
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  className="h-24 w-full object-cover rounded-t-xl"
-                />
-                <div className="p-2 text-center text-sm font-medium">
-                  {cat.name}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* Side Banner 1 (mobile) */}
       {side1Banners.length > 0 && (
@@ -118,26 +92,27 @@ const Home = () => {
 
       {/* Grid for Side1 - Products - Side2 */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
-        {/* Side2 desktop */}
-        {side2Banners.length > 0 && (
+        {/* Side1 desktop */}
+        {side1Banners.length > 0 && (
           <div className="hidden md:block md:col-span-2 space-y-4">
-            {side2Banners.map((banner) => (
+            {side1Banners.map((banner) => (
               <img
                 key={banner.id}
                 src={banner.imageUrl}
-                alt="side2"
-                className="rounded-xl object-cover w-full shadow"
+                alt="side1"
+                className="rounded-xl object-cover h-64 w-full shadow"
               />
             ))}
           </div>
         )}
+
         {/* Main Content: Featured & Discount */}
         <div className="md:col-span-8 space-y-8">
           {/* Featured Products */}
           <section>
             <h2 className="text-xl font-semibold mb-2">✨ Featured Products</h2>
             <p className="text-sm text-muted-foreground mb-4">
-              Do not miss the featured deals! It Limited time sales.
+              Do not miss the featured deals!
             </p>
             <Swiper
               spaceBetween={16}
@@ -164,7 +139,7 @@ const Home = () => {
               🔥 Discounted Products
             </h2>
             <p className="text-sm text-muted-foreground mb-4">
-              Limited time discounts! Get our product with most valuable price.
+              Limited time discounts!
             </p>
             <Swiper
               spaceBetween={16}
@@ -186,14 +161,15 @@ const Home = () => {
           </section>
         </div>
 
-        {side1Banners.length > 0 && (
+        {/* Side2 desktop */}
+        {side2Banners.length > 0 && (
           <div className="hidden md:block md:col-span-2 space-y-4">
-            {side1Banners.map((banner) => (
+            {side2Banners.map((banner) => (
               <img
                 key={banner.id}
                 src={banner.imageUrl}
-                alt="side1"
-                className="rounded-xl object-cover w-full shadow"
+                alt="side2"
+                className="rounded-xl object-cover h-64 w-full shadow"
               />
             ))}
           </div>
