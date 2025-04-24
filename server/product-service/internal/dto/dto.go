@@ -3,7 +3,6 @@ package dto
 import (
 	"mime/multipart"
 
-	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/models"
 	"github.com/google/uuid"
 )
 
@@ -14,14 +13,15 @@ type ProductResponse struct {
 	Description string                 `json:"description"`
 	IsFeatured  bool                   `json:"isFeatured"`
 	IsActive    bool                   `json:"isActive"`
+	Price       float64                `json:"price"`
 	Weight      float64                `json:"weight"`
 	Length      float64                `json:"length"`
 	Width       float64                `json:"width"`
 	Height      float64                `json:"height"`
 	Discount    *float64               `json:"discount"`
 	Images      []string               `json:"images"`
-	Category    models.Category        `json:"category"`
-	Subcategory *models.Subcategory    `json:"subcategory,omitempty"`
+	Category    CategoryMinimal        `json:"category"`
+	Subcategory *CategoryMinimal       `json:"subcategory,omitempty"`
 	Variants    []ProductVariantOutput `json:"variants,omitempty"`
 	Attributes  []AttributeOutput      `json:"attributes,omitempty"`
 }
@@ -180,7 +180,6 @@ type ProductMinimal struct {
 type BannerRequest struct {
 	Position string `form:"position" binding:"required,oneof=top side1 side2 bottom"`
 }
-
 
 type BannerResponse struct {
 	ID       string `json:"id"`

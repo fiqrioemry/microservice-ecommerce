@@ -77,15 +77,14 @@ type VariantOptionValue struct {
 	Type VariantOptionType `gorm:"references:ID;foreignKey:TypeID"`
 }
 
-
 type ProductVariant struct {
 	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
 	ProductID uuid.UUID `gorm:"type:char(36);not null"`
-	SKU      string
-	Price    float64
-	Stock    int
-	Sold     int `gorm:"default:0"`
-	ImageURL string
+	SKU       string
+	Price     float64
+	Stock     int
+	Sold      int `gorm:"default:0"`
+	ImageURL  string
 
 	VariantValues []ProductVariantOption `gorm:"foreignKey:ProductVariantID"`
 }
@@ -156,11 +155,10 @@ func (m *ProductVariant) BeforeCreate(tx *gorm.DB) error {
 	return nil
 }
 
-
 type Banner struct {
-	ID        uuid.UUID      `gorm:"type:char(36);primaryKey"`
-	Position  string         `gorm:"type:varchar(50);not null"` 
-	ImageURL  string         `gorm:"type:varchar(255);not null"`
+	ID        uuid.UUID `gorm:"type:char(36);primaryKey"`
+	Position  string    `gorm:"type:varchar(50);not null"`
+	ImageURL  string    `gorm:"type:varchar(255);not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt `gorm:"index"`

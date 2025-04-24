@@ -100,7 +100,6 @@ func (h *ProductHandler) SearchProducts(c *gin.Context) {
 	})
 }
 
-
 func (h *ProductHandler) CreateProduct(c *gin.Context) {
 	form, err := c.MultipartForm()
 	if err != nil {
@@ -191,15 +190,16 @@ func (h *ProductHandler) GetAllProducts(c *gin.Context) {
 		return
 	}
 	total := len(products)
-	end := min(offset + limit, total)
+	end := min(offset+limit, total)
 
-	var response []dto.ProductMinimal
+	var response []dto.ProductResponse
 	for _, p := range products[offset:end] {
-		item := dto.ProductMinimal{
+		item := dto.ProductResponse{
 			ID:          p.ID.String(),
 			Name:        p.Name,
 			Slug:        p.Slug,
 			Price:       0,
+			Discount:    p.Discount,
 			Description: p.Description,
 			IsFeatured:  p.IsFeatured,
 			IsActive:    p.IsActive,
@@ -257,8 +257,16 @@ func (h *ProductHandler) GetProductBySlug(c *gin.Context) {
 		Width:       product.Width,
 		Height:      product.Height,
 		Discount:    product.Discount,
-		Category:    product.Category,
-		Subcategory: product.Subcategory,
+		Category: dto.CategoryMinimal{
+			ID:   product.Category.ID,
+			Name: product.Category.Name,
+			Slug: product.Category.Slug,
+		},
+		Subcategory: &dto.CategoryMinimal{
+			ID:   product.Subcategory.ID,
+			Name: product.Subcategory.Name,
+			Slug: product.Subcategory.Slug,
+		},
 	}
 
 	for _, img := range product.ProductImage {

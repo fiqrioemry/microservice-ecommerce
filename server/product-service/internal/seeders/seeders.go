@@ -10,7 +10,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// no Error - pass
 func SeedBanner(db *gorm.DB) {
 	banners := []models.Banner{
 		// Top Banner
@@ -38,15 +37,14 @@ func SeedBanner(db *gorm.DB) {
 	}
 }
 
-// no Error - pass
 func SeedCategoriesAndSubcategories(db *gorm.DB) {
 	placeholder := "https://placehold.co/400x400"
 	categories := map[string][]string{
 		"Fashion & Apparel": {"Men's Clothing", "Women's Skirt", "Men's Pants", "Women's Dress"},
 		// "Shoes & Accessories":  {"Sandals", "Walking Style Shoes", "Dress Shoes & Oxford"},
 		// "Health & Care":        {"Collagen", "Vitamin", "Sport Nutritions"},
-		"Gadget & Electronics": {"Phones & Tablet", "Electronic Devices", "Weareable Devices"}, // done - 9 product
-		"Food & Beverage":      {"Health Drink", "Noodle & Pasta", "Snack food"},               // done - 9 product
+		"Gadget And Electronics": {"Phones And Tablet", "Electronic Devices", "Weareable Devices"},
+		"Food & Beverage":        {"Health Drink", "Noodle And Pasta", "Snack food"},
 		// "Beauty & Skin Care":   {"Lip Gloss", "Hair Extention", "Make Up"},
 		// "Sport & Entertainment": {"Cruise Bike", "Baseball", "Roller Wheels"},
 	}
@@ -79,7 +77,6 @@ func SeedCategoriesAndSubcategories(db *gorm.DB) {
 	}
 }
 
-// no Error - pass
 func SeedVariantTypesAndValues(db *gorm.DB) {
 	data := []struct {
 		Name   string
@@ -132,8 +129,8 @@ func SeedFashionAndApparel(db *gorm.DB) {
 			Subcategory: "Men's Clothing",
 			Name:        "Jacket Denim Warna Biru Bahan Ekslusif",
 			Description: "Jaket denim warna biru dongker adalah jaket yang terbuat dari bahan denim yang memiliki warna biru tua...",
-			IsFeatured:  false,
-			Discount:    0.05,
+			IsFeatured:  true,
+			Discount:    0.00,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745429277/erem_shirt_01_shijri.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745429275/erem_shirt_02_dusksh.webp",
@@ -182,7 +179,7 @@ func SeedFashionAndApparel(db *gorm.DB) {
 			Name:        "Hoodie Addict - Zipper Hoodie Dewasa Polos Hitam Pria",
 			Description: "Hoodie Addict Zipper adalah jaket hoodie dengan ritsleting (zipper) yang populer...",
 			IsFeatured:  false,
-			Discount:    0.05,
+			Discount:    0.00,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509457/jaket01_tld8i0.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509457/jaket02_ru71to.webp",
@@ -205,8 +202,8 @@ func SeedFashionAndApparel(db *gorm.DB) {
 			Subcategory: "Men's Clothing",
 			Name:        "Hoodie Boxy Oversize Men Decorder Gray",
 			Description: "Hoodie boxy oversize adalah hoodie dengan siluet yang lebih lebar dan berbentuk kotak (boxy)...",
-			IsFeatured:  false,
-			Discount:    0.05,
+			IsFeatured:  true,
+			Discount:    0.00,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509054/jaket_mens_02_tyjlul.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509053/jaket_mens_01_a21ye5.webp",
@@ -229,7 +226,7 @@ func SeedFashionAndApparel(db *gorm.DB) {
 			Name:        "Elegant Floral Summer Dress Blossom",
 			Description: "Dress ini dirancang untuk memberikan kesan anggun dan modern bagi setiap wanita. Menggunakan bahan berkualitas tinggi yang ringan dan nyaman dipakai sepanjang hari. Potongannya mengikuti lekuk tubuh dengan elegan namun tetap memberikan kenyamanan.",
 			IsFeatured:  false,
-			Discount:    0.0,
+			Discount:    0.07,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510300/dress01_w1clnu.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510301/dress02_xnlphu.webp",
@@ -252,7 +249,7 @@ func SeedFashionAndApparel(db *gorm.DB) {
 			Name:        "Chic Long Sleeve Bodycon Dress",
 			Description: "Didesain dengan gaya timeless yang tak lekang oleh tren. Panjang rok yang midi membuatnya tetap sopan namun tetap stylish. Dress ini dirancang untuk memberikan kesan anggun dan modern bagi setiap wanita. Bagian pinggang dibuat elastis untuk fleksibilitas ukuran dan kenyamanan ekstra.",
 			IsFeatured:  false,
-			Discount:    0.0,
+			Discount:    0.12,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510300/wom_dress03_bqsuif.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510299/wom_dress02_susije.webp",
@@ -275,7 +272,7 @@ func SeedFashionAndApparel(db *gorm.DB) {
 			Name:        "Malvose Celana Pria Formal Bahan Premium Black Slimfit",
 			Description: "Celana Pria Formal Bahan Premium Black Slimfit adalah celana formal dengan potongan slimfit yang terbuat dari bahan premium. Celana ini cocok untuk berbagai acara formal, semi formal, dan bahkan kasual, seperti ke kantor atau kondangan. ",
 			IsFeatured:  false,
-			Discount:    0.15,
+			Discount:    0.09,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510924/pants01_x4memd.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510925/pants02_cloota.webp",
@@ -330,6 +327,11 @@ func SeedFashionAndApparel(db *gorm.DB) {
 			CategoryID:    cat.ID,
 			SubcategoryID: &sub.ID,
 			Name:          p.Name,
+			Description:   p.Description,
+			Weight:        1000.0,
+			Width:         15.0,
+			Height:        15.0,
+			Length:        15.0,
 			Slug:          strings.ToLower(strings.ReplaceAll(p.Name, " ", "-")),
 			IsFeatured:    p.IsFeatured,
 			Discount:      &p.Discount,
@@ -421,7 +423,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 			Name:        "Covita - Healthy Protein Bar 40 gr Gluten Free - Peanut Choco",
 			Description: "Cemilan sehat berprotein (Plant-Based) atau cemilan untuk kegiatan olahraga. Bersumber dari bahan protein alami untuk sebelum dan sesudah berolahraga. 15 MULTIGRAIN Menurut penelitian, pola makan tidak sehat membunuh 11 juta orang di dunia pertahunnya. Kurangnya konsumsi biji-bijian dan kacang-kacangan menjadi salah satu penyebab terbesar kematiannya. Hotto mengandung 15 jenis biji-bijian yang menjadikannya sebagai sumber nutrisi, mineral, protein dan kaya akan serat",
 			IsFeatured:  false,
-			Discount:    0.0,
+			Discount:    0.14,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424765/bars_snack_01_ghf8uj.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424766/bars_snack_02_nsbgth.webp",
@@ -443,7 +445,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 			Name:        "Covita - Peach Gum Collagen Dessert with Tangerine",
 			Description: "Peach Gum Collagen Dessert with Tangerine adalah hidangan penutup yang populer, terutama di Cina, yang kaya akan kolagen dan manfaat kesehatan lainnya. Peach gum, yang terbuat dari getah pohon persik liar, mengandung kolagen dan asam amino yang tinggi, serta manfaat lainnya seperti melancarkan pencernaan, meningkatkan stamina, dan menjaga kesehatan kulit. Penambahan buah tangerine memberikan rasa segar dan aroma yang menyenangkan.",
 			IsFeatured:  false,
-			Discount:    0.0,
+			Discount:    0.12,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425054/grain_snack_01_hurkzb.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425055/grain_snack_02_cnqxkk.webp",
@@ -465,7 +467,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 			Name:        "Madu Asli Hutan Honey Life Gold 650ml",
 			Description: "Madu Honey Life merupakan Spesialis focus madu Segar hutan liar ( bukan Ternak ) mentah, murni dari Alam dan Organik. ...",
 			IsFeatured:  false,
-			Discount:    0.05,
+			Discount:    0.00,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425496/honey_drink_01_qjl69j.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425499/honey_drink_02_dyufai.webp",
@@ -507,7 +509,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 			Name:        "ESSENLI Pure Matcha Powder Japan Bubuk Matcha Murni Drink",
 			Description: "ESSENLI Pure Matcha Powder Japan adalah bubuk matcha murni (bubuk teh hijau Jepang) yang dikeringkan dengan metode khusus dan digiling menjadi bubuk halus. Matcha ini kaya akan antioksidan, seperti polifenol dan EGCG, serta berbagai nutrisi seperti protein, gula, vitamin, dan mineral. ESSENLI Pure Matcha Powder Japan bisa digunakan untuk berbagai macam minuman, makanan, dan bahkan untuk membuat masker wajah. Contohnya adalah untuk membuat matcha latte, matcha ice cream, matcha cake, matcha pasta, dan sebagainya.",
 			IsFeatured:  false,
-			Discount:    0.05,
+			Discount:    0.02,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425829/matcha_drink_01_nq1pzd.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425832/matcha_drink_02_nviqwj.webp",
@@ -525,11 +527,11 @@ func SeedFoodBeverage(db *gorm.DB) {
 		},
 		{
 			Category:    "Food & Beverage",
-			Subcategory: "Noodle & Pasta",
+			Subcategory: "Noodle And Pasta",
 			Name:        "Mie Porang dietmeal GORENG rendah kalori",
 			Description: "Mie Porang dietmeal GORENG rendah kalori adalah varian mie yang terbuat dari umbi porang, cocok untuk mereka yang sedang diet atau ingin menjaga berat badan karena rendah kalori dan bebas gluten. Mie ini juga tinggi serat, membantu menjaga kesehatan pencernaan dan memberikan efek kenyang lebih lama. Terbuat dari tepung porang, umbi-umbian yang rendah kalori dan tinggi serat dan tidak mengandung gluten, sehingga aman dikonsumsi oleh orang dengan intoleransi gluten.",
 			IsFeatured:  false,
-			Discount:    0.05,
+			Discount:    0.04,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426605/indomie_noodle_02_leaptj.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426601/indomie_noodle_01_wztuyg.webp",
@@ -546,7 +548,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 		},
 		{
 			Category:    "Food & Beverage",
-			Subcategory: "Noodle & Pasta",
+			Subcategory: "Noodle And Pasta",
 			Name:        "Bihunku All Rasa Soto Nyus",
 			Description: "Bihunku All Rasa adalah bihun instan yang lezat, mudah dimasak, dan cocok untuk disantap kapan saja dan di mana saja. Bihunku terbuat dari perpaduan beras dan tepung jagung pilihan, dengan bumbu alami yang khas. Produk ini rendah lemak dan kolesterol, serta mengandung serat yang membuat kenyang tahan lama. Tersedia dalam berbagai varian rasa, seperti Ayam Bawang, Soto Spesial, Goreng Spesial, dan lainnya. ",
 			IsFeatured:  false,
@@ -567,11 +569,11 @@ func SeedFoodBeverage(db *gorm.DB) {
 		},
 		{
 			Category:    "Food & Beverage",
-			Subcategory: "Noodle & Pasta",
+			Subcategory: "Noodle And Pasta",
 			Name:        "ORIMIE Goreng dari Orimen Kids",
 			Description: "ORIMIE Goreng dari Orimen Kids adalah pilihan mie goreng yang lebih sehat untuk anak-anak, tanpa pewarna, pengawet, atau MSG. Mie ini juga bebas dari babi dan minyak babi. Bumbunya dibuat dengan bahan-bahan alami, seperti bubuk bawang putih, bawang merah, garam, gula, kaldu, dan lada putih, serta minyak yang dibumbui dengan daun bawang, bawang putih, kulit ayam, dan bawang merah",
 			IsFeatured:  false,
-			Discount:    0.05,
+			Discount:    0.00,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426605/orime_noodle_01_bpuprf.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426606/orime_noodle_02_yjx3u0.webp",
@@ -601,6 +603,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 			CategoryID:    cat.ID,
 			SubcategoryID: &sub.ID,
 			Name:          p.Name,
+			Description:   p.Description,
 			Weight:        1000.0,
 			Width:         15.0,
 			Height:        15.0,
@@ -669,12 +672,12 @@ func SeedGadgetElectronic(db *gorm.DB) {
 		}
 	}{
 		{
-			Category:    "Gadget & Electronics",
-			Subcategory: "Phone & Tablet",
+			Category:    "Gadget And Electronics",
+			Subcategory: "Phones And Tablet",
 			Name:        "Motorola G45 Snapdragon 6s Gen 3",
 			Description: "Moto G45 5G pakai prosesor Qualcomm Snapdragon 6s Gen 3. Prosesor ini andal untuk menjalankan aplikasi-aplikasi secara bersamaan, membuat multi-tasking dapat dilakukan tanpa lag, sekaligus hemat daya. Performanya didukung oleh konfigurasi RAM 8 GB fisik + 8 GB RAM virtual (Extended RAM) dan penyimpanan internal 256 GB.",
-			IsFeatured:  false,
-			Discount:    0.05,
+			IsFeatured:  true,
+			Discount:    0.0,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421821/motorola_phone_01_hpmjaf.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421821/motorola_phone_03_pbvpd1.webp",
@@ -693,12 +696,12 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget & Electronics",
-			Subcategory: "Phone & Tablet",
+			Category:    "Gadget And Electronics",
+			Subcategory: "Phones And Tablet",
 			Name:        "Samsung Galaxy A16 - Garansi Resmi Sein Tam",
 			Description: "Samsung Galaxy A16 adalah smartphone Android yang menawarkan kombinasi layar Super AMOLED 6,7 inci, baterai 5000mAh, dan kamera 50MP. Perangkat ini memiliki desain tipis dengan ketebalan 7,9mm. Samsung Galaxy A16 tersedia dalam beberapa pilihan memori internal dan RAM, serta dilengkapi dengan fitur Super Fast Charging.",
 			IsFeatured:  false,
-			Discount:    0.05,
+			Discount:    0.04,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421821/motorola_phone_01_hpmjaf.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421821/motorola_phone_03_pbvpd1.webp",
@@ -717,12 +720,12 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget & Electronics",
-			Subcategory: "Phone & Tablet",
+			Category:    "Gadget And Electronics",
+			Subcategory: "Phones And Tablet",
 			Name:        "Asus Zenfone 11 Ultra 12 5G",
 			Description: "Asus Zenfone 11 Ultra 12/256GB adalah smartphone flagship dengan layar 6.78 inci AMOLED, chipset Snapdragon 8 Gen 3, RAM 12GB, storage 256GB, dan baterai 5500 mAh. Perangkat ini memiliki kamera belakang 50MP utama dan 32MP telephoto, serta kamera depan 32MP. Zenfone 11 Ultra juga dilengkapi dengan fitur 6-axis hybrid gimbal untuk video yang stabil.",
 			IsFeatured:  false,
-			Discount:    0.05,
+			Discount:    0.07,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423036/asus_phone_05_bgoxso.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423035/asus_phone_04_qe1lqw.webp",
@@ -743,12 +746,12 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget & Electronics",
-			Subcategory: "Phone & Tablet",
+			Category:    "Gadget And Electronics",
+			Subcategory: "Phones And Tablet",
 			Name:        "Infinix XPad 11 Tablet 5G Premium",
 			Description: "Infinix XPad 11 adalah tablet Android dengan layar 11 inci dan refresh rate 90Hz, ditenagai oleh chipset MediaTek Helio G99. 7000mAh, RAM hingga 8GB, dan Android 14. Ia juga dilengkapi dengan fitur-fitur seperti Folax Voice Assistant, Multi-Device Collaboration, dan pengisian cepat.",
 			IsFeatured:  true,
-			Discount:    0.15,
+			Discount:    0.02,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423645/infinix_tablet_01_mh0wgd.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423643/infinix_tablet_02_fptycg.webp",
@@ -765,12 +768,12 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget & Electronics",
-			Subcategory: "Phone & Tablet",
+			Category:    "Gadget And Electronics",
+			Subcategory: "Phones And Tablet",
 			Name:        "Huawei MatePad 11 Snapdragon 865",
 			Description: "Huawei MatePad 11 adalah tablet dengan layar 11 inci, ditenagai oleh chipset Snapdragon 865, RAM 6GB, dan memori internal 128GB yang dapat diperluas. Tablet ini juga dilengkapi dengan sistem operasi Harmony OS 3.1. Secara keseluruhan, Huawei MatePad 11 adalah tablet yang menawarkan performa baik, layar yang bagus, dan berbagai fitur tambahan, menjadikannya pilihan yang menarik untuk berbagai kebutuhan, mulai dari produktivitas hingga hiburan.",
-			IsFeatured:  true,
-			Discount:    0.1,
+			IsFeatured:  false,
+			Discount:    0.0,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423869/huawei_tablet_01_qz7bbi.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423859/huawei_tablet_03_qbokzz.webp",
@@ -788,12 +791,12 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget & Electronics",
-			Subcategory: "Phone & Tablet",
+			Category:    "Gadget And Electronics",
+			Subcategory: "Phones And Tablet",
 			Name:        "Xiaomi Pad SE NEW Garansi",
 			Description: "Xiaomi Redmi Pad SE adalah tablet Android yang memiliki layar FHD+ 11 inci dengan refresh rate 90 Hz, ditenagai oleh prosesor Snapdragon 680, RAM 4GB, dan penyimpanan internal 128GB, serta baterai 8000mAh. Tablet ini dilengkapi dengan empat speaker dengan Dolby Atmos, dan kamera depan 5MP dan kamera belakang 8MP. Redmi Pad SE hadir dengan layar IPS LCD berukuran 10,1 inci, memberikan tampilan yang luas dan jelas. Resolusi layar sebesar 1200 x 2000 piksel, dengan tingkat kecerahan hingga 340 nits dan rasio kontras 1500:1, cocok untuk berbagai kebutuhan mulai dari streaming video, browsing, hingga bermain game.",
-			IsFeatured:  true,
-			Discount:    0.05,
+			IsFeatured:  false,
+			Discount:    0.0,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424296/xiaomi_tablet_02_oxh1ad.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424295/xiaomi_tablet_01_wkjuec.webp",
@@ -810,12 +813,12 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget & Electronics",
+			Category:    "Gadget And Electronics",
 			Subcategory: "Wearable Devices",
 			Name:        "Xiaomi Mi band 4 Smartwatch",
 			Description: "Miliki smartband pintar xiaomi Mi Band 4 Generasi terbaru, hadir dengan beragam fitur canggih dengan peningkatan yang lebih baik dari generasi sebelumnya. Kapasitas baterai Xiaomi Mi Band 4 50 % lebih besar dari xiaomi mi band 2 yang mampu bertahan hingga lebih dari 20 hari penggunaan. XIaomi Mi Band 4 dilengkapi dengan bluetooth 4.2 untuk konektivitasnya dan untuk ketahanan airnya pun turut ditingkatkan yang kini mampu bertahan hingga kedalaman 50 meter.",
 			IsFeatured:  true,
-			Discount:    0.025,
+			Discount:    0.045,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745420230/smart_watch_mi_band_4_2_mjutcx.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745420230/smart_watch_mi_band_4_n3vcip.webp",
@@ -831,12 +834,12 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget & Electronics",
+			Category:    "Gadget And Electronics",
 			Subcategory: "Wearable Devices",
 			Name:        "Samsung Galaxy Watch 4 Classic 42mm",
 			Description: "Samsung Watch 4 hadir dengan display Sapphire Crystal, GPS, sleep tracker dan body composition. Smartwatch yang menawarkan berbagai fitur kesehatan dan kebugaran, serta integrasi yang mulus dengan perangkat Galaxy lainnya. Smartwatch ini dilengkapi dengan sensor BioActive yang mampu memantau detak jantung, tekanan darah, kadar oksigen dalam darah, dan kualitas tidur. Selain itu, Galaxy Watch juga mendukung fitur-fitur lain seperti menerima panggilan dan pesan, mengontrol musik, dan memberikan notifikasi.",
 			IsFeatured:  false,
-			Discount:    0.05,
+			Discount:    0.00,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745420675/samsung_watch_03_bmlayk.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745420675/samsung_watch_03_bmlayk.webp",
@@ -853,12 +856,12 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget & Electronics",
+			Category:    "Gadget And Electronics",
 			Subcategory: "Wearable Devices",
 			Name:        "HUAWEI WATCH FIT Special Edition Smartwatch",
 			Description: "HUAWEI WATCH FIT Special Edition Smartwatch | 1.64 HD AMOLED | 24/7 Active Health Management | Built-in GPS | Fast Charging. Notifikasi panggilan Bluetooth & balas pesan cepat Kompatibel dengan luas, bisa digunakan bersama semua OS Tersedia dalam 3 varian warna: Nebula Pink, Forest Green, Starry Black.",
 			IsFeatured:  false,
-			Discount:    0.02,
+			Discount:    0.03,
 			Images: []string{
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421186/huawei_smartwatch_04_r8ftp5.webp",
 				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421185/huawei_smartwatch_02_ihjja7.webp",
@@ -888,6 +891,7 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			CategoryID:    cat.ID,
 			SubcategoryID: &sub.ID,
 			Name:          p.Name,
+			Description:   p.Description,
 			Weight:        1000.0,
 			Width:         15.0,
 			Height:        15.0,
