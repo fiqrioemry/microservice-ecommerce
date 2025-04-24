@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import clsx from "clsx";
 import { useCartStore } from "@/store/useCartStore";
 import { Button } from "@/components/ui/button";
@@ -7,32 +7,11 @@ import { Minus, Plus } from "lucide-react";
 const ProductVariantSelector = ({
   product,
   selectedVariant,
-  onSelectVariant,
+  selectedOptions,
+  onOptionChange,
 }) => {
   const [quantity, setQuantity] = useState(1);
-  const [activeOptions, setActiveOptions] = useState(
-    selectedVariant.options || {}
-  );
   const addItem = useCartStore((state) => state.addItem);
-
-  useEffect(() => {
-    setActiveOptions(selectedVariant.options || {});
-  }, [selectedVariant]);
-
-  const handleOptionClick = (key, value) => {
-    const updatedOptions = { ...activeOptions, [key]: value };
-    setActiveOptions(updatedOptions);
-
-    const matchedVariant = product.variants.find((v) =>
-      Object.entries(updatedOptions).every(
-        ([k, vOpt]) => v.options?.[k] === vOpt
-      )
-    );
-
-    if (matchedVariant) {
-      onSelectVariant(matchedVariant);
-    }
-  };
 
   const handleAddToCart = async () => {
     if (quantity > selectedVariant.stock) return;
@@ -43,28 +22,52 @@ const ProductVariantSelector = ({
     });
   };
 
-  const optionKeys = Object.keys(selectedVariant.options || {});
+  // Semua key opsi, misal: "colors", "clothing size"
+  const optionKeys = useMemo(() => {
+    const allOptions = product.variants.flatMap((v) =>
+      Object.keys(v.options || {})
+    );
+    return [...new Set(allOptions)];
+  }, [product]);
+
+  // Untuk setiap opsi, hitung nilai unik yang tersedia
+  const getAvailableOptionValues = (key) => {
+    if (key === "clothing size" && selectedOptions?.colors) {
+      // Size hanya untuk color yang dipilih
+      return [
+        ...new Set(
+          product.variants
+            .filter((v) => v.options?.colors === selectedOptions.colors)
+            .map((v) => v.options?.[key])
+        ),
+      ];
+    }
+
+    return [
+      ...new Set(product.variants.map((v) => v.options?.[key]).filter(Boolean)),
+    ];
+  };
+
+  useEffect(() => {
+    setQuantity(1);
+  }, [selectedVariant]);
 
   return (
     <>
       {optionKeys.map((key) => {
-        const uniqueOptionValues = [
-          ...new Set(product.variants.map((v) => v.options?.[key])),
-        ];
-
+        const values = getAvailableOptionValues(key);
         return (
           <div key={key} className="mt-4">
             <p className="text-sm font-medium text-muted-foreground mb-1">
               Pilih {key}
             </p>
             <div className="flex gap-2 flex-wrap">
-              {uniqueOptionValues.map((optionValue) => {
-                const isActive = activeOptions?.[key] === optionValue;
-
+              {values.map((optionValue) => {
+                const isActive = selectedOptions?.[key] === optionValue;
                 return (
                   <button
-                    key={key + optionValue}
-                    onClick={() => handleOptionClick(key, optionValue)}
+                    key={optionValue}
+                    onClick={() => onOptionChange(key, optionValue)}
                     className={clsx(
                       "px-3 py-1 border rounded text-sm",
                       isActive
@@ -106,7 +109,6 @@ const ProductVariantSelector = ({
         </span>
       </div>
 
-      {/* Add to Cart Button */}
       <div className="mt-4">
         <Button
           disabled={
