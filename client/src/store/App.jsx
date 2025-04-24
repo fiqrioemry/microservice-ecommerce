@@ -7,12 +7,14 @@ import Layout from "./components/layout/Layout";
 import { Route, Routes } from "react-router-dom";
 import ProductDetail from "./pages/ProductDetail";
 import ProductResults from "./pages/ProductResults";
+import SignIn from "./pages/SignIn";
 
 function App() {
   return (
     <>
       <Toaster />
       <Routes>
+        <Route path="/signin" element={<SignIn />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="/products" element={<ProductResults />} />
