@@ -37,17 +37,18 @@ func SeedBanner(db *gorm.DB) {
 		}
 	}
 }
+
 // no Error - pass
 func SeedCategoriesAndSubcategories(db *gorm.DB) {
 	placeholder := "https://placehold.co/400x400"
 	categories := map[string][]string{
-		"Fashion & Apparel":         {"Men's Clothing", "Hats and Caps", "Women's Clothing"},
-		"Shoes & Accessories":       {"Sandals", "Walking Style Shoes", "Dress Shoes & Oxford"},
-		"Gadget & Electronics":      {"Mobile Phones", "Smart TV", "Digital Camera", "Earphones"},
-		"Health & Care":             {"Collagen", "Vitamin", "Sport Nutritions"},
-		"Food & Beverage":           {"Health Drink", "Noodle & Pasta", "Snack food"},
-		"Beauty & Skin Care":        {"Lip Gloss", "Hair Extention", "Make Up"},
-		"Sport & Entertainment":     {"Cruise Bike", "Baseball", "Roller Wheels"},
+		"Fashion & Apparel":     {"Men's Clothing", "Hats and Caps", "Women's Clothing"},
+		"Shoes & Accessories":   {"Sandals", "Walking Style Shoes", "Dress Shoes & Oxford"},
+		"Gadget & Electronics":  {"Mobile Phones", "Smart TV", "Digital Camera", "Earphones"},
+		"Health & Care":         {"Collagen", "Vitamin", "Sport Nutritions"},
+		"Food & Beverage":       {"Health Drink", "Noodle & Pasta", "Snack food"},
+		"Beauty & Skin Care":    {"Lip Gloss", "Hair Extention", "Make Up"},
+		"Sport & Entertainment": {"Cruise Bike", "Baseball", "Roller Wheels"},
 	}
 
 	for catName, subs := range categories {
@@ -109,7 +110,6 @@ func SeedVariantTypesAndValues(db *gorm.DB) {
 	}
 }
 
-
 func SeedProductDataOne(db *gorm.DB) {
 	products := []struct {
 		Category    string
@@ -120,17 +120,17 @@ func SeedProductDataOne(db *gorm.DB) {
 		Discount    float64
 		Images      []string
 		Variants    []struct {
-			Color  string
-			Size   string
-			Price  float64
-			Stock  int
-			Image  string
+			Color string
+			Size  string
+			Price float64
+			Stock int
+			Image string
 		}
 	}{
 		{
 			Category:    "Fashion & Apparel",
 			Subcategory: "Men's Clothing",
-			Description : "Pakaian softshell merupakan pakaian serba guna. Sebagai sentuhan baru pada pakaian luar hardshell klasik, bahan ini menawarkan pengalaman yang lebih fleksibel sehingga cocok untuk olahraga, pakaian olahraga, golf, dan bahkan pakaian sehari-hari.",
+			Description: "Pakaian softshell merupakan pakaian serba guna. Sebagai sentuhan baru pada pakaian luar hardshell klasik, bahan ini menawarkan pengalaman yang lebih fleksibel sehingga cocok untuk olahraga, pakaian olahraga, golf, dan bahkan pakaian sehari-hari.",
 			Name:        "Men's Soft Shell Assault Jacket",
 			IsFeatured:  false,
 			Discount:    0.0,
@@ -143,7 +143,7 @@ func SeedProductDataOne(db *gorm.DB) {
 				Size  string
 				Price float64
 				Stock int
-				Image string 
+				Image string
 			}{
 				{"black", "M", 265000, 5, ""},
 				{"black", "L", 265000, 10, ""},
@@ -166,7 +166,7 @@ func SeedProductDataOne(db *gorm.DB) {
 				Size  string
 				Price float64
 				Stock int
-				Image string 
+				Image string
 			}{
 				{"red", "M", 335000, 5, ""},
 				{"red", "L", 335000, 10, ""},
@@ -192,7 +192,7 @@ func SeedProductDataOne(db *gorm.DB) {
 				Size  string
 				Price float64
 				Stock int
-				Image string 
+				Image string
 			}{
 				{"black", "M", 177000, 5, "https://s.alicdn.com/@sc04/kf/H37fdf58f0dd54cdca5a086055fe1e101q.jpg_720x720q50.jpg"},
 				{"black", "L", 177000, 10, "https://s.alicdn.com/@sc04/kf/H37fdf58f0dd54cdca5a086055fe1e101q.jpg_720x720q50.jpg"},
@@ -202,7 +202,7 @@ func SeedProductDataOne(db *gorm.DB) {
 				{"pink", "M", 177000, 5, " https://s.alicdn.com/@sc04/kf/H32a280fda84440be8c22f209b589a36bJ.jpg_720x720q50.jpg"},
 				{"pink", "L", 177000, 10, " https://s.alicdn.com/@sc04/kf/H32a280fda84440be8c22f209b589a36bJ.jpg_720x720q50.jpg"},
 				{"pink", "XL", 177000, 15, " https://s.alicdn.com/@sc04/kf/H32a280fda84440be8c22f209b589a36bJ.jpg_720x720q50.jpg"},
-			},	
+			},
 		},
 		{
 			Category:    "Fashion & Apparel",
@@ -218,14 +218,14 @@ func SeedProductDataOne(db *gorm.DB) {
 				Size  string
 				Price float64
 				Stock int
-				Image string 
+				Image string
 			}{
 				{"black", "M", 275000, 5, "https://s.alicdn.com/@sc04/kf/H5722ff2a7e144e5aa83103a52770bed0G.jpg_720x720q50.jpg"},
 				{"black", "L", 275000, 10, "https://s.alicdn.com/@sc04/kf/H5722ff2a7e144e5aa83103a52770bed0G.jpg_720x720q50.jpg"},
 				{"red", "M", 275000, 10, "https://s.alicdn.com/@sc04/kf/H07b065e7028640488feeb1278c3cff09M.jpg_720x720q50.jpg"},
 				{"red", "L", 275000, 20, " https://s.alicdn.com/@sc04/kf/H07b065e7028640488feeb1278c3cff09M.jpg_720x720q50.jpg"},
 				{"red", "XL", 275000, 30, " https://s.alicdn.com/@sc04/kf/H07b065e7028640488feeb1278c3cff09M.jpg_720x720q50.jpg"},
-			},	
+			},
 		},
 		{
 			Category:    "Fashion & Apparel",
@@ -449,8 +449,6 @@ func SeedProductDataOne(db *gorm.DB) {
 	}
 }
 
-
-
 func SeedFoodBeverage(db *gorm.DB) {
 	products := []struct {
 		Category    string
@@ -461,18 +459,18 @@ func SeedFoodBeverage(db *gorm.DB) {
 		Discount    float64
 		Images      []string
 		Variants    []struct {
-			Color  string
-			Size   string
-			Price  float64
-			Stock  int
-			Image  string
+			Color string
+			Size  string
+			Price float64
+			Stock int
+			Image string
 		}
 	}{
 		{
 			Category:    "Food & Beverage",
 			Subcategory: "Snack Food",
 			Name:        "HOTTO PURTO 1 POUCH 16 SACHET | Superfood Multigrain Purple Potato Oat",
-			Description : "Hotto Purto, merupakan minuman kesehatan tinggi serat yang kaya akan nutrisi dan rendah kalori. Diformulasikan secara khusus dengan bahan-bahan premium seperti ubi ungu, oat dari Swedia, serta 15 biji-bijian (multigrain). Merupakan pilihan yang tepat untuk dijadikan sarapan praktis untuk keluarga tercinta. 15 MULTIGRAIN Menurut penelitian, pola makan tidak sehat membunuh 11 juta orang di dunia pertahunnya. Kurangnya konsumsi biji-bijian dan kacang-kacangan menjadi salah satu penyebab terbesar kematiannya. Hotto mengandung 15 jenis biji-bijian yang menjadikannya sebagai sumber nutrisi, mineral, protein dan kaya akan serat. ",
+			Description: "Hotto Purto, merupakan minuman kesehatan tinggi serat yang kaya akan nutrisi dan rendah kalori. Diformulasikan secara khusus dengan bahan-bahan premium seperti ubi ungu, oat dari Swedia, serta 15 biji-bijian (multigrain). Merupakan pilihan yang tepat untuk dijadikan sarapan praktis untuk keluarga tercinta. 15 MULTIGRAIN Menurut penelitian, pola makan tidak sehat membunuh 11 juta orang di dunia pertahunnya. Kurangnya konsumsi biji-bijian dan kacang-kacangan menjadi salah satu penyebab terbesar kematiannya. Hotto mengandung 15 jenis biji-bijian yang menjadikannya sebagai sumber nutrisi, mineral, protein dan kaya akan serat. ",
 			IsFeatured:  false,
 			Discount:    0.0,
 			Images: []string{
@@ -485,9 +483,9 @@ func SeedFoodBeverage(db *gorm.DB) {
 				Size  string
 				Price float64
 				Stock int
-				Image string 
+				Image string
 			}{
-				{"", "",  135000, 50, ""},
+				{"", "", 135000, 50, ""},
 			},
 		},
 		{
@@ -507,7 +505,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 				Size  string
 				Price float64
 				Stock int
-				Image string 
+				Image string
 			}{
 				{"", "", 67000, 50, ""},
 			},
@@ -529,10 +527,138 @@ func SeedFoodBeverage(db *gorm.DB) {
 				Size  string
 				Price float64
 				Stock int
-				Image string 
+				Image string
 			}{
 				{"", "", 87000, 100, ""},
-			},	
+			},
+		},
+		{
+			Category:    "Food & Beverage",
+			Subcategory: "Health Drink",
+			Name:        "Madu Asli Hutan Honey Life Gold 650ml",
+			Description: "Madu Honey Life merupakan Spesialis focus madu Segar hutan liar ( bukan Ternak ) mentah, murni dari Alam dan Organik. ...",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425496/honey_drink_01_qjl69j.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425499/honey_drink_02_dyufai.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "", 168000, 30, ""},
+			},
+		},
+		{
+			Category:    "Food & Beverage",
+			Subcategory: "Health Drink",
+			Name:        "Nestle Pure Life Air Minum Ukuran 600mL - 1 Pack",
+			Description: "Air minum Nestle Pure Life 600mL adalah air mineral ...",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425497/nestle_drink_02_bd5mye.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425501/nestle_drink_01_vgnua8.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "", 115000, 30, ""},
+			},
+		},
+		{
+			Category:    "Food & Beverage",
+			Subcategory: "Health Drink",
+			Name:        "ESSENLI Pure Matcha Powder Japan / Bubuk Matcha Murni Drink",
+			Description: "ESSENLI Pure Matcha Powder Japan adalah bubuk matcha murni ...",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425829/matcha_drink_01_nq1pzd.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425832/matcha_drink_02_nviqwj.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745425827/matcha_drink_03_y1mbxw.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "", 75500, 30, ""},
+			},
+		},
+		{
+			Category:    "Food & Beverage",
+			Subcategory: "Noodle & Pasta",
+			Name:        "Mie Porang dietmeal GORENG rendah kalori",
+			Description: "Mie Porang dietmeal GORENG rendah kalori adalah varian mie yang terbuat dari umbi porang, cocok untuk mereka yang sedang diet atau ingin menjaga berat badan karena rendah kalori dan bebas gluten. Mie ini juga tinggi serat, membantu menjaga kesehatan pencernaan dan memberikan efek kenyang lebih lama. Terbuat dari tepung porang, umbi-umbian yang rendah kalori dan tinggi serat dan tidak mengandung gluten, sehingga aman dikonsumsi oleh orang dengan intoleransi gluten.",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426605/indomie_noodle_02_leaptj.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426601/indomie_noodle_01_wztuyg.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "", 8900, 1500, ""},
+			},
+		},
+		{
+			Category:    "Food & Beverage",
+			Subcategory: "Noodle & Pasta",
+			Name:        "Bihunku All Rasa Soto Nyus",
+			Description: "Bihunku All Rasa adalah bihun instan yang lezat, mudah dimasak, dan cocok untuk disantap kapan saja dan di mana saja. Bihunku terbuat dari perpaduan beras dan tepung jagung pilihan, dengan bumbu alami yang khas. Produk ini rendah lemak dan kolesterol, serta mengandung serat yang membuat kenyang tahan lama. Tersedia dalam berbagai varian rasa, seperti Ayam Bawang, Soto Spesial, Goreng Spesial, dan lainnya. ",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426599/bihun_noodle_02_ibzcpd.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426611/bihun_noodle_01_t0egqo.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "", 11600, 1500, ""},
+			},
+		},
+		{
+			Category:    "Food & Beverage",
+			Subcategory: "Noodle & Pasta",
+			Name:        "ORIMIE Goreng dari Orimen Kids",
+			Description: "ORIMIE Goreng dari Orimen Kids adalah pilihan mie goreng yang lebih sehat untuk anak-anak, tanpa pewarna, pengawet, atau MSG. Mie ini juga bebas dari babi dan minyak babi. Bumbunya dibuat dengan bahan-bahan alami, seperti bubuk bawang putih, bawang merah, garam, gula, kaldu, dan lada putih, serta minyak yang dibumbui dengan daun bawang, bawang putih, kulit ayam, dan bawang merah",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426605/orime_noodle_01_bpuprf.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426606/orime_noodle_02_yjx3u0.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745426610/orime_noodle_03_k8ljlt.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "", 23500, 1500, ""},
+			},
 		},
 	}
 
@@ -589,4 +715,3 @@ func SeedFoodBeverage(db *gorm.DB) {
 		}
 	}
 }
-
