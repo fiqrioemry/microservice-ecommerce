@@ -44,9 +44,9 @@ func SeedCategoriesAndSubcategories(db *gorm.DB) {
 	categories := map[string][]string{
 		"Fashion & Apparel":     {"Men's Clothing", "Hats and Caps", "Women's Clothing"},
 		"Shoes & Accessories":   {"Sandals", "Walking Style Shoes", "Dress Shoes & Oxford"},
-		"Gadget & Electronics":  {"Mobile Phones", "Smart TV", "Digital Camera", "Earphones"},
+		"Gadget & Electronics":  {"Phones & Tablet", "Electronic Devices", "Weareable Devices"},
 		"Health & Care":         {"Collagen", "Vitamin", "Sport Nutritions"},
-		"Food & Beverage":       {"Health Drink", "Noodle & Pasta", "Snack food"},
+		"Food & Beverage":       {"Health Drink", "Noodle & Pasta", "Snack food"}, // done - 9 product
 		"Beauty & Skin Care":    {"Lip Gloss", "Hair Extention", "Make Up"},
 		"Sport & Entertainment": {"Cruise Bike", "Baseball", "Roller Wheels"},
 	}
@@ -457,6 +457,10 @@ func SeedFoodBeverage(db *gorm.DB) {
 		Name        string
 		IsFeatured  bool
 		Discount    float64
+		Weight      float64
+		Length      float64
+		Width       float64
+		Height      float64
 		Images      []string
 		Variants    []struct {
 			Color string
@@ -674,6 +678,92 @@ func SeedFoodBeverage(db *gorm.DB) {
 			CategoryID:    cat.ID,
 			SubcategoryID: &sub.ID,
 			Name:          p.Name,
+			Weight:        1000.0,
+			Width:         15.0,
+			Height:        15.0,
+			Length:        15.0,
+			Slug:          strings.ToLower(strings.ReplaceAll(p.Name, " ", "-")),
+			IsFeatured:    p.IsFeatured,
+			Discount:      &p.Discount,
+			IsActive:      true,
+		}
+		db.Create(&product)
+
+		for i, img := range p.Images {
+			db.Create(&models.ProductImage{
+				ID:        uuid.New(),
+				ProductID: product.ID,
+				URL:       img,
+				IsPrimary: i == 0,
+			})
+		}
+
+		for _, v := range p.Variants {
+			var colorVal, sizeVal models.VariantOptionValue
+			db.Where("value = ?", v.Color).First(&colorVal)
+			db.Where("value = ?", v.Size).First(&sizeVal)
+
+			variant := models.ProductVariant{
+				ID:        uuid.New(),
+				ProductID: product.ID,
+				Price:     v.Price,
+				Stock:     v.Stock,
+				ImageURL:  v.Image,
+			}
+			db.Create(&variant)
+
+			db.Create(&models.ProductVariantOption{
+				ProductVariantID: variant.ID,
+				OptionValueID:    colorVal.ID,
+			})
+			db.Create(&models.ProductVariantOption{
+				ProductVariantID: variant.ID,
+				OptionValueID:    sizeVal.ID,
+			})
+		}
+	}
+}
+
+func SeedGadgetElectronic(db *gorm.DB) {
+	products := []struct {
+		Category    string
+		Subcategory string
+		Description string
+		Name        string
+		IsFeatured  bool
+		Discount    float64
+		Weight      float64
+		Length      float64
+		Width       float64
+		Height      float64
+		Images      []string
+		Variants    []struct {
+			Color string
+			Size  string
+			Price float64
+			Stock int
+			Image string
+		}
+	}{
+		// write code here ......
+	}
+
+	for _, p := range products {
+		var cat models.Category
+		db.Where("name = ?", p.Category).First(&cat)
+
+		var sub models.Subcategory
+		db.Where("name = ? AND category_id = ?", p.Subcategory, cat.ID).First(&sub)
+
+		product := models.Product{
+			ID:            uuid.New(),
+			CategoryID:    cat.ID,
+			SubcategoryID: &sub.ID,
+			Name:          p.Name,
+			Weight:        1000.0,
+			Width:         15.0,
+			Height:        15.0,
+			Length:        15.0,
 			Slug:          strings.ToLower(strings.ReplaceAll(p.Name, " ", "-")),
 			IsFeatured:    p.IsFeatured,
 			Discount:      &p.Discount,
