@@ -223,6 +223,99 @@ func SeedFashionAndApparel(db *gorm.DB) {
 				{"", "XL", 112500, 30, ""},
 			},
 		},
+		{
+			Category:    "Fashion & Apparel",
+			Subcategory: "Women's Dress",
+			Name:        "Elegant Floral Summer Dress Blossom",
+			Description: "Dress ini dirancang untuk memberikan kesan anggun dan modern bagi setiap wanita. Menggunakan bahan berkualitas tinggi yang ringan dan nyaman dipakai sepanjang hari. Potongannya mengikuti lekuk tubuh dengan elegan namun tetap memberikan kenyamanan.",
+			IsFeatured:  false,
+			Discount:    0.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510300/dress01_w1clnu.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510301/dress02_xnlphu.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510304/dress03_d3y08s.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "M", 199000, 10, ""},
+				{"", "L", 199000, 20, ""},
+			},
+		},
+		{
+			Category:    "Fashion & Apparel",
+			Subcategory: "Women's Dress",
+			Name:        "Chic Long Sleeve Bodycon Dress",
+			Description: "Didesain dengan gaya timeless yang tak lekang oleh tren. Panjang rok yang midi membuatnya tetap sopan namun tetap stylish. Dress ini dirancang untuk memberikan kesan anggun dan modern bagi setiap wanita. Bagian pinggang dibuat elastis untuk fleksibilitas ukuran dan kenyamanan ekstra.",
+			IsFeatured:  false,
+			Discount:    0.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510300/wom_dress03_bqsuif.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510299/wom_dress02_susije.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510299/wom_dress01_zgzscq.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "M", 245000, 15, ""},
+				{"", "L", 245000, 20, ""},
+			},
+		},
+		{
+			Category:    "Fashion & Apparel",
+			Subcategory: "Men's Pants",
+			Name:        "Malvose Celana Pria Formal Bahan Premium Black Slimfit",
+			Description: "Celana Pria Formal Bahan Premium Black Slimfit adalah celana formal dengan potongan slimfit yang terbuat dari bahan premium. Celana ini cocok untuk berbagai acara formal, semi formal, dan bahkan kasual, seperti ke kantor atau kondangan. ",
+			IsFeatured:  false,
+			Discount:    0.15,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510924/pants01_x4memd.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510925/pants02_cloota.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510925/pants03_rx1ixk.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "M", 345000, 10, ""},
+				{"", "L", 345000, 20, ""},
+				{"", "XL", 345000, 30, ""},
+			},
+		},
+		{
+			Category:    "Fashion & Apparel",
+			Subcategory: "Men's Pants",
+			Name:        "celana cargo panjang pria celana outdoor pria longgar kasual korduroi kulot",
+			Description: "Celana cargo panjang pria ini adalah pilihan ideal untuk kegiatan outdoor, dikarenakan desainnya yang longgar dan kasual, serta dilengkapi dengan saku-saku besar di samping (cargo pockets). Bahan korduroi memberikan kesan unik dan nyaman, cocok untuk berbagai aktivitas, termasuk kulot.",
+			IsFeatured:  false,
+			Discount:    0.15,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510904/men_pants01_tgqmbn.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745510916/men_pants02_yjdzug.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "M", 215000, 10, ""},
+				{"", "L", 215000, 20, ""},
+				{"", "XL", 215000, 30, ""},
+			},
+		},
 	}
 
 	for _, p := range products {
