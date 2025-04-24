@@ -41,7 +41,8 @@ func SeedCategoriesAndSubcategories(db *gorm.DB) {
 	placeholder := "https://placehold.co/400x400"
 	categories := map[string][]string{
 		"Fashion & Apparel": {"Men's Clothing", "Women's Skirt", "Men's Pants", "Women's Dress"},
-		// "Shoes & Accessories":  {"Sandals", "Walking Style Shoes", "Dress Shoes & Oxford"},
+		"Men's Shoes":       {"Sneakers", "Sandals", "Formal Shoes"},
+		// "Women's Shoes":     {"Men's Shoes", "Women's Shoes", "Dress Shoes & Oxford"},
 		// "Health & Care":        {"Collagen", "Vitamin", "Sport Nutritions"},
 		"Gadget And Electronics": {"Phones And Tablet", "Electronic Devices", "Weareable Devices"},
 		"Food & Beverage":        {"Health Drink", "Noodle And Pasta", "Snack food"},
@@ -922,6 +923,351 @@ func SeedGadgetElectronic(db *gorm.DB) {
 				ProductID: product.ID,
 				Price:     v.Price,
 				Stock:     v.Stock,
+				ImageURL:  v.Image,
+			}
+			db.Create(&variant)
+
+			db.Create(&models.ProductVariantOption{
+				ProductVariantID: variant.ID,
+				OptionValueID:    colorVal.ID,
+			})
+			db.Create(&models.ProductVariantOption{
+				ProductVariantID: variant.ID,
+				OptionValueID:    sizeVal.ID,
+			})
+		}
+	}
+}
+
+func SeedMenShoes(db *gorm.DB) {
+	products := []struct {
+		Category    string
+		Subcategory string
+		Description string
+		Name        string
+		IsFeatured  bool
+		Discount    float64
+		Weight      float64
+		Length      float64
+		Width       float64
+		Height      float64
+		Images      []string
+		Variants    []struct {
+			Color string
+			Size  string
+			Price float64
+			Stock int
+			Sold  int
+			Image string
+		}
+	}{
+		{
+			Category:    "Men's Shoes",
+			Subcategory: "Sneakers",
+			Name:        "Sepatu Sneakers Olahraga Pria Casual",
+			Description: "Sepatu sneakers olahraga pria casual adalah sepatu yang menggabungkan gaya sporty dengan kenyamanan untuk kegiatan sehari-hari. Sepatu ini dirancang untuk berbagai aktivitas, dari olahraga ringan hingga kegiatan santai seperti jalan-jalan atau nongkrong. ",
+			IsFeatured:  true,
+			Discount:    0.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536263/3sneaker_shoes_01_t4lbd5.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536264/3sneaker_shoes_02_atfnsn.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Sold  int
+				Image string
+			}{
+				{"", "41", 425000, 10, 5, ""},
+				{"", "42", 425000, 20, 10, ""},
+				{"", "43", 425000, 30, 15, ""},
+				{"", "44", 425000, 40, 20, ""},
+			},
+		},
+		{
+			Category:    "Men's Shoes",
+			Subcategory: "Sneakers",
+			Name:        "DES SNEAKERS Sepatu Pria Vans Classic",
+			Description: "Vans adalah produsen sepatu skateboard asal Amerika Serikat dan juga memproduksi pakaian terkait, berbasis di California. Sepatu vans adalah kombinasi sempurna antara kenyamanan dan gaya. Sepatu ini menawarkan dukungan yang baik sehingga ideal untuk berjalan kaki. Sepatu ini juga memiliki toe cap yang lebih kuat, collar empuk yang memberikan support, dan outsole waffle karet ciri khas Vans",
+			IsFeatured:  false,
+			Discount:    0.12,
+			Weight:      1000.0,
+			Length:      40.0,
+			Width:       40.0,
+			Height:      40.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536262/sneaker_shoes_01_nssqgb.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536262/sneaker_shoes_02_mctuky.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536262/sneaker_shoes_03_aiuieg.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Sold  int
+				Image string
+			}{
+				{"", "41", 475000, 10, 5, ""},
+				{"", "42", 475000, 20, 15, ""},
+				{"", "43", 475000, 30, 25, ""},
+				{"", "44", 475000, 40, 35, ""},
+			},
+		},
+		{
+			Category:    "Men's Shoes",
+			Subcategory: "Sneakers",
+			Name:        "Converse Allstar Sepatu Sekolah Sepatu ALL STAR CLASSIC",
+			Description: "Sneakers Converse adalah sepatu kets ikonik yang terkenal dengan desain klasik, konstruksi tahan lama, dan kesetiaan pada gaya aslinya. Terkenal dengan siluet Converse All Star yang khas, sepatu ini telah menjadi simbol fesyen dan budaya jalanan sejak lama. Sepatu ini dikenal dengan konstruksi yang kuat, bahan berkualitas, dan jahitan yang cermat, menjadikannya pilihan yang tahan lama.",
+			IsFeatured:  false,
+			Discount:    0.12,
+			Weight:      1000.0,
+			Length:      40.0,
+			Width:       40.0,
+			Height:      40.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536263/sneaker2_shoes_01_rc7i1l.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536263/sneaker2_shoes_02_iluvmx.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536263/sneaker3_shoes_02_viyrm9.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Sold  int
+				Image string
+			}{
+				{"", "41", 525000, 10, 5, ""},
+				{"", "42", 525000, 20, 15, ""},
+				{"", "43", 525000, 30, 25, ""},
+				{"", "44", 525000, 40, 35, ""},
+			},
+		},
+		{
+			Category:    "Men's Shoes",
+			Subcategory: "Sandals",
+			Name:        "Sandal Pria Nike Offcourt Slide Black",
+			Description: "Sandal ini nyaman, ringan, dan memiliki tampilan sporty. Kamu juga dapat memilih sepasang sandal Nike terbaru favorit kamu dari Nike Offcourt dan lini sepatu slide. Dibuat dengan desain asli Nike, sandal ini menggunakan busa lembut pada tali dan midsole untuk memberikan sensasi yang lebih nyaman. ",
+			IsFeatured:  false,
+			Discount:    0.07,
+			Weight:      1000.0,
+			Length:      40.0,
+			Width:       40.0,
+			Height:      40.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536496/03sandals02_uqknkc.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536494/03sandals01_ogodhf.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Sold  int
+				Image string
+			}{
+				{"", "41", 225000, 10, 5, ""},
+				{"", "42", 225000, 20, 15, ""},
+				{"", "43", 225000, 30, 25, ""},
+				{"", "44", 225000, 40, 35, ""},
+			},
+		},
+		{
+			Category:    "Men's Shoes",
+			Subcategory: "Sandals",
+			Name:        "Sandal Pria Jordan Franchise Slide HF3263",
+			Description: "Sandal pria Jordan Franchise Slide adalah sandal slip-on yang menggabungkan kenyamanan dan gaya ikonik Jordan. Desainnya menampilkan busa yang kuat namun fleksibel untuk dukungan yang nyaman, dengan footbed melengkung untuk menjaga kaki tetap aman. Sandal ini dilengkapi dengan strap synthetic leather pada bagian depan untuk menjaga kestabilan dan outsole berbahan foam untuk traksi yang baik.",
+			IsFeatured:  false,
+			Discount:    0.12,
+			Weight:      1000.0,
+			Length:      40.0,
+			Width:       40.0,
+			Height:      40.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536494/02sandals02_xuz1zl.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536498/02sandals03_f4bphf.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536494/02sandals01_otpx9n.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Sold  int
+				Image string
+			}{
+				{"", "41", 175000, 10, 5, ""},
+				{"", "42", 175000, 20, 15, ""},
+				{"", "43", 175000, 30, 25, ""},
+				{"", "44", 175000, 40, 35, ""},
+			},
+		},
+		{
+			Category:    "Men's Shoes",
+			Subcategory: "Sandals",
+			Name:        "Bata Preseley Feather-Light Sendal Sintetis Kulit",
+			Description: "Sandal Bata adalah merek alas kaki yang populer di Indonesia, dikenal dengan kualitas dan keawetannya. Bata menawarkan berbagai jenis sandal, mulai dari model flat hingga sandal dengan hak, dengan desain yang beragam dan cocok untuk berbagai kegiatan, baik santai sehari-hari maupun untuk acara khusus. Sandal Bata seringkali terbuat dari bahan seperti PU (Polyurethane), kulit asli, dan karet, yang memberikan kenyamanan dan daya tahan.",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Weight:      1000.0,
+			Length:      40.0,
+			Width:       40.0,
+			Height:      40.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536493/01sandals01_y4l6vb.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536494/01sandals02_euuo47.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536495/01sandals03_dxzjww.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Sold  int
+				Image string
+			}{
+				{"", "41", 315000, 10, 5, ""},
+				{"", "42", 315000, 20, 15, ""},
+				{"", "43", 315000, 30, 25, ""},
+				{"", "44", 315000, 40, 35, ""},
+			},
+		},
+		{
+			Category:    "Men's Shoes",
+			Subcategory: "Formal Shoes",
+			Name:        "Sepatu Dokmart pria terlaris xaxinara footwear",
+			Description: "Sepatu Docmart pria terlaris Xaxinara Footwear adalah sepatu boot dengan desain ikonik yang kokoh dan tahan lama, dikenal karena kualitas kulitnya yang premium dan jahitan yang kuat. Sepatu ini sering dipilih untuk tampilan kasual atau punk, serta cocok untuk berbagai aktivitas karena sol karetnya yang tahan slip dan nyaman.",
+			IsFeatured:  false,
+			Discount:    0.00,
+			Weight:      1000.0,
+			Length:      40.0,
+			Width:       40.0,
+			Height:      40.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536998/02formal01_nojgda.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536998/02formal02_ihkwdw.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Sold  int
+				Image string
+			}{
+				{"", "41", 465000, 10, 5, ""},
+				{"", "42", 465000, 20, 15, ""},
+				{"", "43", 465000, 30, 25, ""},
+				{"", "44", 465000, 40, 35, ""},
+			},
+		},
+		{
+			Category:    "Men's Shoes",
+			Subcategory: "Formal Shoes",
+			Name:        "Kenfa - Mora Black Sepatu Pria Loafer Formal Kerja Kantor Kuliah Slip On Basic Hitam",
+			Description: "Sepatu Kenfa Mora Basic Hitam adalah sepatu formal pria dengan model slip-on yang elegan dan cocok untuk berbagai acara, baik formal maupun kasual. Sepatu ini dibuat dengan material berkualitas tinggi dari pengrajin berpengalaman, memberikan tampilan yang berkelas dan nyaman untuk dipakai sehari-hari, misalnya di kantor atau kuliah",
+			IsFeatured:  false,
+			Discount:    0.12,
+			Weight:      1000.0,
+			Length:      40.0,
+			Width:       40.0,
+			Height:      40.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536999/01formal03_yzmzs3.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536998/01formal02_wqdqvd.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536998/01formal01_sxsc4y.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Sold  int
+				Image string
+			}{
+				{"", "41", 245000, 10, 5, ""},
+				{"", "42", 245000, 20, 15, ""},
+				{"", "43", 245000, 30, 25, ""},
+				{"", "44", 245000, 40, 35, ""},
+			},
+		},
+		{
+			Category:    "Men's Shoes",
+			Subcategory: "Formal Shoes",
+			Name:        "Paulmay Sepatu Formal Kerja Venesia",
+			Description: "Paulmay Sepatu Formal Kerja Venesia adalah sepatu kulit formal yang cocok untuk berbagai acara, termasuk kerja dan kegiatan formal lainnya. Sepatu ini dikenal sebagai produk dari merek Paulmay, sebuah brand fashion lokal Indonesia yang awalnya fokus pada sepatu kulit. Venesia kemungkinan adalah nama model spesifik dari sepatu formal ini.",
+			IsFeatured:  false,
+			Discount:    0.12,
+			Weight:      1000.0,
+			Length:      40.0,
+			Width:       40.0,
+			Height:      40.0,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536999/03formal02_ysq0pe.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745536999/03formal03_kgeocu.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Sold  int
+				Image string
+			}{
+				{"", "41", 335000, 10, 5, ""},
+				{"", "42", 335000, 20, 15, ""},
+				{"", "43", 335000, 30, 25, ""},
+				{"", "44", 335000, 40, 35, ""},
+			},
+		},
+	}
+	for _, p := range products {
+		var cat models.Category
+		db.Where("name = ?", p.Category).First(&cat)
+
+		var sub models.Subcategory
+		db.Where("name = ? AND category_id = ?", p.Subcategory, cat.ID).First(&sub)
+
+		product := models.Product{
+			ID:            uuid.New(),
+			CategoryID:    cat.ID,
+			SubcategoryID: &sub.ID,
+			Name:          p.Name,
+			Description:   p.Description,
+			Weight:        1000.0,
+			Width:         40.0,
+			Height:        40.0,
+			Length:        40.0,
+			Slug:          strings.ToLower(strings.ReplaceAll(p.Name, " ", "-")),
+			IsFeatured:    p.IsFeatured,
+			Discount:      &p.Discount,
+			IsActive:      true,
+		}
+		db.Create(&product)
+
+		for i, img := range p.Images {
+			db.Create(&models.ProductImage{
+				ID:        uuid.New(),
+				ProductID: product.ID,
+				URL:       img,
+				IsPrimary: i == 0,
+			})
+		}
+
+		for _, v := range p.Variants {
+			var colorVal, sizeVal models.VariantOptionValue
+			db.Where("value = ?", v.Color).First(&colorVal)
+			db.Where("value = ?", v.Size).First(&sizeVal)
+
+			variant := models.ProductVariant{
+				ID:        uuid.New(),
+				ProductID: product.ID,
+				Price:     v.Price,
+				Stock:     v.Stock,
+				Sold:      v.Sold,
 				ImageURL:  v.Image,
 			}
 			db.Create(&variant)

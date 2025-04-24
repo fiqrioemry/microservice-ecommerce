@@ -69,6 +69,7 @@ func main() {
 	seeders.SeedFashionAndApparel(db)
 	seeders.SeedFoodBeverage(db)
 	seeders.SeedGadgetElectronic(db)
+	seeders.SeedMenShoes(db)
 
 	go func() {
 		lis, err := net.Listen("tcp", ":50051")
