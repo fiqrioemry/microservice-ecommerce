@@ -1,5 +1,4 @@
-// components/productDetail/ProductVariantSelector.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useCartStore } from "@/store/useCartStore";
 import { Button } from "@/components/ui/button";
@@ -10,22 +9,25 @@ const ProductVariantSelector = ({
   selectedVariant,
   onSelectVariant,
 }) => {
-  const optionKeys = Object.keys(selectedVariant.options || {});
   const [quantity, setQuantity] = useState(1);
+  const [activeOptions, setActiveOptions] = useState(
+    selectedVariant.options || {}
+  );
   const addItem = useCartStore((state) => state.addItem);
-  const [activeOptions, setActiveOptions] = useState({
-    ...selectedVariant.options,
-  });
+
+  useEffect(() => {
+    setActiveOptions(selectedVariant.options || {});
+  }, [selectedVariant]);
 
   const handleOptionClick = (key, value) => {
     const updatedOptions = { ...activeOptions, [key]: value };
     setActiveOptions(updatedOptions);
 
-    const matchedVariant = product.variants.find((v) => {
-      return Object.entries(updatedOptions).every(
+    const matchedVariant = product.variants.find((v) =>
+      Object.entries(updatedOptions).every(
         ([k, vOpt]) => v.options?.[k] === vOpt
-      );
-    });
+      )
+    );
 
     if (matchedVariant) {
       onSelectVariant(matchedVariant);
@@ -41,6 +43,8 @@ const ProductVariantSelector = ({
     });
   };
 
+  const optionKeys = Object.keys(selectedVariant.options || {});
+
   return (
     <>
       {optionKeys.map((key) => {
@@ -55,26 +59,17 @@ const ProductVariantSelector = ({
             </p>
             <div className="flex gap-2 flex-wrap">
               {uniqueOptionValues.map((optionValue) => {
-                const matchedVariant = product.variants.find(
-                  (v) => v.options?.[key] === optionValue
-                );
-
-                if (!matchedVariant) return null;
-
-                const onlyOneOption = uniqueOptionValues.length === 1;
-                const isActive = selectedVariant.options?.[key] === optionValue;
+                const isActive = activeOptions?.[key] === optionValue;
 
                 return (
                   <button
-                    key={matchedVariant.sku + key}
+                    key={key + optionValue}
                     onClick={() => handleOptionClick(key, optionValue)}
-                    disabled={false}
                     className={clsx(
                       "px-3 py-1 border rounded text-sm",
                       isActive
                         ? "bg-primary text-white border-primary"
-                        : "bg-white text-gray-700 border-gray-300 hover:border-primary",
-                      onlyOneOption && "opacity-50 cursor-not-allowed"
+                        : "bg-white text-gray-700 border-gray-300 hover:border-primary"
                     )}
                   >
                     {optionValue}
