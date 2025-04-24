@@ -13,6 +13,24 @@ const ProductVariantSelector = ({
   const optionKeys = Object.keys(selectedVariant.options || {});
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore((state) => state.addItem);
+  const [activeOptions, setActiveOptions] = useState({
+    ...selectedVariant.options,
+  });
+
+  const handleOptionClick = (key, value) => {
+    const updatedOptions = { ...activeOptions, [key]: value };
+    setActiveOptions(updatedOptions);
+
+    const matchedVariant = product.variants.find((v) => {
+      return Object.entries(updatedOptions).every(
+        ([k, vOpt]) => v.options?.[k] === vOpt
+      );
+    });
+
+    if (matchedVariant) {
+      onSelectVariant(matchedVariant);
+    }
+  };
 
   const handleAddToCart = async () => {
     if (quantity > selectedVariant.stock) return;
@@ -49,10 +67,8 @@ const ProductVariantSelector = ({
                 return (
                   <button
                     key={matchedVariant.sku + key}
-                    onClick={() =>
-                      !onlyOneOption && onSelectVariant(matchedVariant)
-                    }
-                    disabled={onlyOneOption}
+                    onClick={() => handleOptionClick(key, optionValue)}
+                    disabled={false}
                     className={clsx(
                       "px-3 py-1 border rounded text-sm",
                       isActive

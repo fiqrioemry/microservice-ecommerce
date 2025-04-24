@@ -44,10 +44,12 @@ const Product = () => {
   if (isError) return <ErrorDialog onRetry={refetch} />;
   if (!product || !selectedVariant) return null;
 
-  const galleryImages = [
-    ...(product.images || []),
-    ...product.variants.map((v) => v.imageUrl).filter(Boolean),
-  ];
+  const galleryImages = Array.from(
+    new Set([
+      ...(product.images || []),
+      ...product.variants.map((v) => v.imageUrl).filter(Boolean),
+    ])
+  );
 
   return (
     <div className="container mx-auto p-6 grid md:grid-cols-2 gap-8">
