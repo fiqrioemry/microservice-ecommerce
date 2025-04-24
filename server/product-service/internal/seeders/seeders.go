@@ -42,13 +42,13 @@ func SeedBanner(db *gorm.DB) {
 func SeedCategoriesAndSubcategories(db *gorm.DB) {
 	placeholder := "https://placehold.co/400x400"
 	categories := map[string][]string{
-		"Fashion & Apparel":     {"Men's Clothing", "Hats and Caps", "Women's Clothing"},
-		"Shoes & Accessories":   {"Sandals", "Walking Style Shoes", "Dress Shoes & Oxford"},
-		"Gadget & Electronics":  {"Phones & Tablet", "Electronic Devices", "Weareable Devices"},
-		"Health & Care":         {"Collagen", "Vitamin", "Sport Nutritions"},
-		"Food & Beverage":       {"Health Drink", "Noodle & Pasta", "Snack food"}, // done - 9 product
-		"Beauty & Skin Care":    {"Lip Gloss", "Hair Extention", "Make Up"},
-		"Sport & Entertainment": {"Cruise Bike", "Baseball", "Roller Wheels"},
+		"Fashion & Apparel": {"Men's Clothing", "Women's Skirt", "Men's Pants", "Women's Dress"},
+		// "Shoes & Accessories":  {"Sandals", "Walking Style Shoes", "Dress Shoes & Oxford"},
+		// "Health & Care":        {"Collagen", "Vitamin", "Sport Nutritions"},
+		"Gadget & Electronics": {"Phones & Tablet", "Electronic Devices", "Weareable Devices"}, // done - 9 product
+		"Food & Beverage":      {"Health Drink", "Noodle & Pasta", "Snack food"},               // done - 9 product
+		// "Beauty & Skin Care":   {"Lip Gloss", "Hair Extention", "Make Up"},
+		// "Sport & Entertainment": {"Cruise Bike", "Baseball", "Roller Wheels"},
 	}
 
 	for catName, subs := range categories {
@@ -110,7 +110,7 @@ func SeedVariantTypesAndValues(db *gorm.DB) {
 	}
 }
 
-func SeedProductDataOne(db *gorm.DB) {
+func SeedFashionAndApparel(db *gorm.DB) {
 	products := []struct {
 		Category    string
 		Subcategory string
@@ -130,13 +130,14 @@ func SeedProductDataOne(db *gorm.DB) {
 		{
 			Category:    "Fashion & Apparel",
 			Subcategory: "Men's Clothing",
-			Description: "Pakaian softshell merupakan pakaian serba guna. Sebagai sentuhan baru pada pakaian luar hardshell klasik, bahan ini menawarkan pengalaman yang lebih fleksibel sehingga cocok untuk olahraga, pakaian olahraga, golf, dan bahkan pakaian sehari-hari.",
-			Name:        "Men's Soft Shell Assault Jacket",
+			Name:        "Jacket Denim Warna Biru Bahan Ekslusif",
+			Description: "Jaket denim warna biru dongker adalah jaket yang terbuat dari bahan denim yang memiliki warna biru tua...",
 			IsFeatured:  false,
-			Discount:    0.0,
+			Discount:    0.05,
 			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/H7a6558c2616241aaafb4e6e119042238C.png_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/H8ed62347008341f0a6927543e7cc5504c.jpg_720x720q50.jpg",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745429277/erem_shirt_01_shijri.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745429275/erem_shirt_02_dusksh.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745429265/erem_shirt_03_ykizqa.webp",
 			},
 			Variants: []struct {
 				Color string
@@ -145,21 +146,21 @@ func SeedProductDataOne(db *gorm.DB) {
 				Stock int
 				Image string
 			}{
-				{"black", "M", 265000, 5, ""},
-				{"black", "L", 265000, 10, ""},
-				{"white", "M", 265000, 5, ""},
-				{"white", "L", 265000, 10, ""},
+				{"", "M", 315000, 10, ""},
+				{"", "L", 315000, 20, ""},
+				{"", "XL", 315000, 30, ""},
 			},
 		},
 		{
 			Category:    "Fashion & Apparel",
 			Subcategory: "Men's Clothing",
-			Name:        "High Quality Men's Youth Fashion Jacket",
+			Name:        "Kaos Distro Pria Lengan Pendek NY Kaos Oblong Cowok",
+			Description: "Kaos Distro Pria Lengan Pendek NY Kaos Oblong Cowok adalah jenis kaos yang diproduksi dengan jumlah terbatas...",
 			IsFeatured:  false,
-			Discount:    0.0,
+			Discount:    0.05,
 			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/H45c2134872bc4b6e89ca5b55db292019q.jpg_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/Hf54245977fbb469cbc3282fd31d2d65dl.jpg?avif=close",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509051/cloth_mens_01_l4sqob.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509051/cloth_mens_02_rzapkt.webp",
 			},
 			Variants: []struct {
 				Color string
@@ -168,24 +169,24 @@ func SeedProductDataOne(db *gorm.DB) {
 				Stock int
 				Image string
 			}{
-				{"red", "M", 335000, 5, ""},
-				{"red", "L", 335000, 10, ""},
-				{"black", "M", 335000, 5, ""},
-				{"black", "L", 335000, 10, ""},
-				{"blue", "M", 335000, 5, ""},
-				{"blue", "L", 335000, 10, ""},
-				{"blue", "XL", 335000, 15, ""},
-				{"blue", "XXL", 335000, 20, ""},
+				{"white", "M", 98500, 10, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509050/cloth_mens_04_xttcat.webp"},
+				{"white", "L", 98500, 20, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509050/cloth_mens_04_xttcat.webp"},
+				{"gray", "M", 98500, 10, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509053/cloth_mens_03_nwcb4c.webp"},
+				{"gray", "L", 98500, 20, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509053/cloth_mens_03_nwcb4c.webp"},
+				{"gray", "XL", 98500, 30, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509053/cloth_mens_03_nwcb4c.webp"},
 			},
 		},
 		{
 			Category:    "Fashion & Apparel",
 			Subcategory: "Men's Clothing",
-			Name:        "Men's High Quality 300 Gsm Boxy Graphic Oversized",
+			Name:        "Hoodie Addict - Zipper Hoodie Dewasa Polos Hitam Pria",
+			Description: "Hoodie Addict Zipper adalah jaket hoodie dengan ritsleting (zipper) yang populer...",
 			IsFeatured:  false,
-			Discount:    0.0,
+			Discount:    0.05,
 			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/H37fdf58f0dd54cdca5a086055fe1e101q.jpg_720x720q50.jpg",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509457/jaket01_tld8i0.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509457/jaket02_ru71to.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509458/jaket03_ygtnw2.webp",
 			},
 			Variants: []struct {
 				Color string
@@ -194,132 +195,21 @@ func SeedProductDataOne(db *gorm.DB) {
 				Stock int
 				Image string
 			}{
-				{"black", "M", 177000, 5, "https://s.alicdn.com/@sc04/kf/H37fdf58f0dd54cdca5a086055fe1e101q.jpg_720x720q50.jpg"},
-				{"black", "L", 177000, 10, "https://s.alicdn.com/@sc04/kf/H37fdf58f0dd54cdca5a086055fe1e101q.jpg_720x720q50.jpg"},
-				{"blue", "M", 177000, 5, " https://s.alicdn.com/@sc04/kf/Hcf176a6f30b840a89e5f0a3c60bb1ecec.jpg_720x720q50.jpg"},
-				{"blue", "L", 177000, 10, " https://s.alicdn.com/@sc04/kf/Hcf176a6f30b840a89e5f0a3c60bb1ecec.jpg_720x720q50.jpg"},
-				{"blue", "XL", 177000, 15, " https://s.alicdn.com/@sc04/kf/Hcf176a6f30b840a89e5f0a3c60bb1ecec.jpg_720x720q50.jpg"},
-				{"pink", "M", 177000, 5, " https://s.alicdn.com/@sc04/kf/H32a280fda84440be8c22f209b589a36bJ.jpg_720x720q50.jpg"},
-				{"pink", "L", 177000, 10, " https://s.alicdn.com/@sc04/kf/H32a280fda84440be8c22f209b589a36bJ.jpg_720x720q50.jpg"},
-				{"pink", "XL", 177000, 15, " https://s.alicdn.com/@sc04/kf/H32a280fda84440be8c22f209b589a36bJ.jpg_720x720q50.jpg"},
+				{"", "M", 138500, 10, ""},
+				{"", "L", 138500, 20, ""},
+				{"", "XL", 138500, 30, ""},
 			},
 		},
 		{
 			Category:    "Fashion & Apparel",
 			Subcategory: "Men's Clothing",
-			Name:        "Business Casual Tuxedo Men's ",
-			IsFeatured:  false,
-			Discount:    0.0,
-			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/H1db0a8f8f25041dab98442eaa144ff3ay.jpg_720x720q50.jpg",
-			},
-			Variants: []struct {
-				Color string
-				Size  string
-				Price float64
-				Stock int
-				Image string
-			}{
-				{"black", "M", 275000, 5, "https://s.alicdn.com/@sc04/kf/H5722ff2a7e144e5aa83103a52770bed0G.jpg_720x720q50.jpg"},
-				{"black", "L", 275000, 10, "https://s.alicdn.com/@sc04/kf/H5722ff2a7e144e5aa83103a52770bed0G.jpg_720x720q50.jpg"},
-				{"red", "M", 275000, 10, "https://s.alicdn.com/@sc04/kf/H07b065e7028640488feeb1278c3cff09M.jpg_720x720q50.jpg"},
-				{"red", "L", 275000, 20, " https://s.alicdn.com/@sc04/kf/H07b065e7028640488feeb1278c3cff09M.jpg_720x720q50.jpg"},
-				{"red", "XL", 275000, 30, " https://s.alicdn.com/@sc04/kf/H07b065e7028640488feeb1278c3cff09M.jpg_720x720q50.jpg"},
-			},
-		},
-		{
-			Category:    "Fashion & Apparel",
-			Subcategory: "Hats and Caps",
-			Name:        "High Quality Fashion Street Versatile Baseball",
-			IsFeatured:  false,
-			Discount:    0.1,
-			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/Hfc996a70f57747738dd5625a897b7195K.jpg_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/H16978a217d7e41029ff43eacbfd5fd6c0.jpg_720x720q50.jpg",
-			},
-			Variants: []struct {
-				Color string
-				Size  string
-				Price float64
-				Stock int
-				Image string
-			}{
-				{"", "", 65000, 50, ""},
-			},
-		},
-		{
-			Category:    "Fashion & Apparel",
-			Subcategory: "Hats and Caps",
-			Name:        "TCAP Custom 5 Panel PVC Rubber Patch Waterproof",
-			IsFeatured:  false,
-			Discount:    0.1,
-			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/A3906e6f105314c8290c9e9bdc83ac51aI.jpg_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/A7b4aa8232070439ba0fbd6536019e761m.jpg_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/A6f2dc7440ff5485abbaa1ec07b94a929q.jpg_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/A9e67963f988744db9c7de7dc444b0007U.jpg_720x720q50.jpg",
-			},
-			Variants: []struct {
-				Color string
-				Size  string
-				Price float64
-				Stock int
-				Image string
-			}{
-				{"blue", "", 87000, 20, "https://sc04.alicdn.com/kf/Hd72c0ef6e89a43869e3306391e27180c5.jpg"},
-				{"gray", "", 87000, 20, "https://sc04.alicdn.com/kf/H3463b32013bb4d1693edea4337ff6a4aP.jpg"},
-			},
-		},
-		{
-			Category:    "Fashion & Apparel",
-			Subcategory: "Hats and Caps",
-			Name:        "New Vintage Street Baseball Caps Custom",
-			IsFeatured:  false,
-			Discount:    0.1,
-			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/Hcdd83d479d6942dcb72e509264dac134J.png_720x720q50.jpg",
-			},
-			Variants: []struct {
-				Color string
-				Size  string
-				Price float64
-				Stock int
-				Image string
-			}{
-				{"black", "", 102000, 10, "https://s.alicdn.com/@sc04/kf/H521ebe131a5d49ec897756bf8c059871O.jpg_720x720q50.jpg"},
-				{"red", "", 102000, 20, "https://s.alicdn.com/@sc04/kf/H3f5c17c9b79147d997d9fde2fda989c3p.jpg_720x720q50.jpg"},
-				{"white", "", 102000, 30, "https://sc04.alicdn.com/kf/Hfae099e8a4024fac872081a35047f00bj.jpg"},
-			},
-		},
-		{
-			Category:    "Fashion & Apparel",
-			Subcategory: "Hats and Caps",
-			Name:        "Factory Price Classic Adjustable Women and Men",
-			IsFeatured:  false,
-			Discount:    0.1,
-			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/Hcdd83d479d6942dcb72e509264dac134J.png_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/H9f964f8dbdcd447690136e6ff5fb80f19.png_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/H42a9dd56e4d440ab96b40a8c73891a68z.png_720x720q50.jpg",
-			},
-			Variants: []struct {
-				Color string
-				Size  string
-				Price float64
-				Stock int
-				Image string
-			}{
-				{"", "", 77500, 50, ""},
-			},
-		},
-		{
-			Category:    "Fashion & Apparel",
-			Subcategory: "Women's Clothing",
-			Name:        "Autumn Allover Print Twist High Waist Bodycon Skirts",
+			Name:        "Hoodie Boxy Oversize Men Decorder Gray",
+			Description: "Hoodie boxy oversize adalah hoodie dengan siluet yang lebih lebar dan berbentuk kotak (boxy)...",
 			IsFeatured:  false,
 			Discount:    0.05,
 			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/H6b1532ff613d4fe992a79a8f220218dcy.jpg_720x720q50.jpg",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509054/jaket_mens_02_tyjlul.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509053/jaket_mens_01_a21ye5.webp",
 			},
 			Variants: []struct {
 				Color string
@@ -328,69 +218,9 @@ func SeedProductDataOne(db *gorm.DB) {
 				Stock int
 				Image string
 			}{
-				{"red", "", 152000, 10, "https://s.alicdn.com/@sc04/kf/Ha4b04e36c7524776a4c00042d442fd03z.jpg_720x720q50.jpg"},
-				{"black", "", 152000, 20, "https://s.alicdn.com/@sc04/kf/H97eef9a0f6f446e499d440fcdea82dd7Q.jpg_720x720q50.jpg"},
-			},
-		},
-		{
-			Category:    "Fashion & Apparel",
-			Subcategory: "Women's Clothing",
-			Name:        "Women Clothing Dress Lady Elegant Temperament",
-			IsFeatured:  false,
-			Discount:    0.05,
-			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/H08730c53ec1f4c25a6ac260f72ca87fbN.jpg_720x720q50.jpg",
-			},
-			Variants: []struct {
-				Color string
-				Size  string
-				Price float64
-				Stock int
-				Image string
-			}{
-				{"orange", "", 215000, 10, "https://s.alicdn.com/@sc04/kf/Hb53d9a848df448b3bd9f5cae730bbe33p.jpg_720x720q50.jpg"},
-				{"red", "", 215000, 20, "https://s.alicdn.com/@sc04/kf/H525c5ec4f6974984a2731f0cb3c5c51av.jpg_720x720q50.jpg"},
-			},
-		},
-		{
-			Category:    "Fashion & Apparel",
-			Subcategory: "Women's Clothing",
-			Name:        "Spring Fashion Casual Women's Clothes Ladies",
-			IsFeatured:  false,
-			Discount:    0.05,
-			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/H3988b57157ca44e092a53ed1cb53f187L.jpg_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/H17aa21955dd243b2b696e1b29f75dfe2h.jpg_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/H79066d0dc2d64e5ba4844bce49c5c53d3.jpg_720x720q50.jpg",
-			},
-			Variants: []struct {
-				Color string
-				Size  string
-				Price float64
-				Stock int
-				Image string
-			}{
-				{"", "", 172000, 10, ""},
-			},
-		},
-		{
-			Category:    "Fashion & Apparel",
-			Subcategory: "Women's Clothing",
-			Name:        "Spring Fashion Casual Women's Clothes Ladies",
-			IsFeatured:  false,
-			Discount:    0.05,
-			Images: []string{
-				"https://s.alicdn.com/@sc04/kf/H9bc860bc18094c18892a3973003cbde8W.png_720x720q50.jpg",
-				"https://s.alicdn.com/@sc04/kf/H06b3dc8823ad4a568f015e193ce3d131j.png_720x720q50.jpg",
-			},
-			Variants: []struct {
-				Color string
-				Size  string
-				Price float64
-				Stock int
-				Image string
-			}{
-				{"", "", 97000, 20, ""},
+				{"", "M", 112500, 10, ""},
+				{"", "L", 112500, 20, ""},
+				{"", "XL", 112500, 30, ""},
 			},
 		},
 	}
@@ -561,7 +391,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 			Category:    "Food & Beverage",
 			Subcategory: "Health Drink",
 			Name:        "Nestle Pure Life Air Minum Ukuran 600mL - 1 Pack",
-			Description: "Air minum Nestle Pure Life 600mL adalah air mineral ...",
+			Description: "Air minum Nestle Pure Life 600mL adalah air mineral yang diproduksi dengan Standar Internasional oleh Nestle Global Waters. Tersebar diberbagai negara di dunia, air minum Nestle Pure Life tersedia di lebih dari 40 negara di dunia dan menjadi Top 3 di 13 negara. Selain cocok untuk memenuhi kebutuhan hidrasi kamu dan keluarga setiap hari. Air minum Nestle Pure Life juga cocok untuk kamu yang membutuhkan air minum dengan kesegaran nyata dalam kondisi apapun.",
 			IsFeatured:  false,
 			Discount:    0.05,
 			Images: []string{
@@ -581,8 +411,8 @@ func SeedFoodBeverage(db *gorm.DB) {
 		{
 			Category:    "Food & Beverage",
 			Subcategory: "Health Drink",
-			Name:        "ESSENLI Pure Matcha Powder Japan / Bubuk Matcha Murni Drink",
-			Description: "ESSENLI Pure Matcha Powder Japan adalah bubuk matcha murni ...",
+			Name:        "ESSENLI Pure Matcha Powder Japan Bubuk Matcha Murni Drink",
+			Description: "ESSENLI Pure Matcha Powder Japan adalah bubuk matcha murni (bubuk teh hijau Jepang) yang dikeringkan dengan metode khusus dan digiling menjadi bubuk halus. Matcha ini kaya akan antioksidan, seperti polifenol dan EGCG, serta berbagai nutrisi seperti protein, gula, vitamin, dan mineral. ESSENLI Pure Matcha Powder Japan bisa digunakan untuk berbagai macam minuman, makanan, dan bahkan untuk membuat masker wajah. Contohnya adalah untuk membuat matcha latte, matcha ice cream, matcha cake, matcha pasta, dan sebagainya.",
 			IsFeatured:  false,
 			Discount:    0.05,
 			Images: []string{
@@ -745,9 +575,214 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			Image string
 		}
 	}{
-		// write code here ......
+		{
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
+			Name:        "Motorola G45 Snapdragon 6s Gen 3",
+			Description: "Moto G45 5G pakai prosesor Qualcomm Snapdragon 6s Gen 3. Prosesor ini andal untuk menjalankan aplikasi-aplikasi secara bersamaan, membuat multi-tasking dapat dilakukan tanpa lag, sekaligus hemat daya. Performanya didukung oleh konfigurasi RAM 8 GB fisik + 8 GB RAM virtual (Extended RAM) dan penyimpanan internal 256 GB.",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421821/motorola_phone_01_hpmjaf.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421821/motorola_phone_03_pbvpd1.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421820/motorola_phone_02_wqlrdz.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "4gb", 1250000, 10, ""},
+				{"", "6gb", 1350000, 20, ""},
+				{"", "8gb", 1450000, 30, ""},
+			},
+		},
+		{
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
+			Name:        "Samsung Galaxy A16 - Garansi Resmi Sein Tam",
+			Description: "Samsung Galaxy A16 adalah smartphone Android yang menawarkan kombinasi layar Super AMOLED 6,7 inci, baterai 5000mAh, dan kamera 50MP. Perangkat ini memiliki desain tipis dengan ketebalan 7,9mm. Samsung Galaxy A16 tersedia dalam beberapa pilihan memori internal dan RAM, serta dilengkapi dengan fitur Super Fast Charging.",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421821/motorola_phone_01_hpmjaf.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421821/motorola_phone_03_pbvpd1.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421820/motorola_phone_02_wqlrdz.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "4gb", 2599999, 10, ""},
+				{"", "6gb", 2699999, 20, ""},
+				{"", "8gb", 2799999, 30, ""},
+			},
+		},
+		{
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
+			Name:        "Asus Zenfone 11 Ultra 12 5G",
+			Description: "Asus Zenfone 11 Ultra 12/256GB adalah smartphone flagship dengan layar 6.78 inci AMOLED, chipset Snapdragon 8 Gen 3, RAM 12GB, storage 256GB, dan baterai 5500 mAh. Perangkat ini memiliki kamera belakang 50MP utama dan 32MP telephoto, serta kamera depan 32MP. Zenfone 11 Ultra juga dilengkapi dengan fitur 6-axis hybrid gimbal untuk video yang stabil.",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423036/asus_phone_05_bgoxso.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423035/asus_phone_04_qe1lqw.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"black", "256gb", 8499000, 10, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745422573/asus_phone_01_wyvgsx.webp"},
+				{"black", "512gb", 8899000, 20, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745422573/asus_phone_01_wyvgsx.webp"},
+				{"grey", "256gb", 8499000, 10, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745422573/asus_phone_03_ptjmet.webp"},
+				{"grey", "512gb", 8899000, 20, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745422573/asus_phone_03_ptjmet.webp"},
+				{"blue", "256gb", 8499000, 10, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745422573/asus_phone_02_mbvwyi.webp"},
+				{"blue", "512gb", 8899000, 20, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745422573/asus_phone_02_mbvwyi.webp"},
+			},
+		},
+		{
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
+			Name:        "Infinix XPad 11 Tablet 5G Premium",
+			Description: "Infinix XPad 11 adalah tablet Android dengan layar 11 inci dan refresh rate 90Hz, ditenagai oleh chipset MediaTek Helio G99. 7000mAh, RAM hingga 8GB, dan Android 14. Ia juga dilengkapi dengan fitur-fitur seperti Folax Voice Assistant, Multi-Device Collaboration, dan pengisian cepat.",
+			IsFeatured:  true,
+			Discount:    0.15,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423645/infinix_tablet_01_mh0wgd.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423643/infinix_tablet_02_fptycg.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "4gb", 2250000, 10, ""},
+				{"", "8gb", 2350000, 20, ""},
+			},
+		},
+		{
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
+			Name:        "Huawei MatePad 11 Snapdragon 865",
+			Description: "Huawei MatePad 11 adalah tablet dengan layar 11 inci, ditenagai oleh chipset Snapdragon 865, RAM 6GB, dan memori internal 128GB yang dapat diperluas. Tablet ini juga dilengkapi dengan sistem operasi Harmony OS 3.1. Secara keseluruhan, Huawei MatePad 11 adalah tablet yang menawarkan performa baik, layar yang bagus, dan berbagai fitur tambahan, menjadikannya pilihan yang menarik untuk berbagai kebutuhan, mulai dari produktivitas hingga hiburan.",
+			IsFeatured:  true,
+			Discount:    0.1,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423869/huawei_tablet_01_qz7bbi.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423859/huawei_tablet_03_qbokzz.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745423858/huawei_tablet_02_twk4ey.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "6gb", 5500000, 10, ""},
+				{"", "8gb", 5900000, 20, ""},
+			},
+		},
+		{
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
+			Name:        "Xiaomi Pad SE NEW Garansi",
+			Description: "Xiaomi Redmi Pad SE adalah tablet Android yang memiliki layar FHD+ 11 inci dengan refresh rate 90 Hz, ditenagai oleh prosesor Snapdragon 680, RAM 4GB, dan penyimpanan internal 128GB, serta baterai 8000mAh. Tablet ini dilengkapi dengan empat speaker dengan Dolby Atmos, dan kamera depan 5MP dan kamera belakang 8MP. Redmi Pad SE hadir dengan layar IPS LCD berukuran 10,1 inci, memberikan tampilan yang luas dan jelas. Resolusi layar sebesar 1200 x 2000 piksel, dengan tingkat kecerahan hingga 340 nits dan rasio kontras 1500:1, cocok untuk berbagai kebutuhan mulai dari streaming video, browsing, hingga bermain game.",
+			IsFeatured:  true,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424296/xiaomi_tablet_02_oxh1ad.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745424295/xiaomi_tablet_01_wkjuec.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "6gb", 2450000, 10, ""},
+				{"", "8gb", 275000, 20, ""}, // ← Perlu dicek, kemungkinan typo (mungkin maksudnya 2.750.000?)
+			},
+		},
+		{
+			Category:    "Gadget & Electronics",
+			Subcategory: "Wearable Devices",
+			Name:        "Xiaomi Mi band 4 Smartwatch",
+			Description: "Miliki smartband pintar xiaomi Mi Band 4 Generasi terbaru, hadir dengan beragam fitur canggih dengan peningkatan yang lebih baik dari generasi sebelumnya. Kapasitas baterai Xiaomi Mi Band 4 50 % lebih besar dari xiaomi mi band 2 yang mampu bertahan hingga lebih dari 20 hari penggunaan. XIaomi Mi Band 4 dilengkapi dengan bluetooth 4.2 untuk konektivitasnya dan untuk ketahanan airnya pun turut ditingkatkan yang kini mampu bertahan hingga kedalaman 50 meter.",
+			IsFeatured:  true,
+			Discount:    0.025,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745420230/smart_watch_mi_band_4_2_mjutcx.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745420230/smart_watch_mi_band_4_n3vcip.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"", "", 750000, 50, ""},
+			},
+		},
+		{
+			Category:    "Gadget & Electronics",
+			Subcategory: "Wearable Devices",
+			Name:        "Samsung Galaxy Watch 4 Classic 42mm",
+			Description: "Samsung Watch 4 hadir dengan display Sapphire Crystal, GPS, sleep tracker dan body composition. Smartwatch yang menawarkan berbagai fitur kesehatan dan kebugaran, serta integrasi yang mulus dengan perangkat Galaxy lainnya. Smartwatch ini dilengkapi dengan sensor BioActive yang mampu memantau detak jantung, tekanan darah, kadar oksigen dalam darah, dan kualitas tidur. Selain itu, Galaxy Watch juga mendukung fitur-fitur lain seperti menerima panggilan dan pesan, mengontrol musik, dan memberikan notifikasi.",
+			IsFeatured:  false,
+			Discount:    0.05,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745420675/samsung_watch_03_bmlayk.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745420675/samsung_watch_03_bmlayk.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"white", "", 875000, 10, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745420675/samsung_watch_04_uh1fjs.webp"},
+				{"black", "", 875000, 20, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745420675/samsung_watch_02_szbzqg.webp"},
+			},
+		},
+		{
+			Category:    "Gadget & Electronics",
+			Subcategory: "Wearable Devices",
+			Name:        "HUAWEI WATCH FIT Special Edition Smartwatch",
+			Description: "HUAWEI WATCH FIT Special Edition Smartwatch | 1.64 HD AMOLED | 24/7 Active Health Management | Built-in GPS | Fast Charging. Notifikasi panggilan Bluetooth & balas pesan cepat Kompatibel dengan luas, bisa digunakan bersama semua OS Tersedia dalam 3 varian warna: Nebula Pink, Forest Green, Starry Black.",
+			IsFeatured:  false,
+			Discount:    0.02,
+			Images: []string{
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421186/huawei_smartwatch_04_r8ftp5.webp",
+				"https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421185/huawei_smartwatch_02_ihjja7.webp",
+			},
+			Variants: []struct {
+				Color string
+				Size  string
+				Price float64
+				Stock int
+				Image string
+			}{
+				{"blue", "", 545000, 10, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421187/huawei_smartwatch_05_qbvhc7.webp"},
+				{"black", "", 545000, 20, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421185/huawei_smartwatch_03_wswy7h.webp"},
+				{"pink", "", 545000, 30, "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745421185/huawei_smartwatch_01_iwdoic.webp"},
+			},
+		},
 	}
-
 	for _, p := range products {
 		var cat models.Category
 		db.Where("name = ?", p.Category).First(&cat)
