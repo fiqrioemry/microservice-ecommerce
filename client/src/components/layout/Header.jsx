@@ -1,11 +1,11 @@
-import Logo from "@/components/ui/Logo";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import Button from "@/components/ui/button";
+import { Link, useNavigate } from "react-router-dom";
+import { ShoppingCart, LogIn } from "lucide-react";
+import { useAuthStore } from "@/store/useAuthStore";
 import SearchInput from "@/components/header/SearchInput";
 import SearchDropdown from "@/components/header/SearchDropdown";
 import { useSearchProductsQuery } from "@/hooks/useProductsQuery";
-import { useAuthStore } from "../../store/useAuthStore";
-import { ShoppingCart, LogIn } from "lucide-react";
 
 const Header = () => {
   const { user } = useAuthStore();
@@ -35,9 +35,10 @@ const Header = () => {
       <header className="fixed w-full bg-white p-2 border-b shadow-sm">
         <div className="flex items-center justify-between container mx-auto gap-4">
           {/* Logo */}
-          <div className="flex items-center gap-4">
-            <Logo />
-          </div>
+
+          <Link to="/">
+            <h2 className="text-xl font-bold text-primary">Ecommerce</h2>
+          </Link>
 
           {/* Search */}
           <div className="relative w-full max-w-md">
@@ -62,7 +63,7 @@ const Header = () => {
 
           {/* Right section */}
           <div className="flex items-center gap-4">
-            {/* Keranjang hanya jika user login */}
+            {/* Shopping cart dropdown*/}
             {user && (
               <button
                 onClick={() => navigate("/cart")}
@@ -72,22 +73,19 @@ const Header = () => {
               </button>
             )}
 
-            {/* Avatar / Login */}
+            {/* User Dropdown Avatar & Login */}
             {user ? (
               <img
                 src={user.profile?.avatar}
                 alt={user.profile?.fullname}
-                className="w-8 h-8 rounded-full object-cover cursor-pointer"
                 onClick={() => navigate("/profile")}
+                className="w-8 h-8 rounded-full object-cover cursor-pointer"
               />
             ) : (
-              <button
-                onClick={handleLoginClick}
-                className="flex items-center gap-2 text-sm border px-3 py-1.5 rounded-md hover:bg-gray-100 transition"
-              >
+              <Button onClick={handleLoginClick}>
                 <LogIn className="w-4 h-4" />
                 Login
-              </button>
+              </Button>
             )}
           </div>
         </div>

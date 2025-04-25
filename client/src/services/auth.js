@@ -4,6 +4,7 @@ import { userInstance } from ".";
 
 // Auth - Public
 const login = async (data) => {
+  console.log("login", data);
   const res = await userInstance.post("/auth/login", data);
   return res.data;
 };

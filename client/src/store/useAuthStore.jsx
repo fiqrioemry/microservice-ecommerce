@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 import { toast } from "sonner";
 import auth from "@/services/auth";
+import { persist } from "zustand/middleware";
 
 export const useAuthStore = create(
   persist(
@@ -29,7 +29,7 @@ export const useAuthStore = create(
           toast.success(message);
           window.location.href = "/";
         } catch (error) {
-          toast.error(error.message);
+          toast.error(error.response.data.message);
         } finally {
           set({ loading: false });
         }
@@ -37,12 +37,11 @@ export const useAuthStore = create(
 
       logout: async () => {
         try {
-          await auth.logout(); // optional: you can skip this if token in cookies
+          await auth.logout();
+          set({ user: null });
         } catch (err) {
           console.warn("Failed to logout", err);
         }
-        set({ user: null });
-        window.location.href = "/signin";
       },
 
       register: async (formData) => {

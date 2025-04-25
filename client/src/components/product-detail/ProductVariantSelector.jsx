@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import clsx from "clsx";
 import { useCartStore } from "@/store/useCartStore";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 
 const ProductVariantSelector = ({

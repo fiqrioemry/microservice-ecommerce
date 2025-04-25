@@ -1,47 +1,34 @@
 /* eslint-disable react/prop-types */
-import { Fragment } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Fragment, useEffect } from "react";
+import Loading from "@/components/ui/Loading";
 import { useAuthStore } from "@/store/useAuthStore";
+
+const AuthProvider = ({ children }) => {
+  const { authCheck, checkingAuth } = useAuthStore();
+
+  useEffect(() => {
+    authCheck();
+  }, [authCheck]);
+
+  if (checkingAuth) return <Loading />;
+
+  return <>{children}</>;
+};
+
+export default AuthProvider;
+
+export const AuthRoute = ({ children }) => {
+  const { user } = useAuthStore();
+
+  if (!user || user.role !== "customer") return window.location.href("/");
+
+  return <Fragment>{children}</Fragment>;
+};
 
 export const NonAuthRoute = ({ children }) => {
   const { user } = useAuthStore();
 
-  if (user) {
-    return <Navigate to="/" />;
-  }
+  if (user) return window.location.href("/");
 
-  return <Fragment>{children}</Fragment>;
-};
-
-export const AuthRoute = ({ children }) => {
-  const { user } = useAuthStore();
-  const location = useLocation();
-
-  if (!user) {
-    return <Navigate to="/signin" />;
-  }
-
-  if (location.pathname === "/open-store") {
-    if (user.role === "seller") return <Navigate to="/store" />;
-  }
-
-  return <Fragment>{children}</Fragment>;
-};
-
-export const SellerRoute = ({ children }) => {
-  const { user } = useAuthStore();
-
-  if (!user || user.role !== "seller") {
-    return <Navigate to="/" />;
-  }
-  return <Fragment>{children}</Fragment>;
-};
-
-export const AdminRoute = ({ children }) => {
-  const { user } = useAuthStore();
-
-  if (!user || user.role !== "admin") {
-    return <Navigate to="*" />;
-  }
   return <Fragment>{children}</Fragment>;
 };

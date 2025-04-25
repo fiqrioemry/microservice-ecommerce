@@ -1,13 +1,14 @@
-import { useState, useEffect } from "react";
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
   DialogTitle,
-  DialogDescription,
+  DialogHeader,
   DialogFooter,
+  DialogContent,
+  DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+
+import Button from "./button";
+import { useState, useEffect } from "react";
 import { AlertTriangle } from "lucide-react";
 
 const ErrorDialog = ({ open = true, onRetry }) => {

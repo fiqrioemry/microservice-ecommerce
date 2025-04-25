@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "sonner";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export const productInstance = axios.create({
   baseURL: import.meta.env.VITE_PRODUCT_SERVICES,
@@ -25,37 +26,15 @@ export const cartInstance = axios.create({
   },
 });
 
-cartInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      const logout = useAuthStore.getState().logout;
-      toast.error("Session expired, please login again.");
-      logout();
-    }
-    return Promise.reject(error);
-  }
-);
-
 userInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      const logout = useAuthStore.getState().logout;
-      toast.error("Session expired, please login again.");
-      logout();
-    }
-    return Promise.reject(error);
-  }
-);
-
-productInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      const logout = useAuthStore.getState().logout;
-      toast.error("Session expired, please login again.");
-      logout();
+      const { logout, user } = useAuthStore.getState();
+      if (user) {
+        toast.error("Session expired, please login again.");
+        logout();
+      }
     }
     return Promise.reject(error);
   }
@@ -65,9 +44,11 @@ cartInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      const logout = useAuthStore.getState().logout;
-      toast.error("Session expired, please login again.");
-      logout();
+      const { logout, user } = useAuthStore.getState();
+      if (user) {
+        toast.error("Session expired, please login again.");
+        logout();
+      }
     }
     return Promise.reject(error);
   }

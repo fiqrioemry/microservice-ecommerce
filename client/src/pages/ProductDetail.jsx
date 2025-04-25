@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
 import ErrorDialog from "@/components/ui/ErrorDialog";
 import FetchLoading from "@/components/ui/FetchLoading";
 import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
 import { useProductDetailQuery } from "@/hooks/useProductsQuery";
 import ProductInfo from "@/components/product-detail/ProductInfo";
 import ProductGallery from "@/components/product-detail/ProductGallery";
@@ -94,7 +94,7 @@ const Product = () => {
   if (!product || !selectedVariant) return null;
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="section">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <ProductGallery
           images={galleryImages}

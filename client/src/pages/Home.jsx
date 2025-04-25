@@ -6,10 +6,10 @@ import {
   useCategoriesQuery,
   useGetAllBannersQuery,
 } from "@/hooks/useProductsQuery";
+import { Swiper, SwiperSlide } from "swiper/react";
 import ErrorDialog from "@/components/ui/ErrorDialog";
 import FetchLoading from "@/components/ui/FetchLoading";
-import ProductCard from "@/components/products/ProductCard";
-import { Swiper, SwiperSlide } from "swiper/react";
+import ProductCard from "@/components/product-results/ProductCard";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 const Home = () => {
@@ -39,7 +39,7 @@ const Home = () => {
   );
 
   return (
-    <section className="py-6 px-4 md:px-6 max-w-screen-xl mx-auto">
+    <section className="section">
       {/* Top Banner */}
       {topBanners.length > 0 && (
         <div className="mb-6">

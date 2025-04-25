@@ -1,24 +1,25 @@
 import { Link } from "react-router-dom";
 import { AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Button from "@/components/ui/Button";
 
 const NotFound = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center w-1/2 p-8 border-4 border-red-500 ">
-        <div className="flex justify-center">
-          <AlertTriangle className="w-16 h-16 text-red-500 mb-4" />
-        </div>
-        <h2 className="mb-4">404 - Page Not Found</h2>
-        <p className="text-lg text-muted-foreground mb-4">
-          Oops! The page you&apos;re looking for doesn&apos;t exist or has been
-          moved.
+    <section className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
+      <div className="text-center max-w-xl w-full">
+        <img
+          src="/page-not-found.webp"
+          alt="page-not-found-illustration"
+          className="mx-auto max-w-xs md:max-w-md mb-8 rounded-md"
+        />
+        <p className="text-gray-500 text-base md:text-lg mb-6">
+          Oops! The page you're looking for doesn't exist or has been moved.
         </p>
+
         <Link to="/">
-          <Button>Go Back Home</Button>
+          <Button variant="primary">← Back to Homepage</Button>
         </Link>
       </div>
-    </div>
+    </section>
   );
 };
 
