@@ -1,17 +1,16 @@
-// src/api/user.js
-import { instance } from ".";
-
 // =====================
 // PROFILE (Auth Required)
 // =====================
 
+import { userInstance } from ".";
+
 const getProfile = async () => {
-  const res = await instance.get("/user/profile");
+  const res = await userInstance.get("/user/profile");
   return res.data;
 };
 
 const updateProfile = async (data) => {
-  const res = await instance.put("/user/profile", data);
+  const res = await userInstance.put("/user/profile", data);
   return res.data;
 };
 
@@ -20,27 +19,27 @@ const updateProfile = async (data) => {
 // =====================
 
 const getAddresses = async () => {
-  const res = await instance.get("/user/addresses");
+  const res = await userInstance.get("/user/addresses");
   return res.data;
 };
 
 const addAddress = async (data) => {
-  const res = await instance.post("/user/addresses", data);
+  const res = await userInstance.post("/user/addresses", data);
   return res.data;
 };
 
 const updateAddress = async (id, data) => {
-  const res = await instance.put(`/user/addresses/${id}`, data);
+  const res = await userInstance.put(`/user/addresses/${id}`, data);
   return res.data;
 };
 
 const deleteAddress = async (id) => {
-  const res = await instance.delete(`/user/addresses/${id}`);
+  const res = await userInstance.delete(`/user/addresses/${id}`);
   return res.data;
 };
 
 const setMainAddress = async (id) => {
-  const res = await instance.put(`/user/addresses/${id}/set-main`);
+  const res = await userInstance.put(`/user/addresses/${id}/set-main`);
   return res.data;
 };
 

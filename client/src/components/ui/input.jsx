@@ -3,11 +3,11 @@ import * as React from "react";
 const Input = ({
   label,
   name,
-  type = "text",
-  placeholder,
   error,
   register,
+  placeholder,
   className = "",
+  type = "text",
   ...rest
 }) => {
   return (

@@ -3,56 +3,62 @@ import { create } from "zustand";
 import carts from "@/services/carts";
 import { immer } from "zustand/middleware/immer";
 
+// src/store/useCartStore.jsx
+
 export const useCartStore = create(
   immer((set, get) => ({
-    items: [],
+    carts: {},
+    totalItems: 0,
+    totalPrice: 0,
     loading: false,
 
-    // 🧠 Getter
-    get totalItems() {
-      return get().items.reduce((total, item) => total + item.quantity, 0);
+    getTotalItems: () => {
+      const totalItems =
+        get().carts.items?.reduce((total, item) => total + item.quantity, 0) ||
+        0;
+      set({ totalItems });
     },
 
-    get totalPrice() {
-      return get().items.reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      );
+    getTotalPrice: () => {
+      const totalPrice =
+        get().carts.items?.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0
+        ) || 0;
+      set({ totalPrice });
     },
 
-    // ✅ Fetch cart (initial load)
     fetchCart: async () => {
-      set((state) => {
-        state.loading = true;
+      set({
+        loading: true,
       });
       try {
-        const data = await carts.getCart();
-        set((state) => {
-          state.items = data;
-        });
+        const { cart } = await carts.getCart();
+        set({ carts: cart });
+        get().getTotalItems();
+        get().getTotalPrice();
       } catch (err) {
         toast.error("Gagal memuat keranjang");
       } finally {
-        set((state) => {
-          state.loading = false;
+        set({
+          loading: false,
         });
       }
     },
 
-    // ✅ Add new item
     addItem: async (formData) => {
       try {
         const { message } = await carts.addToCart(formData);
         toast.success(message);
-        await get().fetchCart(); // refresh setelah add
+        await get().fetchCart();
       } catch (err) {
         toast.error(err.message);
       }
     },
 
-    // ✅ Update item quantity
     updateItem: async (itemId, data) => {
       try {
+        console.log(itemId, data);
         const { message } = await carts.updateCartItem(itemId, data);
         toast.success(message);
         await get().fetchCart();
@@ -61,26 +67,25 @@ export const useCartStore = create(
       }
     },
 
-    // ✅ Remove single item
     removeItem: async (itemId) => {
       try {
         const { message } = await carts.removeCartItem(itemId);
         toast.success(message);
         set((state) => {
-          state.items = state.items.filter((i) => i.id !== itemId);
+          state.carts.items =
+            state.carts.items?.filter((i) => i.id !== itemId) || [];
         });
       } catch (err) {
         toast.error(err.message);
       }
     },
 
-    // ✅ Clear entire cart
     clearCart: async () => {
       try {
         const { message } = await carts.clearCart();
         toast.success(message);
         set((state) => {
-          state.items = [];
+          state.carts = { items: [] };
         });
       } catch (err) {
         toast.error(err.message);

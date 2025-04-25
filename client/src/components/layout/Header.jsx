@@ -6,6 +6,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 import SearchInput from "@/components/header/SearchInput";
 import SearchDropdown from "@/components/header/SearchDropdown";
 import { useSearchProductsQuery } from "@/hooks/useProductsQuery";
+import CartDropdown from "../header/CartDropdown";
+import UserDropdown from "../header/UserDropdown";
 
 const Header = () => {
   const { user } = useAuthStore();
@@ -64,23 +66,11 @@ const Header = () => {
           {/* Right section */}
           <div className="flex items-center gap-4">
             {/* Shopping cart dropdown*/}
-            {user && (
-              <button
-                onClick={() => navigate("/cart")}
-                className="relative text-muted-foreground hover:text-primary"
-              >
-                <ShoppingCart className="w-6 h-6" />
-              </button>
-            )}
+            {user && <CartDropdown />}
 
             {/* User Dropdown Avatar & Login */}
             {user ? (
-              <img
-                src={user.profile?.avatar}
-                alt={user.profile?.fullname}
-                onClick={() => navigate("/profile")}
-                className="w-8 h-8 rounded-full object-cover cursor-pointer"
-              />
+              <UserDropdown />
             ) : (
               <Button onClick={handleLoginClick}>
                 <LogIn className="w-4 h-4" />
