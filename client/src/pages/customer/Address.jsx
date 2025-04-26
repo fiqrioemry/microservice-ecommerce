@@ -1,36 +1,35 @@
-// Updated Address.jsx with new UI/UX and Dialog
-
-import {
-  Dialog,
-  DialogTitle,
-  DialogHeader,
-  DialogContent,
-} from "@/components/ui/dialog";
-import React, { useState } from "react";
-import Input from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { addressSchema } from "@/lib/schema";
-import { Switch } from "@/components/ui/switch";
-import Button from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
+// Updated Address.jsx with dynamic city loading and auto zipcode
+import React, { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import { useProfileStore } from "@/store/useProfileStore";
-
+import Button from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAddressesQuery } from "@/hooks/useProfileManagement";
-import { useCitiesQuery, useProvincesQuery } from "@/hooks/useLocationQuery";
+import { useProfileStore } from "@/store/useProfileStore";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { addressSchema } from "@/lib/schema";
+import Input from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useLocationQuery } from "@/hooks/useLocationQuery";
+import { Switch } from "@/components/ui/switch";
 
 const Address = () => {
+  const { isError, refetch, isLoading, data: addresses } = useAddressesQuery();
   const { addAddress } = useProfileStore();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formTouched, setFormTouched] = useState(false);
-  const { isError, isLoading, data: addresses } = useAddressesQuery();
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     watch,
     formState: { errors },
   } = useForm({
@@ -46,11 +45,19 @@ const Address = () => {
     },
   });
 
-  const provinceId = watch("id");
+  const provinceId = watch("province_id");
+  const cityId = watch("city_id");
 
-  const { data: provinces = [] } = useProvincesQuery("province");
-  const { data: cities = [] } = useCitiesQuery("city", provinces.id);
-  console.log(provinces);
+  const { data: provinces = [] } = useLocationQuery("province");
+  const { data: cities = [] } = useLocationQuery("city", provinceId);
+
+  useEffect(() => {
+    const selectedCity = cities.find((c) => c.id.toString() === cityId);
+    if (selectedCity) {
+      setValue("zipcode", selectedCity.postal_code);
+    }
+  }, [cityId, cities, setValue]);
+
   const onSubmit = async (data) => {
     await addAddress({
       ...data,
@@ -129,6 +136,7 @@ const Address = () => {
               <div className="w-1/2">
                 <label className="label">Province</label>
                 <select className="input" {...register("province_id")}>
+                  <option value="">Select Province</option>
                   {provinces.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.name}
@@ -139,9 +147,10 @@ const Address = () => {
               <div className="w-1/2">
                 <label className="label">City</label>
                 <select className="input" {...register("city_id")}>
+                  <option value="">Select City</option>
                   {cities.map((c) => (
                     <option key={c.id} value={c.id}>
-                      {c.name}
+                      {c.type} {c.name}
                     </option>
                   ))}
                 </select>
