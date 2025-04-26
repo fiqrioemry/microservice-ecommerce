@@ -6,6 +6,8 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useProfileStore } from "@/store/useProfileStore";
 import LocationSelection from "@/components/beta/LocationSelection";
+import CategorySelection from "../components/beta/CategorySelection";
+import { toast } from "sonner";
 
 const InputPage = () => {
   const { addAddress, loading } = useProfileStore();
@@ -16,21 +18,20 @@ const InputPage = () => {
   });
 
   const onSubmit = (data) => {
-    addAddress(data);
+    console.log(data);
   };
 
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <CategorySelection />
         <LocationSelection />
         <Button
-          variant="primary"
+          type="submit"
           className="w-full"
-          isLoading={loading}
           disabled={loading}
-        >
-          Submit New Location
-        </Button>
+          isLoading={loading}
+        />
       </form>
     </FormProvider>
   );

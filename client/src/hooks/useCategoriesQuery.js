@@ -1,6 +1,6 @@
 // 1. hooks/useCategoriesQuery.jsx
 import { useQuery } from "@tanstack/react-query";
-import categoryApi from "@/api/category";
+import categoryApi from "@/services/categories";
 
 export function useCategoriesQuery() {
   return useQuery({

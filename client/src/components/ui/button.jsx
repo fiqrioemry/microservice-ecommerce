@@ -1,12 +1,12 @@
 import { Loader2 } from "lucide-react"; // pastikan pakai lucide-react
 
 const Button = ({
-  children,
   type = "button",
   variant = "primary",
   disabled = false,
   isLoading = false,
   className = "",
+  textButton = "Submit",
   ...rest
 }) => {
   const baseStyle =
@@ -27,8 +27,11 @@ const Button = ({
       } ${className}`}
       {...rest}
     >
-      {isLoading && <Loader2 className="animate-spin mr-2 h-4 w-4" />}
-      {children}
+      {isLoading ? (
+        <Loader2 className="animate-spin mr-2 h-4 w-4" />
+      ) : (
+        textButton
+      )}
     </button>
   );
 };

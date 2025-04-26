@@ -1,7 +1,7 @@
 // 2. stores/useCategoryStore.jsx
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import categoryApi from "@/api/categories";
+import categoryApi from "@/services/categories";
 import { devtools } from "zustand/middleware";
 import { queryClient } from "@/lib/react-query";
 
