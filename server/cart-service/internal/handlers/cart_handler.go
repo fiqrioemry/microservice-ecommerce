@@ -31,7 +31,35 @@ func (h *CartHandler) GetCart(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to fetch cart"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"cart": cart})
+
+	// mapping hasil ke response lengkap
+	items := []dto.CartItemResponse{}
+	for _, item := range cart.Items {
+		var variantIDStr *string
+		if item.VariantID != nil {
+			id := item.VariantID.String()
+			variantIDStr = &id
+		}
+
+		items = append(items, dto.CartItemResponse{
+			ID:          item.ID.String(),
+			ProductID:   item.ProductID.String(),
+			VariantID:   variantIDStr,
+			ProductName: item.ProductName,
+			ImageURL:    item.ImageURL,
+			Price:       item.Price,
+			Quantity:    item.Quantity,
+			IsChecked:   item.IsChecked,
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"cart": gin.H{
+			"id":     cart.ID.String(),
+			"userId": cart.UserID.String(),
+			"items":  items,
+		},
+	})
 }
 
 // POST /api/cart

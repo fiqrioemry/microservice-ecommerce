@@ -30,12 +30,18 @@ func (s *ProductGRPCServer) GetProductSnapshot(ctx context.Context, req *product
 		if err != nil {
 			return nil, err
 		}
+		imageURL := variant.ImageURL
+		if imageURL == "" && len(variant.Product.ProductImage) > 0 {
+			imageURL = variant.Product.ProductImage[0].URL
+		}
+
 		return &productpb.ProductSnapshotResponse{
-			Name:     variant.SKU,
-			ImageUrl: variant.ImageURL,
+			Name:     variant.Product.Name,
+			ImageUrl: imageURL,
 			Price:    variant.Price,
 			Stock:    int32(variant.Stock),
 		}, nil
+
 	}
 
 	// fallback jika tidak ada variant

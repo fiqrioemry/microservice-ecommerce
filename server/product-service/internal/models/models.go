@@ -86,6 +86,7 @@ type ProductVariant struct {
 	Sold      int `gorm:"default:0"`
 	ImageURL  string
 
+	Product       Product                `gorm:"foreignKey:ProductID"`
 	VariantValues []ProductVariantOption `gorm:"foreignKey:ProductVariantID"`
 }
 

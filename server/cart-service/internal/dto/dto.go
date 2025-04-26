@@ -18,7 +18,7 @@ type UpdateCartItemRequest struct {
 type CartItemResponse struct {
 	ID          string  `json:"id"`
 	ProductID   string  `json:"productId"`
-	ProductName string  `json:"productName"`
+	ProductName string  `json:"name"`
 	ImageURL    string  `json:"imageUrl"`
 	VariantID   *string `json:"variantId,omitempty"`
 	Price       float64 `json:"price"`

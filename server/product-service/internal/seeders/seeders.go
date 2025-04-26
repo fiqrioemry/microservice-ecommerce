@@ -4,6 +4,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/fiqrioemry/microservice-ecommerce/server/pkg/utils"
 	"github.com/fiqrioemry/microservice-ecommerce/server/product-service/internal/models"
 	"gorm.io/gorm"
 
@@ -44,8 +45,8 @@ func SeedCategoriesAndSubcategories(db *gorm.DB) {
 		"Men's Shoes":       {"Sneakers", "Sandals", "Formal Shoes"},
 		// "Women's Shoes":     {"Men's Shoes", "Women's Shoes", "Dress Shoes & Oxford"},
 		// "Health & Care":        {"Collagen", "Vitamin", "Sport Nutritions"},
-		"Gadget And Electronics": {"Phones And Tablet", "Electronic Devices", "Weareable Devices"},
-		"Food & Beverage":        {"Health Drink", "Noodle And Pasta", "Snack food"},
+		"Gadget & Electronics": {"Phone & Tablet", "Electronic Devices", "Weareable Devices"},
+		"Food & Beverage":      {"Health Drink", "Noodle & Pasta", "Snack food"},
 		// "Beauty & Skin Care":   {"Lip Gloss", "Hair Extention", "Make Up"},
 		// "Sport & Entertainment": {"Cruise Bike", "Baseball", "Roller Wheels"},
 	}
@@ -54,7 +55,7 @@ func SeedCategoriesAndSubcategories(db *gorm.DB) {
 		cat := models.Category{
 			ID:    uuid.New(),
 			Name:  catName,
-			Slug:  strings.ToLower(strings.ReplaceAll(catName, " ", "-")),
+			Slug:  utils.GenerateSlug(catName),
 			Image: placeholder,
 		}
 
@@ -68,7 +69,7 @@ func SeedCategoriesAndSubcategories(db *gorm.DB) {
 			sub := models.Subcategory{
 				ID:         uuid.New(),
 				Name:       subName,
-				Slug:       strings.ToLower(strings.ReplaceAll(subName, " ", "-")),
+				Slug:       utils.GenerateSlug(subName),
 				CategoryID: cat.ID,
 				Image:      placeholder,
 			}
@@ -528,7 +529,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 		},
 		{
 			Category:    "Food & Beverage",
-			Subcategory: "Noodle And Pasta",
+			Subcategory: "Noodle & Pasta",
 			Name:        "Mie Porang dietmeal GORENG rendah kalori",
 			Description: "Mie Porang dietmeal GORENG rendah kalori adalah varian mie yang terbuat dari umbi porang, cocok untuk mereka yang sedang diet atau ingin menjaga berat badan karena rendah kalori dan bebas gluten. Mie ini juga tinggi serat, membantu menjaga kesehatan pencernaan dan memberikan efek kenyang lebih lama. Terbuat dari tepung porang, umbi-umbian yang rendah kalori dan tinggi serat dan tidak mengandung gluten, sehingga aman dikonsumsi oleh orang dengan intoleransi gluten.",
 			IsFeatured:  false,
@@ -549,7 +550,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 		},
 		{
 			Category:    "Food & Beverage",
-			Subcategory: "Noodle And Pasta",
+			Subcategory: "Noodle & Pasta",
 			Name:        "Bihunku All Rasa Soto Nyus",
 			Description: "Bihunku All Rasa adalah bihun instan yang lezat, mudah dimasak, dan cocok untuk disantap kapan saja dan di mana saja. Bihunku terbuat dari perpaduan beras dan tepung jagung pilihan, dengan bumbu alami yang khas. Produk ini rendah lemak dan kolesterol, serta mengandung serat yang membuat kenyang tahan lama. Tersedia dalam berbagai varian rasa, seperti Ayam Bawang, Soto Spesial, Goreng Spesial, dan lainnya. ",
 			IsFeatured:  false,
@@ -570,7 +571,7 @@ func SeedFoodBeverage(db *gorm.DB) {
 		},
 		{
 			Category:    "Food & Beverage",
-			Subcategory: "Noodle And Pasta",
+			Subcategory: "Noodle & Pasta",
 			Name:        "ORIMIE Goreng dari Orimen Kids",
 			Description: "ORIMIE Goreng dari Orimen Kids adalah pilihan mie goreng yang lebih sehat untuk anak-anak, tanpa pewarna, pengawet, atau MSG. Mie ini juga bebas dari babi dan minyak babi. Bumbunya dibuat dengan bahan-bahan alami, seperti bubuk bawang putih, bawang merah, garam, gula, kaldu, dan lada putih, serta minyak yang dibumbui dengan daun bawang, bawang putih, kulit ayam, dan bawang merah",
 			IsFeatured:  false,
@@ -673,8 +674,8 @@ func SeedGadgetElectronic(db *gorm.DB) {
 		}
 	}{
 		{
-			Category:    "Gadget And Electronics",
-			Subcategory: "Phones And Tablet",
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
 			Name:        "Motorola G45 Snapdragon 6s Gen 3",
 			Description: "Moto G45 5G pakai prosesor Qualcomm Snapdragon 6s Gen 3. Prosesor ini andal untuk menjalankan aplikasi-aplikasi secara bersamaan, membuat multi-tasking dapat dilakukan tanpa lag, sekaligus hemat daya. Performanya didukung oleh konfigurasi RAM 8 GB fisik + 8 GB RAM virtual (Extended RAM) dan penyimpanan internal 256 GB.",
 			IsFeatured:  true,
@@ -697,8 +698,8 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget And Electronics",
-			Subcategory: "Phones And Tablet",
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
 			Name:        "Samsung Galaxy A16 - Garansi Resmi Sein Tam",
 			Description: "Samsung Galaxy A16 adalah smartphone Android yang menawarkan kombinasi layar Super AMOLED 6,7 inci, baterai 5000mAh, dan kamera 50MP. Perangkat ini memiliki desain tipis dengan ketebalan 7,9mm. Samsung Galaxy A16 tersedia dalam beberapa pilihan memori internal dan RAM, serta dilengkapi dengan fitur Super Fast Charging.",
 			IsFeatured:  false,
@@ -721,8 +722,8 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget And Electronics",
-			Subcategory: "Phones And Tablet",
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
 			Name:        "Asus Zenfone 11 Ultra 12 5G",
 			Description: "Asus Zenfone 11 Ultra 12/256GB adalah smartphone flagship dengan layar 6.78 inci AMOLED, chipset Snapdragon 8 Gen 3, RAM 12GB, storage 256GB, dan baterai 5500 mAh. Perangkat ini memiliki kamera belakang 50MP utama dan 32MP telephoto, serta kamera depan 32MP. Zenfone 11 Ultra juga dilengkapi dengan fitur 6-axis hybrid gimbal untuk video yang stabil.",
 			IsFeatured:  false,
@@ -747,8 +748,8 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget And Electronics",
-			Subcategory: "Phones And Tablet",
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
 			Name:        "Infinix XPad 11 Tablet 5G Premium",
 			Description: "Infinix XPad 11 adalah tablet Android dengan layar 11 inci dan refresh rate 90Hz, ditenagai oleh chipset MediaTek Helio G99. 7000mAh, RAM hingga 8GB, dan Android 14. Ia juga dilengkapi dengan fitur-fitur seperti Folax Voice Assistant, Multi-Device Collaboration, dan pengisian cepat.",
 			IsFeatured:  true,
@@ -769,8 +770,8 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget And Electronics",
-			Subcategory: "Phones And Tablet",
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
 			Name:        "Huawei MatePad 11 Snapdragon 865",
 			Description: "Huawei MatePad 11 adalah tablet dengan layar 11 inci, ditenagai oleh chipset Snapdragon 865, RAM 6GB, dan memori internal 128GB yang dapat diperluas. Tablet ini juga dilengkapi dengan sistem operasi Harmony OS 3.1. Secara keseluruhan, Huawei MatePad 11 adalah tablet yang menawarkan performa baik, layar yang bagus, dan berbagai fitur tambahan, menjadikannya pilihan yang menarik untuk berbagai kebutuhan, mulai dari produktivitas hingga hiburan.",
 			IsFeatured:  false,
@@ -792,8 +793,8 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget And Electronics",
-			Subcategory: "Phones And Tablet",
+			Category:    "Gadget & Electronics",
+			Subcategory: "Phone & Tablet",
 			Name:        "Xiaomi Pad SE NEW Garansi",
 			Description: "Xiaomi Redmi Pad SE adalah tablet Android yang memiliki layar FHD+ 11 inci dengan refresh rate 90 Hz, ditenagai oleh prosesor Snapdragon 680, RAM 4GB, dan penyimpanan internal 128GB, serta baterai 8000mAh. Tablet ini dilengkapi dengan empat speaker dengan Dolby Atmos, dan kamera depan 5MP dan kamera belakang 8MP. Redmi Pad SE hadir dengan layar IPS LCD berukuran 10,1 inci, memberikan tampilan yang luas dan jelas. Resolusi layar sebesar 1200 x 2000 piksel, dengan tingkat kecerahan hingga 340 nits dan rasio kontras 1500:1, cocok untuk berbagai kebutuhan mulai dari streaming video, browsing, hingga bermain game.",
 			IsFeatured:  false,
@@ -810,11 +811,11 @@ func SeedGadgetElectronic(db *gorm.DB) {
 				Image string
 			}{
 				{"", "6gb", 2450000, 10, ""},
-				{"", "8gb", 275000, 20, ""}, // ← Perlu dicek, kemungkinan typo (mungkin maksudnya 2.750.000?)
+				{"", "8gb", 2750000, 20, ""},
 			},
 		},
 		{
-			Category:    "Gadget And Electronics",
+			Category:    "Gadget & Electronics",
 			Subcategory: "Wearable Devices",
 			Name:        "Xiaomi Mi band 4 Smartwatch",
 			Description: "Miliki smartband pintar xiaomi Mi Band 4 Generasi terbaru, hadir dengan beragam fitur canggih dengan peningkatan yang lebih baik dari generasi sebelumnya. Kapasitas baterai Xiaomi Mi Band 4 50 % lebih besar dari xiaomi mi band 2 yang mampu bertahan hingga lebih dari 20 hari penggunaan. XIaomi Mi Band 4 dilengkapi dengan bluetooth 4.2 untuk konektivitasnya dan untuk ketahanan airnya pun turut ditingkatkan yang kini mampu bertahan hingga kedalaman 50 meter.",
@@ -835,7 +836,7 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget And Electronics",
+			Category:    "Gadget & Electronics",
 			Subcategory: "Wearable Devices",
 			Name:        "Samsung Galaxy Watch 4 Classic 42mm",
 			Description: "Samsung Watch 4 hadir dengan display Sapphire Crystal, GPS, sleep tracker dan body composition. Smartwatch yang menawarkan berbagai fitur kesehatan dan kebugaran, serta integrasi yang mulus dengan perangkat Galaxy lainnya. Smartwatch ini dilengkapi dengan sensor BioActive yang mampu memantau detak jantung, tekanan darah, kadar oksigen dalam darah, dan kualitas tidur. Selain itu, Galaxy Watch juga mendukung fitur-fitur lain seperti menerima panggilan dan pesan, mengontrol musik, dan memberikan notifikasi.",
@@ -857,7 +858,7 @@ func SeedGadgetElectronic(db *gorm.DB) {
 			},
 		},
 		{
-			Category:    "Gadget And Electronics",
+			Category:    "Gadget & Electronics",
 			Subcategory: "Wearable Devices",
 			Name:        "HUAWEI WATCH FIT Special Edition Smartwatch",
 			Description: "HUAWEI WATCH FIT Special Edition Smartwatch | 1.64 HD AMOLED | 24/7 Active Health Management | Built-in GPS | Fast Charging. Notifikasi panggilan Bluetooth & balas pesan cepat Kompatibel dengan luas, bisa digunakan bersama semua OS Tersedia dalam 3 varian warna: Nebula Pink, Forest Green, Starry Black.",

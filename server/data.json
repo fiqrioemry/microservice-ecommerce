@@ -1,0 +1,29 @@
+{
+  "cart": {
+    "id": "fabdb3ea-2603-441d-a090-c84cc88f38b5",
+    "userId": "e1b937d5-fd62-480a-8fe9-19b81e97e516",
+    "items": [
+      {
+        "id": "a69d49ee-86ec-434a-856e-dcb35986b005",
+        "productId": "3aebb6e1-6c74-4e05-8169-3ff7e5423472",
+        "variantId": "10489976-673f-447b-b609-bc29274b03b8",
+        "name": "product name",
+        "imageUrl": "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509050/cloth_mens_04_xttcat.webp",
+        "Price": 98500,
+        "Quantity": 2,
+        "IsChecked": true
+      },
+      {
+        "id": "e969a372-4eb3-422c-8cf5-7874dcc104e9",
+        "CartID": "fabdb3ea-2603-441d-a090-c84cc88f38b5",
+        "productID": "29df9e2e-1732-457d-bb33-d3b1e099fb60",
+        "variantId": "f0acc017-b181-427a-9c63-958d3c6dad7f",
+        "name": "product name",
+        "imageUrl": "https://res.cloudinary.com/dp1xbgxdn/image/upload/v1745509050/cloth_mens_04_xttcat.webp",
+        "Price": 23500,
+        "Quantity": 3,
+        "IsChecked": true
+      }
+    ]
+  }
+}

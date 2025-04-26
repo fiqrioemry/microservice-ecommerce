@@ -212,6 +212,6 @@ func (r *productRepo) FindVariantsByProductID(productID uuid.UUID) ([]models.Pro
 
 func (r *productRepo) FindVariantByID(id uuid.UUID) (*models.ProductVariant, error) {
 	var variant models.ProductVariant
-	err := r.db.First(&variant, "id = ?", id).Error
+	err := r.db.Preload("Product").First(&variant, "id = ?", id).Error
 	return &variant, err
 }
