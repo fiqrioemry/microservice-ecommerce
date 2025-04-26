@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import Button from "@/components/ui/button";
+import FormInput from "./FormInput";
+import { Button } from "@/components/ui/button";
 import { useFormSchema } from "@/hooks/useFormSchema";
 import { useState, useCallback, useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,7 +16,7 @@ export function DialogForm({
   param = null,
   loading = false,
   variant = "edit",
-  children,
+  textButton = "edit",
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const formik = useFormSchema(action, state, control, param);
@@ -73,7 +74,30 @@ export function DialogForm({
               </div>
 
               <ScrollArea className="max-h-96 border pb-8">
-                <div className="p-4">{children}</div>
+                <div className="p-4">
+                  <FormInput
+                    formik={formik}
+                    formControl={control}
+                    inputStyle={"h-40 md:h-[4rem]"}
+                  >
+                    <div className="flex gap-2 p-2 absolute bottom-0 right-0 left-0 bg-background border-t">
+                      <Button
+                        type="button"
+                        variant="delete"
+                        onClick={handleCancel}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={handleSave}
+                        disabled={!(formik.isValid && formik.dirty)}
+                      >
+                        submit
+                      </Button>
+                    </div>
+                  </FormInput>
+                </div>
               </ScrollArea>
             </DialogContent>
           )}
@@ -91,13 +115,10 @@ export function DialogForm({
             </p>
           </div>
           <div className="flex justify-center gap-2 ">
-            <Button variant="danger" onClick={() => handleConfirmation(true)}>
+            <Button variant="delete" onClick={() => handleConfirmation(true)}>
               Yes, discard changes
             </Button>
-            <Button
-              variant="secondary"
-              onClick={() => handleConfirmation(false)}
-            >
+            <Button onClick={() => handleConfirmation(false)}>
               No, keep changes
             </Button>
           </div>

@@ -1,26 +1,25 @@
-// Updated Address.jsx with dynamic city loading and auto zipcode
-import React, { useState, useEffect } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card, CardContent } from "@/components/ui/card";
-import Button from "@/components/ui/button";
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
   DialogTitle,
+  DialogHeader,
+  DialogContent,
 } from "@/components/ui/dialog";
-import { useAddressesQuery } from "@/hooks/useProfileManagement";
-import { useProfileStore } from "@/store/useProfileStore";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { addressSchema } from "@/lib/schema";
 import Input from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useLocationQuery } from "@/hooks/useLocationQuery";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { addressSchema } from "@/lib/schema";
 import { Switch } from "@/components/ui/switch";
+import React, { useState, useEffect } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent } from "@/components/ui/card";
+import { useProfileStore } from "@/store/useProfileStore";
+import { useLocationQuery } from "@/hooks/useLocationQuery";
+import { useAddressesQuery } from "@/hooks/useProfileManagement";
 
 const Address = () => {
-  const { isError, refetch, isLoading, data: addresses } = useAddressesQuery();
+  const { isError, isLoading, data: addresses } = useAddressesQuery();
   const { addAddress } = useProfileStore();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formTouched, setFormTouched] = useState(false);
@@ -37,16 +36,16 @@ const Address = () => {
     defaultValues: {
       name: "",
       address: "",
-      province_id: "",
-      city_id: "",
+      provinceId: "",
+      cityId: "",
       zipcode: "",
       phone: "",
       isMain: false,
     },
   });
 
-  const provinceId = watch("province_id");
   const cityId = watch("city_id");
+  const provinceId = watch("province_id");
 
   const { data: provinces = [] } = useLocationQuery("province");
   const { data: cities = [] } = useLocationQuery("city", provinceId);
@@ -172,6 +171,7 @@ const Address = () => {
               <label className="label">Set as Main</label>
               <Switch {...register("isMain")} />
             </div>
+
             <div className="flex justify-end">
               <Button type="submit">Save</Button>
             </div>

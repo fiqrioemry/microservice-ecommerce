@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useCartStore } from "@/store/useCartStore";
 import { formatRupiah } from "@/lib/utils";
-import Button from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Minus, Plus, Trash2 } from "lucide-react";
 

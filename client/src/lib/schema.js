@@ -13,11 +13,11 @@ export const registerSchema = z.object({
 });
 
 export const addressSchema = z.object({
-  name: z.string().min(1, "Name tidak boleh kosong"),
+  name: z.string().min(6, "Nama minimal 6 karakter"),
   address: z.string().min(1, "Address tidak boleh kosong"),
-  province_id: z.string().min(1, "Province harus dipilih"),
-  city_id: z.string().min(1, "City harus dipilih"),
+  provinceId: z.string().min(1, "Province harus dipilih"),
+  cityId: z.string().min(1, "City harus dipilih"),
   zipcode: z.string().min(1, "Zipcode tidak boleh kosong"),
-  phone: z.string().min(10, "Nomor telepon tidak valid"),
+  phone: z.string().min(12, "Nomor telepon tidak valid"),
   isMain: z.boolean().optional(),
 });

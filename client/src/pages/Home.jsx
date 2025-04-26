@@ -35,7 +35,7 @@ const Home = () => {
   const featuredProducts = products.results.filter((p) => p.isFeatured);
   const discountProducts = products.results.filter((p) => p.discount > 0.05);
   const gadgetProducts = products.results.filter(
-    (p) => p.category?.name === "Gadget And Electronics"
+    (p) => p.category?.name === "Gadget & Electronics"
   );
 
   return (

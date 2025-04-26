@@ -46,7 +46,7 @@ const ProductCard = ({ product }) => {
             : product.name}
         </h3>
         <p className="text-xs text-muted-foreground">
-          {product.subcategory?.name} — {product.category?.name}
+          {product.category?.name}
         </p>
         <div className="mt-2 text-sm">
           {hasDiscount ? (
