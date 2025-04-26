@@ -25,6 +25,11 @@ export const useAuthStore = create(
         set({ loading: true });
         try {
           const { message, user } = await auth.login(formData);
+          if (formData.rememberMe) {
+            localStorage.setItem("rememberme", formData.email);
+          } else {
+            localStorage.removeItem("rememberme");
+          }
           set({ user });
           toast.success(message);
           window.location.href = "/";

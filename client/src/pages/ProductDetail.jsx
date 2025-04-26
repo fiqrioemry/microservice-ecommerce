@@ -33,7 +33,6 @@ const Product = () => {
 
   useEffect(() => {
     if (product?.variants?.length) {
-      // Cari variant berdasarkan opsi di URL atau fallback
       const variant =
         product.variants.find((v) =>
           Object.entries(variantOptionsFromUrl).every(

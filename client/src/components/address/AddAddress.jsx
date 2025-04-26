@@ -1,45 +1,46 @@
 import React from "react";
 import { addressSchema } from "@/lib/schema";
 import { addressState } from "@/lib/constant";
-import { FormInput } from "@/components/form/FormInput";
+import { FormDialog } from "@/components/form/FormDialog";
 import { useProfileStore } from "@/store/useProfileStore";
 import { InputElement } from "@/components/input/InputElement";
 import { SwitchElement } from "@/components/input/SwitchElement";
 import LocationSelection from "@/components/input/LocationSelection";
 
-const InputPage = () => {
-  const { loading, addAddress } = useProfileStore();
+const AddAddress = () => {
+  const { addAddress, loading } = useProfileStore();
   return (
-    <FormInput
+    <FormDialog
       loading={loading}
-      state={addressState}
       action={addAddress}
+      state={addressState}
       schema={addressSchema}
+      title="Add New Address"
+      buttonText="New Address"
     >
       <InputElement
         name="name"
-        label="Nama Penerima"
-        placeholder="Masukkan nama Penerima"
+        label="Nama penerima"
+        placeholder="Masukkan nama penerima"
       />
-
-      <InputElement
-        name="address"
-        label="Alamat Lengkap"
-        isTextArea={true}
-        placeholder="Masukkan Alamat Penerima"
-      />
-      <LocationSelection />
-
       <InputElement
         name="phone"
         isNumber={true}
-        maxLength={12}
-        label="Phone Number"
-        placeholder="Enter your phone"
+        label="Nomor Telepon"
+        placeholder="Masukkan Nomor Penerima"
       />
-      <SwitchElement name="isMain" label="Atur alamat utama" />
-    </FormInput>
+      <InputElement
+        name="address"
+        label="Alamat Penerima"
+        isTextArea={true}
+        placeholder="Masukkan Alamat Penerima"
+      />
+
+      <LocationSelection />
+
+      <SwitchElement name="isMain" label="Atur sebagai alamat utama ?" />
+    </FormDialog>
   );
 };
 
-export default InputPage;
+export default AddAddress;
