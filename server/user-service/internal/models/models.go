@@ -38,7 +38,7 @@ type Address struct {
 	CityID     uint      `gorm:"not null" json:"city_id"`
 	Province   string    `gorm:"type:varchar(255);not null" json:"province"`
 	City       string    `gorm:"type:varchar(255);not null" json:"city"`
-	Zipcode    string    `gorm:"type:varchar(10);not null" json:"zipcode"`
+	PostalCode string    `gorm:"type:varchar(10);not null" json:"postal_code"`
 	Phone      string    `gorm:"type:varchar(20);not null" json:"phone"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
@@ -52,12 +52,30 @@ type Province struct {
 }
 
 type City struct {
-	ID         uint     `gorm:"primaryKey" json:"id"`
-	ProvinceID uint     `gorm:"not null" json:"province_id"`
-	Province   Province `gorm:"foreignKey:ProvinceID" json:"-"`
-	Type       string   `gorm:"type:varchar(20)" json:"type"`
-	Name       string   `gorm:"type:varchar(100)" json:"name"`
-	PostalCode string   `gorm:"type:varchar(20)" json:"postal_code"`
+	ID         uint       `gorm:"primaryKey" json:"id"`
+	ProvinceID uint       `gorm:"not null" json:"province_id"`
+	Name       string     `gorm:"type:varchar(100);not null" json:"name"`
+	Districts  []District `gorm:"foreignKey:CityID" json:"-"`
+}
+
+type District struct {
+	ID           uint          `gorm:"primaryKey" json:"id"`
+	CityID       uint          `gorm:"not null" json:"city_id"`
+	Name         string        `gorm:"type:varchar(100);not null" json:"name"`
+	Subdistricts []Subdistrict `gorm:"foreignKey:DistrictID" json:"-"`
+}
+
+type Subdistrict struct {
+	ID          uint         `gorm:"primaryKey" json:"id"`
+	DistrictID  uint         `gorm:"not null" json:"district_id"`
+	Name        string       `gorm:"type:varchar(100);not null" json:"name"`
+	PostalCodes []PostalCode `gorm:"foreignKey:SubdistrictID" json:"-"`
+}
+
+type PostalCode struct {
+	ID            uint   `gorm:"primaryKey" json:"id"`
+	SubdistrictID uint   `gorm:"not null" json:"subdistrict_id"`
+	PostalCode    string `gorm:"type:varchar(20);not null" json:"postal_code"`
 }
 
 func (a *Address) BeforeCreate(tx *gorm.DB) (err error) {

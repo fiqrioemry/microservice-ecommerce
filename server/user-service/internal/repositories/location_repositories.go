@@ -26,6 +26,12 @@ func (r *locationRepo) GetAllProvinces() ([]models.Province, error) {
 	return provinces, err
 }
 
+func (r *locationRepo) GetAllProvinces() ([]models.Province, error) {
+	var provinces []models.Province
+	err := r.db.Order("name ASC").Find(&provinces).Error
+	return provinces, err
+}
+
 func (r *locationRepo) GetCitiesByProvince(provinceID uint) ([]models.City, error) {
 	var cities []models.City
 	err := r.db.Where("province_id = ?", provinceID).Order("name ASC").Find(&cities).Error

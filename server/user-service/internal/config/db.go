@@ -37,7 +37,16 @@ func InitDatabase() {
 		panic("Failed to connect database: " + err.Error())
 	}
 
-	err = db.AutoMigrate(&models.User{}, &models.Profile{}, &models.Address{}, &models.Province{}, &models.City{})
+	err = db.AutoMigrate(
+		&models.User{},
+		&models.Profile{},
+		&models.Address{},
+		&models.Province{},
+		&models.City{},
+		&models.District{},
+		&models.Subdistrict{},
+		&models.PostalCode{},
+	)
 	if err != nil {
 		panic("Migration failed: " + err.Error())
 	}

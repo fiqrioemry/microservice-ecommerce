@@ -78,7 +78,7 @@ func main() {
 	routes.UserRoutes(r, profileHandler, addressHandler)
 
 	seeders.SeedUsers(db)
-	seeders.SeedProvincesAndCities(db)
+	seeders.SeedLocations(db)
 
 	port := os.Getenv("PORT")
 	log.Println("user service running on port:", port)
