@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Input from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { signInSchema } from "@/lib/schema";
-import Button from "@//components/ui/button";
+import { Button } from "@//components/ui/button";
 import { useSignIn } from "@/hooks/useSignIn";
 import { zodResolver } from "@hookform/resolvers/zod";
 

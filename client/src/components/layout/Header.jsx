@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import Button from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, LogIn } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import SearchInput from "@/components/header/SearchInput";
 import SearchDropdown from "@/components/header/SearchDropdown";

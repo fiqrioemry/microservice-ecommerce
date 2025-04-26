@@ -1,6 +1,6 @@
 import Input from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import Button from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { registerSchema } from "@/lib/schema";
 import { useSignIn } from "@/hooks/useSignIn";
 import { zodResolver } from "@hookform/resolvers/zod";

@@ -7,7 +7,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
-import Button from "./button";
+import { Button } from "./button";
 import { useState, useEffect } from "react";
 import { AlertTriangle } from "lucide-react";
 

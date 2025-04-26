@@ -15,12 +15,14 @@ import Layout from "./components/layout/Layout";
 import { AuthRoute, NonAuthRoute } from "./middleware";
 import UserLayout from "./components/layout/UserLayout";
 import { Navigate, Route, Routes } from "react-router-dom";
+import InputPage from "./pages/InputPage";
 
 function App() {
   return (
     <>
       <Toaster />
       <Routes>
+        <Route path="/input" element={<InputPage />} />
         <Route
           path="/signin"
           element={

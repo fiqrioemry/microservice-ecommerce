@@ -4,7 +4,7 @@ import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { formatRupiah } from "@/lib/utils";
 import { useCartStore } from "@/store/useCartStore";
-import Button from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 import {
   DropdownMenu,
