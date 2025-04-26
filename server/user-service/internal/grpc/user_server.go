@@ -28,13 +28,21 @@ func (s *UserGRPCServer) GetMainAddress(ctx context.Context, req *userpb.GetMain
 	for _, addr := range addresses {
 		if addr.IsMain {
 			return &userpb.AddressResponse{
-				Id:       addr.ID.String(),
-				Name:     addr.Name,
-				Address:  addr.Address,
-				City:     addr.City,
-				Province: addr.Province,
-				Zipcode:  addr.Zipcode,
-				Phone:    addr.Phone,
+				Id:            addr.ID.String(),
+				Name:          addr.Name,
+				Address:       addr.Address,
+				ProvinceId:    uint32(addr.ProvinceID),
+				Province:      addr.Province,
+				CityId:        uint32(addr.CityID),
+				City:          addr.City,
+				DistrictId:    uint32(addr.DistrictID),
+				District:      addr.District,
+				SubdistrictId: uint32(addr.SubdistrictID),
+				Subdistrict:   addr.Subdistrict,
+				PostalCodeId:  uint32(addr.PostalCodeID),
+				PostalCode:    addr.PostalCode,
+				Phone:         addr.Phone,
+				IsMain:        addr.IsMain,
 			}, nil
 		}
 	}

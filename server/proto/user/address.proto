@@ -5,8 +5,7 @@ package user;
 option go_package = "proto/user";
 
 service UserService {
- rpc GetMainAddress(GetMainAddressRequest) returns (AddressResponse);
-
+  rpc GetMainAddress(GetMainAddressRequest) returns (AddressResponse);
 }
 
 message AddressRequest {
@@ -21,8 +20,22 @@ message AddressResponse {
   string id = 1;
   string name = 2;
   string address = 3;
-  string city = 4;
+
+  uint32 province_id = 4;
   string province = 5;
-  string zipcode = 6;
-  string phone = 7;
+
+  uint32 city_id = 6;
+  string city = 7;
+
+  uint32 district_id = 8;
+  string district = 9;
+
+  uint32 subdistrict_id = 10;
+  string subdistrict = 11;
+
+  uint32 postal_code_id = 12;
+  string postal_code = 13;
+
+  string phone = 14;
+  bool is_main = 15;
 }

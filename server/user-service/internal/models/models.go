@@ -29,20 +29,29 @@ func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 type Address struct {
-	ID         uuid.UUID `gorm:"type:char(36);primaryKey" json:"id"`
-	UserID     uuid.UUID `gorm:"type:char(36);not null;index" json:"-"`
-	Name       string    `gorm:"type:varchar(255);not null" json:"name"`
-	IsMain     bool      `gorm:"default:false" json:"isMain"`
-	Address    string    `gorm:"type:text;not null" json:"address"`
-	ProvinceID uint      `gorm:"not null" json:"province_id"`
-	CityID     uint      `gorm:"not null" json:"city_id"`
-	Province   string    `gorm:"type:varchar(255);not null" json:"province"`
-	City       string    `gorm:"type:varchar(255);not null" json:"city"`
-	PostalCode string    `gorm:"type:varchar(10);not null" json:"postal_code"`
-	Phone      string    `gorm:"type:varchar(20);not null" json:"phone"`
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
+	ID      uuid.UUID `gorm:"type:char(36);primaryKey" json:"id"`
+	UserID  uuid.UUID `gorm:"type:char(36);not null;index" json:"-"`
+	Name    string    `gorm:"type:varchar(255);not null" json:"name"`
+	IsMain  bool      `gorm:"default:false" json:"isMain"`
+	Address string    `gorm:"type:text;not null" json:"address"`
+
+	ProvinceID    uint `gorm:"not null" json:"provinceId"`
+	CityID        uint `gorm:"not null" json:"cityId"`
+	DistrictID    uint `gorm:"not null" json:"districtId"`
+	SubdistrictID uint `gorm:"not null" json:"subdistrictId"`
+	PostalCodeID  uint `gorm:"not null" json:"postalCodeId"`
+
+	Province    string `gorm:"type:varchar(255);not null" json:"province"`
+	City        string `gorm:"type:varchar(255);not null" json:"city"`
+	District    string `gorm:"type:varchar(255);not null" json:"district"`
+	Subdistrict string `gorm:"type:varchar(255);not null" json:"subdistrict"`
+	PostalCode  string `gorm:"type:varchar(20);not null" json:"postalCode"`
+
+	Phone string `gorm:"type:varchar(20);not null" json:"phone"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
 type Province struct {
