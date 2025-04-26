@@ -2,8 +2,10 @@ export const AddressState = {
   name: "",
   address: "",
   provinceId: "",
+  districtId: "",
+  subdistrictId: "",
+  postalCodeId: "",
   cityId: "",
-  zipcode: "",
   phone: "",
   isMain: "",
 };
