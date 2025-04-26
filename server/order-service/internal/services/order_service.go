@@ -85,12 +85,14 @@ func (s *OrderService) CreateOrderWithMainAddress(userID uuid.UUID, cart *models
 
 	addressID, _ := uuid.Parse(resp.Id)
 	address := models.Address{
-		Name:     resp.Name,
-		Address:  resp.Address,
-		City:     resp.City,
-		Province: resp.Province,
-		Zipcode:  resp.Zipcode,
-		Phone:    resp.Phone,
+		Name:        resp.Name,
+		Address:     resp.Address,
+		City:        resp.City,
+		Province:    resp.Province,
+		District:    resp.District,
+		Subdistrict: resp.Subdistrict,
+		PostalCode:  resp.PostalCode,
+		Phone:       resp.Phone,
 	}
 
 	var items []models.OrderItem
@@ -158,7 +160,9 @@ func (s *OrderService) CreateOrder(userID, addressID uuid.UUID, items []models.O
 		ShippingAddress: address.Address,
 		City:            address.City,
 		Province:        address.Province,
-		Zipcode:         address.Zipcode,
+		District:        address.District,
+		Subdistrict:     address.Subdistrict,
+		PostalCode:      address.PostalCode,
 		Phone:           address.Phone,
 	}
 	return order, s.Repo.CreateOrder(order)

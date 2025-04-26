@@ -25,13 +25,14 @@ type Order struct {
 	Items    []OrderItem `gorm:"foreignKey:OrderID"`
 	Shipment Shipment    `gorm:"foreignKey:OrderID"`
 
-	// Snapshot shipping fields
 	CourierName     string `gorm:"type:varchar(255)"`
 	ShippingName    string `gorm:"type:varchar(255)"`
 	ShippingAddress string `gorm:"type:text"`
 	City            string `gorm:"type:varchar(255)"`
 	Province        string `gorm:"type:varchar(255)"`
-	Zipcode         string `gorm:"type:varchar(20)"`
+	District        string `gorm:"type:varchar(255)"`
+	Subdistrict     string `gorm:"type:varchar(255)"`
+	PostalCode      string `gorm:"type:varchar(20)"`
 	Phone           string `gorm:"type:varchar(20)"`
 }
 
@@ -72,12 +73,14 @@ type Shipment struct {
 }
 
 type Address struct {
-	Name     string
-	Address  string
-	City     string
-	Province string
-	Zipcode  string
-	Phone    string
+	Name        string
+	Address     string
+	City        string
+	Province    string
+	District    string
+	Subdistrict string
+	PostalCode  string
+	Phone       string
 }
 
 type Cart struct {
