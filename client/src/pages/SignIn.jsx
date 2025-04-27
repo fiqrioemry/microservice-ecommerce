@@ -1,15 +1,21 @@
+// src/pages/SignIn.jsx
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { signInSchema } from "@/lib/schema";
 import { signInState } from "@/lib/constant";
-import { useAuthStore } from "@/store/useAuthStore";
+import WebLogo from "@/components/ui/WebLogo";
+import { useLogin } from "@/hooks/useAuthMutation";
 import { FormInput } from "@/components/form/FormInput";
+import { SubmitButton } from "@/components/form/SubmitButton";
 import { InputElement } from "@/components/input/InputElement";
 import { SwitchElement } from "@/components/input/SwitchElement";
-import { SubmitButton } from "@/components/form/SubmitButton";
 
 const SignIn = () => {
-  const { loading, login } = useAuthStore();
+  const loginMutation = useLogin();
+
+  const handleSubmit = (formData) => {
+    loginMutation.mutate(formData);
+  };
 
   useEffect(() => {
     const rememberedEmail = localStorage.getItem("rememberme");
@@ -34,12 +40,14 @@ const SignIn = () => {
 
         <div className="p-8">
           <div className="mb-4">
-            <Link to="/">
-              <h1 className="text-center text-primary">Ecommerce</h1>
-            </Link>
+            <WebLogo />
             <h2 className="text-center">Login</h2>
           </div>
-          <FormInput action={login} state={signInState} schema={signInSchema}>
+          <FormInput
+            action={handleSubmit}
+            state={signInState}
+            schema={signInSchema}
+          >
             {(methods) => (
               <>
                 <InputElement
@@ -60,13 +68,14 @@ const SignIn = () => {
                 <SubmitButton
                   text="Login"
                   className="w-full"
-                  isLoading={loading}
+                  isLoading={loginMutation.isPending}
                   disabled={!methods.formState.isValid}
                 />
               </>
             )}
           </FormInput>
 
+          <div></div>
           <p className="text-sm text-center mt-6 text-gray-600">
             Belum punya akun?{" "}
             <Link

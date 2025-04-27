@@ -1,52 +1,58 @@
+// src/hooks/useProductMutation.js
 import products from "@/services/products";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useCreateProduct = () => {
+export const useProductMutation = () => {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: products.onSuccesscreateProduct,
-    onSuccess: ({ message }) => {
-      toast.success(message);
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-    },
-    onError: (err) => toast.error(err.message),
-  });
-};
 
-export const useUpdateProduct = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, formData }) =>
-      products.onSuccessupdateProduct(id, formData),
-    onSuccess: ({ message }) => {
-      toast.success(message);
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-    },
-    onError: (err) => toast.error(err.message),
-  });
-};
+  const mutationOptions = (defaultMessage, refetchFn) => ({
+    onSuccess: (response, variables) => {
+      const successMessage = response?.message || defaultMessage;
+      toast.success(successMessage);
 
-export const useDeleteProduct = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id) => products.onSuccessdeleteProduct(id),
-    onSuccess: ({ message }) => {
-      toast.success(message);
-      queryClient.invalidateQueries({ queryKey: ["products"] });
+      if (typeof refetchFn === "function") {
+        refetchFn(variables);
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+      }
     },
-    onError: (err) => toast.error(err.message),
+    onError: (error) => {
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Something went wrong";
+      toast.error(errorMessage);
+    },
   });
-};
 
-export const useDeleteVariantProduct = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id) => products.onSuccessdeleteVariantProduct(id),
-    onSuccess: ({ message }) => {
-      toast.success(message);
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-    },
-    onError: (err) => toast.error(err.message),
-  });
+  return {
+    createProduct: useMutation({
+      mutationFn: products.onSuccesscreateProduct,
+      ...mutationOptions("Product created successfully"),
+    }),
+
+    updateProduct: useMutation({
+      mutationFn: ({ id, formData }) =>
+        products.onSuccessupdateProduct(id, formData),
+      ...mutationOptions("Product updated successfully", ({ id }) => {
+        queryClient.invalidateQueries({ queryKey: ["product", id] });
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+      }),
+    }),
+
+    deleteProduct: useMutation({
+      mutationFn: (id) => products.onSuccessdeleteProduct(id),
+      ...mutationOptions("Product deleted successfully", () => {
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+      }),
+    }),
+
+    deleteVariantProduct: useMutation({
+      mutationFn: (id) => products.onSuccessdeleteVariantProduct(id),
+      ...mutationOptions("Product variant deleted successfully", () => {
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+      }),
+    }),
+  };
 };

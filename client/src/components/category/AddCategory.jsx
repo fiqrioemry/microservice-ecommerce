@@ -8,22 +8,10 @@ import { UploadElement } from "@/components/input/UploadElement";
 import { categoryState } from "@/lib/constant";
 import { useCategoryMutation } from "@/hooks/useCategoryMutation";
 import { toast } from "sonner";
+import { useCategoryStore } from "../../store/useCategoryStore";
 
 const AddCategory = () => {
-  const { createCategory } = useCategoryMutation();
-  const [loading, setLoading] = useState(false);
-
-  const handleAddCategory = async (data) => {
-    setLoading(true);
-    try {
-      await createCategory.mutateAsync(data);
-      toast.success("Category added successfully");
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to add category");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { loading, AddNewCategory } = useCategoryStore();
 
   return (
     <FormDialog
@@ -31,7 +19,7 @@ const AddCategory = () => {
       state={categoryState}
       schema={categorySchema}
       title="Add NewCategory"
-      action={handleAddCategory}
+      action={AddNewCategory}
       buttonText={
         <button className="btn btn-primary gap-4">
           <PlusCircle size={18} />

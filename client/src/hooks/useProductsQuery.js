@@ -1,43 +1,44 @@
-import p from "@/services/products";
-import c from "@/services/categories";
-import b from "@/services/banners";
+import product from "@/services/products";
+import banner from "@/services/banners";
+import category from "@/services/categories";
 import { useQuery } from "@tanstack/react-query";
 
 export const useProductsQuery = (params = {}) =>
   useQuery({
     queryKey: ["products", params],
-    queryFn: () => p.getAllProducts(params),
+    queryFn: () => product.getAllProducts(params),
+    keepPreviousData: true,
   });
 
 export const useProductDetailQuery = (slug) =>
   useQuery({
     queryKey: ["product", slug],
-    queryFn: () => p.getProductBySlug(slug),
+    queryFn: () => product.getProductBySlug(slug),
     enabled: !!slug,
   });
 
 export const useSearchProductsQuery = (queryParams) =>
   useQuery({
     queryKey: ["products", "search", queryParams],
-    queryFn: () => p.searchProducts(queryParams),
+    queryFn: () => product.searchProducts(queryParams),
     enabled: !!queryParams,
   });
 
 export const useCategoriesQuery = () =>
   useQuery({
     queryKey: ["categories"],
-    queryFn: c.getAllCategories,
+    queryFn: category.getAllCategories,
   });
 
 export const useGetAllBannersQuery = () =>
   useQuery({
     queryKey: ["banners"],
-    queryFn: b.getAllBanners,
+    queryFn: banner.getAllBanners,
   });
 
 export const useGetBannerByPositionQuery = (position) =>
   useQuery({
     queryKey: ["banners", position],
-    queryFn: () => b.getBannersByPosition(position),
+    queryFn: () => banner.getBannersByPosition(position),
     enabled: !!position,
   });

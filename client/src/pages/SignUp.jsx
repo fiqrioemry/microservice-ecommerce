@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { FormInput } from "@/components/form/FormInput";
 import { SubmitButton } from "@/components/form/SubmitButton";
 import { InputElement } from "@/components/input/InputElement";
+import WebLogo from "../components/ui/WebLogo";
 
 const SignUp = () => {
   const { loading, register } = useAuthStore();
@@ -24,9 +25,7 @@ const SignUp = () => {
 
         <div className="p-8">
           <div className="mb-4">
-            <Link to="/">
-              <h1 className="text-center text-primary">Ecommerce</h1>
-            </Link>
+            <WebLogo />
             <h2 className="text-center">Register</h2>
           </div>
           <FormInput
