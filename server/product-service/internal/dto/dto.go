@@ -43,18 +43,18 @@ type AttributeOutput struct {
 }
 
 type CreateFullProductRequest struct {
-	Name          string                            `form:"name" binding:"required"`
-	Description   string                            `form:"description"`
-	CategoryID    uuid.UUID                         `form:"categoryId" binding:"required"`
-	SubcategoryID *uuid.UUID                        `form:"subcategoryId"`
-	IsFeatured    bool                              `form:"isFeatured"`
-	Weight        float64                           `json:"weight"`
-	Length        float64                           `json:"length"`
-	Width         float64                           `json:"width"`
-	Height        float64                           `json:"height"`
-	Discount      *float64                          `json:"discount"`
-	Variants      []CreateVariantRequest            `json:"variants"`
-	Attributes    []AddProductAttributeValueRequest `json:"attributes"`
+	Name          string                             `form:"name" binding:"required"`
+	Description   string                             `form:"description"`
+	CategoryID    uuid.UUID                          `form:"categoryId" binding:"required"`
+	SubcategoryID *uuid.UUID                         `form:"subcategoryId"`
+	IsFeatured    bool                               `form:"isFeatured"`
+	Weight        float64                            `json:"weight"`
+	Length        float64                            `json:"length"`
+	Width         float64                            `json:"width"`
+	Height        float64                            `json:"height"`
+	Discount      *float64                           `json:"discount"`
+	Variants      []CreateVariantRequest             `json:"variants"`
+	Attributes    []*AddProductAttributeValueRequest `json:"attributes"`
 }
 
 type CreateVariantRequest struct {
@@ -67,8 +67,8 @@ type CreateVariantRequest struct {
 	Options  map[string]string `json:"options"`
 }
 type AddProductAttributeValueRequest struct {
-	AttributeID      uint `json:"attributeId" binding:"required"`
-	AttributeValueID uint `json:"attributeValueId" binding:"required"`
+	AttributeID      uint `json:"attributeId"`
+	AttributeValueID uint `json:"attributeValueId"`
 }
 
 type CreateFullProductWithImages struct {

@@ -18,7 +18,6 @@ func SeedLocations(db *gorm.DB) {
 	seedPostalCodes(db)
 }
 
-// --- Province ---
 func seedProvinces(db *gorm.DB) {
 	file, err := os.Open("internal/seeders/province.csv")
 	if err != nil {
@@ -30,17 +29,23 @@ func seedProvinces(db *gorm.DB) {
 	_, _ = reader.Read() // Skip header
 
 	var provinces []models.Province
+
 	for {
 		record, err := reader.Read()
 		if err != nil {
 			break
 		}
 
-		id, _ := strconv.ParseUint(record[0], 10, 64) // id
-		provinces = append(provinces, models.Province{
+		id, err := strconv.ParseUint(record[0], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid province ID: %v", err)
+		}
+
+		province := models.Province{
 			ID:   uint(id),
-			Name: record[1], // name
-		})
+			Name: record[1],
+		}
+		provinces = append(provinces, province)
 	}
 
 	if err := db.Create(&provinces).Error; err != nil {
@@ -49,7 +54,6 @@ func seedProvinces(db *gorm.DB) {
 	log.Println("✅ Province seeding completed")
 }
 
-// --- City ---
 func seedCities(db *gorm.DB) {
 	file, err := os.Open("internal/seeders/city.csv")
 	if err != nil {
@@ -58,24 +62,32 @@ func seedCities(db *gorm.DB) {
 	defer file.Close()
 
 	reader := csv.NewReader(file)
-	_, _ = reader.Read()
+	_, _ = reader.Read() // Skip header
 
 	var cities []models.City
+
 	for {
 		record, err := reader.Read()
 		if err != nil {
 			break
 		}
 
-		id, _ := strconv.ParseUint(record[0], 10, 64)         // id
-		provinceID, _ := strconv.ParseUint(record[1], 10, 64) // province_id
-		name := record[2]                                     // city name
+		id, err := strconv.ParseUint(record[0], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid city ID: %v", err)
+		}
 
-		cities = append(cities, models.City{
+		provinceID, err := strconv.ParseUint(record[2], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid province ID for city: %v", err)
+		}
+
+		city := models.City{
 			ID:         uint(id),
 			ProvinceID: uint(provinceID),
-			Name:       name,
-		})
+			Name:       record[1],
+		}
+		cities = append(cities, city)
 	}
 
 	if err := db.Create(&cities).Error; err != nil {
@@ -84,7 +96,6 @@ func seedCities(db *gorm.DB) {
 	log.Println("✅ City seeding completed")
 }
 
-// --- District ---
 func seedDistricts(db *gorm.DB) {
 	file, err := os.Open("internal/seeders/district.csv")
 	if err != nil {
@@ -93,24 +104,32 @@ func seedDistricts(db *gorm.DB) {
 	defer file.Close()
 
 	reader := csv.NewReader(file)
-	_, _ = reader.Read()
+	_, _ = reader.Read() // Skip header
 
 	var districts []models.District
+
 	for {
 		record, err := reader.Read()
 		if err != nil {
 			break
 		}
 
-		id, _ := strconv.ParseUint(record[0], 10, 64)     // id
-		cityID, _ := strconv.ParseUint(record[1], 10, 64) // city_id
-		name := record[2]                                 // district name
+		id, err := strconv.ParseUint(record[0], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid district ID: %v", err)
+		}
 
-		districts = append(districts, models.District{
+		cityID, err := strconv.ParseUint(record[2], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid city ID for district: %v", err)
+		}
+
+		district := models.District{
 			ID:     uint(id),
 			CityID: uint(cityID),
-			Name:   name,
-		})
+			Name:   record[1],
+		}
+		districts = append(districts, district)
 	}
 
 	if err := db.Create(&districts).Error; err != nil {
@@ -119,7 +138,6 @@ func seedDistricts(db *gorm.DB) {
 	log.Println("✅ District seeding completed")
 }
 
-// --- Subdistrict ---
 func seedSubdistricts(db *gorm.DB) {
 	file, err := os.Open("internal/seeders/subdistrict.csv")
 	if err != nil {
@@ -127,34 +145,48 @@ func seedSubdistricts(db *gorm.DB) {
 	}
 	defer file.Close()
 
+	var count int64
+	db.Model(&models.Subdistrict{}).Count(&count)
+	if count > 0 {
+		log.Println("✅ Subdistricts already seeded, skipping...")
+		return
+	}
+
 	reader := csv.NewReader(file)
-	_, _ = reader.Read()
+	_, _ = reader.Read() // Skip header
 
 	var subdistricts []models.Subdistrict
+
 	for {
 		record, err := reader.Read()
 		if err != nil {
 			break
 		}
 
-		id, _ := strconv.ParseUint(record[0], 10, 64)         // id
-		districtID, _ := strconv.ParseUint(record[1], 10, 64) // district_id
-		name := record[2]                                     // subdistrict name
+		id, err := strconv.ParseUint(record[0], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid subdistrict ID: %v", err)
+		}
 
-		subdistricts = append(subdistricts, models.Subdistrict{
+		districtID, err := strconv.ParseUint(record[2], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid district ID for subdistrict: %v", err)
+		}
+
+		subdistrict := models.Subdistrict{
 			ID:         uint(id),
 			DistrictID: uint(districtID),
-			Name:       name,
-		})
+			Name:       record[1],
+		}
+		subdistricts = append(subdistricts, subdistrict)
 	}
 
-	if err := db.Create(&subdistricts).Error; err != nil {
+	if err := db.CreateInBatches(&subdistricts, 500).Error; err != nil {
 		log.Fatal("Failed to seed subdistricts:", err)
 	}
 	log.Println("✅ Subdistrict seeding completed")
 }
 
-// --- Postal Code ---
 func seedPostalCodes(db *gorm.DB) {
 	file, err := os.Open("internal/seeders/postal_code.csv")
 	if err != nil {
@@ -162,29 +194,58 @@ func seedPostalCodes(db *gorm.DB) {
 	}
 	defer file.Close()
 
+	var count int64
+	db.Model(&models.PostalCode{}).Count(&count)
+	if count > 0 {
+		log.Println("✅ Postal codes already seeded, skipping...")
+		return
+	}
+
 	reader := csv.NewReader(file)
-	_, _ = reader.Read()
+	_, _ = reader.Read() // Skip header
 
 	var postalCodes []models.PostalCode
+
 	for {
 		record, err := reader.Read()
 		if err != nil {
 			break
 		}
 
-		id, _ := strconv.ParseUint(record[0], 10, 64)            // id
-		subdistrictID, _ := strconv.ParseUint(record[1], 10, 64) // subdistrict_id
-		code := record[5]                                        // postal_code
+		id, err := strconv.ParseUint(record[0], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid postal ID: %v", err)
+		}
+		provinceID, err := strconv.ParseUint(record[4], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid province ID for postal code: %v", err)
+		}
+		cityID, err := strconv.ParseUint(record[3], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid city ID for postal code: %v", err)
+		}
+		districtID, err := strconv.ParseUint(record[2], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid district ID for postal code: %v", err)
+		}
+		subdistrictID, err := strconv.ParseUint(record[1], 10, 64)
+		if err != nil {
+			log.Fatalf("Invalid subdistrict ID for postal code: %v", err)
+		}
 
-		postalCodes = append(postalCodes, models.PostalCode{
+		postalCode := models.PostalCode{
 			ID:            uint(id),
 			SubdistrictID: uint(subdistrictID),
-			PostalCode:    code,
-		})
+			DistrictID:    uint(districtID),
+			CityID:        uint(cityID),
+			ProvinceID:    uint(provinceID),
+			PostalCode:    record[5],
+		}
+		postalCodes = append(postalCodes, postalCode)
 	}
 
-	if err := db.Create(&postalCodes).Error; err != nil {
+	if err := db.CreateInBatches(&postalCodes, 500).Error; err != nil {
 		log.Fatal("Failed to seed postal codes:", err)
 	}
-	log.Println("✅ Postal Code seeding completed")
+	log.Println("✅ Postal code seeding completed")
 }

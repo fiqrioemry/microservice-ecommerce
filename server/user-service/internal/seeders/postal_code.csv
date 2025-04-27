@@ -1,4 +1,4 @@
-postal_id,subdis_id,dis_id,city_id,prov_id,postal_code
+id,subdistrict_id,district_id,city_id,province_id,postal_code
 1,1,1,1,1,24184
 2,2,2,2,1,23891
 3,3,3,3,1,24251

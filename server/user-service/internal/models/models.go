@@ -86,6 +86,9 @@ type Subdistrict struct {
 
 type PostalCode struct {
 	ID            uint   `gorm:"primaryKey" json:"id"`
+	ProvinceID    uint   `gorm:"not null" json:"provinceId"`
+	CityID        uint   `gorm:"not null" json:"cityId"`
+	DistrictID    uint   `gorm:"not null" json:"districtId"`
 	SubdistrictID uint   `gorm:"not null" json:"subdistrictId"`
 	PostalCode    string `gorm:"type:varchar(20);not null" json:"postalCode"`
 }
