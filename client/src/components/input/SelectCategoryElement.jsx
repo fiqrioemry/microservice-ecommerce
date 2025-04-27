@@ -1,7 +1,8 @@
+// src/components/input/SelectCategoryElement.jsx
 import { useFormContext, Controller } from "react-hook-form";
 import { useCategoriesQuery } from "@/hooks/useCategoriesQuery";
 
-export const CategorySelectElement = () => {
+export const SelectCategoryElement = () => {
   const { control, watch, setValue } = useFormContext();
   const selectedCategoryId = watch("categoryId");
 

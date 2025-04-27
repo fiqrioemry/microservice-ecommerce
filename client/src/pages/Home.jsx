@@ -1,16 +1,16 @@
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
 import {
   useProductsQuery,
   useCategoriesQuery,
   useGetAllBannersQuery,
 } from "@/hooks/useProductsQuery";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ErrorDialog from "@/components/ui/ErrorDialog";
 import FetchLoading from "@/components/ui/FetchLoading";
-import ProductCard from "@/components/product-results/ProductCard";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import ProductCard from "@/components/product-results/ProductCard";
 
 const Home = () => {
   const {

@@ -1,3 +1,4 @@
+// src/lib/schema.js
 import { z } from "zod";
 
 export const signInSchema = z.object({
@@ -70,7 +71,7 @@ export const createProductSchema = z.object({
         .refine((file) => file.type.startsWith("image/"), {
           message: "File must be an image",
         })
-        .refine((file) => file.size <= 5 * 1024 * 1024, {
+        .refine((file) => file.size <= 1 * 1024 * 1024, {
           message: "Max 5MB image size",
         })
     )
@@ -82,7 +83,7 @@ export const createProductSchema = z.object({
 });
 
 // Category Schema
-const categorySchema = z.object({
+export const categorySchema = z.object({
   name: z.string().min(1, "Name is required"),
   image: z
     .array(
@@ -99,7 +100,7 @@ const categorySchema = z.object({
 });
 
 //  Subcategory Schema
-const subCategorySchema = z.object({
+export const subCategorySchema = z.object({
   name: z.string().min(1, "Name is required"),
   image: z
     .array(

@@ -1,3 +1,4 @@
+// src/pages/CreateNewProduct.jsx
 import { Button } from "@/components/ui/button";
 import { createProductSchema } from "@/lib/schema";
 import { createProductState } from "@/lib/constant";
@@ -8,9 +9,7 @@ import { InputElement } from "@/components/input/InputElement";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { UploadElement } from "@/components/input/UploadElement";
 import { SwitchElement } from "@/components/input/SwitchElement";
-import CategorySelection from "@/components/input/CategorySelection";
-import { CategorySelectElement } from "../components/input/CategorySelectElement";
-import AddCategory from "../components/category/AddCategory";
+import { SelectCategoryElement } from "@/components/input/SelectCategoryElement";
 
 const CreateNewProduct = () => {
   const { mutateAsync: createProduct } = useCreateProduct();
@@ -36,8 +35,7 @@ const CreateNewProduct = () => {
             rows={4}
           />
           <div>
-            <AddCategory />
-            <CategorySelectElement />
+            <SelectCategoryElement />
           </div>
 
           <SwitchElement name="isFeatured" label="Featured Product" />

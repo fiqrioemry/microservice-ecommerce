@@ -1,4 +1,4 @@
-// src/components/form/FormSwitch.jsx
+// src/components/input/SwitchElement.jsx
 
 import { Controller, useFormContext } from "react-hook-form";
 import { Switch } from "@/components/ui/switch";

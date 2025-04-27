@@ -1,4 +1,4 @@
-// src/components/form/SelectElement.jsx
+// src/components/input/SelectElement.jsx
 
 import { Controller, useFormContext } from "react-hook-form";
 

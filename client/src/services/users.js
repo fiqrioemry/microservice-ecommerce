@@ -1,7 +1,4 @@
-// =====================
-// PROFILE (Auth Required)
-// =====================
-
+// src/services/users.js
 import { userInstance } from ".";
 
 const getProfile = async () => {
