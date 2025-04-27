@@ -3,55 +3,50 @@ import { toast } from "sonner";
 import { create } from "zustand";
 import users from "@/services/users";
 
-export const useProfileStore = create((set) => ({
-  loading: false,
+export const useProfileStore = create((set) => {
+  const setLoading = (value) => set({ loading: value });
 
-  addAddress: async (data) => {
-    set({ loading: true });
+  const handleMutation = async (fn, successMessage) => {
+    setLoading(true);
     try {
-      const { message } = await users.addAddress(data);
-      toast.success(message);
+      const response = await fn();
+      toast.success(response?.message || successMessage);
     } catch (error) {
-      console.log(error);
-      toast.error(error?.response?.data?.message);
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Something went wrong";
+      toast.error(errorMessage);
     } finally {
-      set({ loading: false });
+      setLoading(false);
     }
-  },
+  };
 
-  updateAddress: async (id, data) => {
-    set({ loading: true });
-    try {
-      const { message } = await users.updateAddress(id, data);
-      toast.success(message);
-    } catch (error) {
-      toast.error(error?.response?.data?.message);
-    } finally {
-      set({ loading: false });
-    }
-  },
+  return {
+    loading: false,
 
-  deleteAddress: async (id) => {
-    set({ loading: true });
-    try {
-      const { message } = await users.deleteAddress(id);
-      toast.success(message);
-    } catch (error) {
-      toast.error(error?.response?.data?.message);
-    } finally {
-      set({ loading: false });
-    }
-  },
+    addAddress: (data) =>
+      handleMutation(
+        () => users.addAddress(data),
+        "Address added successfully"
+      ),
 
-  setMainAddress: async (id) => {
-    set({ loading: true });
-    try {
-      await users.setMainAddress(id);
-      toast.success("Main address set");
-    } catch (error) {
-      toast.error(error?.response?.data?.message);
-    } finally {
-      set({ loading: false });
-    }
-  },
-}));
+    updateAddress: (id, data) =>
+      handleMutation(
+        () => users.updateAddress(id, data),
+        "Address updated successfully"
+      ),
+
+    deleteAddress: (id) =>
+      handleMutation(
+        () => users.deleteAddress(id),
+        "Address deleted successfully"
+      ),
+
+    setMainAddress: (id) =>
+      handleMutation(
+        () => users.setMainAddress(id),
+        "Main address set successfully"
+      ),
+  };
+});

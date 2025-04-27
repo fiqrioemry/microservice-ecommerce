@@ -14,7 +14,6 @@ export const useCategoryMutation = () => {
       if (typeof refetchFn === "function") {
         refetchFn(variables);
       } else {
-        // Default fallback: refresh all categories
         queryClient.invalidateQueries(["categories"]);
       }
     },

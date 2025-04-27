@@ -1,5 +1,5 @@
-import product from "@/services/products";
 import banner from "@/services/banners";
+import product from "@/services/products";
 import category from "@/services/categories";
 import { useQuery } from "@tanstack/react-query";
 

@@ -2,24 +2,21 @@
 import React, { useState } from "react";
 import { PlusCircle } from "lucide-react";
 import { categorySchema } from "@/lib/schema";
+import { categoryState } from "@/lib/constant";
 import { FormDialog } from "@/components/form/FormDialog";
 import { InputElement } from "@/components/input/InputElement";
 import { UploadElement } from "@/components/input/UploadElement";
-import { categoryState } from "@/lib/constant";
 import { useCategoryMutation } from "@/hooks/useCategoryMutation";
-import { toast } from "sonner";
-import { useCategoryStore } from "../../store/useCategoryStore";
 
 const AddCategory = () => {
-  const { loading, AddNewCategory } = useCategoryStore();
-
+  const createCategory = useCategoryMutation();
   return (
     <FormDialog
-      loading={loading}
+      loading={createCategory.pending}
       state={categoryState}
       schema={categorySchema}
       title="Add NewCategory"
-      action={AddNewCategory}
+      action={createCategory}
       buttonText={
         <button className="btn btn-primary gap-4">
           <PlusCircle size={18} />

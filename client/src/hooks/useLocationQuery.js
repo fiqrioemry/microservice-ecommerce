@@ -13,7 +13,7 @@ export const useSearchProvincesQuery = (query) => {
   return useQuery({
     queryKey: ["searchProvinces", query],
     queryFn: () => loc.searchProvinces(query),
-    enabled: !!query, // hanya jalan kalau query ada
+    enabled: !!query,
   });
 };
 
@@ -21,7 +21,7 @@ export const useCitiesByProvinceQuery = (provinceId) => {
   return useQuery({
     queryKey: ["cities", provinceId],
     queryFn: () => loc.getCitiesByProvince(provinceId),
-    enabled: !!provinceId, // hanya jalan kalau ada provinceId
+    enabled: !!provinceId,
   });
 };
 
