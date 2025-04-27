@@ -80,3 +80,38 @@ export const createProductSchema = z.object({
     .min(1, { message: "At least 1 variant is required" }),
   attributes: z.array(attributeSchema).optional(),
 });
+
+// Category Schema
+const categorySchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  image: z
+    .array(
+      z
+        .instanceof(File)
+        .refine((file) => file.type.startsWith("image/"), {
+          message: "File must be an image",
+        })
+        .refine((file) => file.size <= 5 * 1024 * 1024, {
+          message: "Max 5MB image size",
+        })
+    )
+    .min(1, { message: "At least 1 product image is required" }),
+});
+
+//  Subcategory Schema
+const subCategorySchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  image: z
+    .array(
+      z
+        .instanceof(File)
+        .refine((file) => file.type.startsWith("image/"), {
+          message: "File must be an image",
+        })
+        .refine((file) => file.size <= 5 * 1024 * 1024, {
+          message: "Max 5MB image size",
+        })
+    )
+    .min(1, { message: "At least 1 product image is required" }),
+  categoryId: z.string().uuid({ message: "Invalid category ID" }),
+});

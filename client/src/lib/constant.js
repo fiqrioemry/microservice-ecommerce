@@ -48,3 +48,14 @@ export const createProductState = {
   ],
   attributes: [],
 };
+
+export const categoryState = {
+  name: "",
+  image: "",
+};
+
+export const subCategoryState = {
+  name: "",
+  image: "",
+  categoryId: "",
+};

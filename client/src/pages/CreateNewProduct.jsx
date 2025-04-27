@@ -9,6 +9,8 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { UploadElement } from "@/components/input/UploadElement";
 import { SwitchElement } from "@/components/input/SwitchElement";
 import CategorySelection from "@/components/input/CategorySelection";
+import { CategorySelectElement } from "../components/input/CategorySelectElement";
+import AddCategory from "../components/category/AddCategory";
 
 const CreateNewProduct = () => {
   const { mutateAsync: createProduct } = useCreateProduct();
@@ -33,8 +35,10 @@ const CreateNewProduct = () => {
             isTextArea
             rows={4}
           />
-
-          <CategorySelection />
+          <div>
+            <AddCategory />
+            <CategorySelectElement />
+          </div>
 
           <SwitchElement name="isFeatured" label="Featured Product" />
 

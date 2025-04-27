@@ -1,4 +1,5 @@
 import React from "react";
+import { MapPin } from "lucide-react";
 import ErrorDialog from "@/components/ui/ErrorDialog";
 import FetchLoading from "@/components/ui/FetchLoading";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,8 +8,6 @@ import AddAddress from "@/components/address/AddAddress";
 import UpdateAddress from "@/components/address/UpdateAddress";
 import DeleteAddress from "@/components/address/DeleteAddress";
 import { useAddressesQuery } from "@/hooks/useProfileManagement";
-import { Button } from "@/components/ui/button";
-import { MapPin } from "lucide-react";
 
 const Address = () => {
   const { isError, isLoading, data: addresses } = useAddressesQuery();
