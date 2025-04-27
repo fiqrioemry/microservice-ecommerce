@@ -8,7 +8,6 @@ const SelectElement = ({
   options = [],
   placeholder = "Select an option",
   disabled = false,
-  rules = { required: true },
 }) => {
   const { control } = useFormContext();
 
@@ -16,7 +15,10 @@ const SelectElement = ({
     <Controller
       control={control}
       name={name}
-      rules={rules}
+      rules={{
+        required: true,
+        setValueAs: (value) => (value ? Number(value) : undefined),
+      }}
       render={({ field, fieldState }) => (
         <div className="space-y-1">
           {label && (

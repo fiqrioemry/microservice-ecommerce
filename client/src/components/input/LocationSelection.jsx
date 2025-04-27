@@ -1,3 +1,4 @@
+// src/components/input/LocationSelection.jsx
 import {
   useProvincesQuery,
   useCitiesByProvinceQuery,
@@ -30,7 +31,10 @@ const LocationSelection = () => {
       <Controller
         control={control}
         name="provinceId"
-        rules={{ required: true }}
+        rules={{
+          required: true,
+          setValueAs: (value) => (value ? Number(value) : undefined),
+        }}
         render={({ field }) => (
           <div>
             <label className="block mb-1 font-medium">Province</label>
@@ -51,7 +55,10 @@ const LocationSelection = () => {
         <Controller
           control={control}
           name="cityId"
-          rules={{ required: true }}
+          rules={{
+            required: true,
+            setValueAs: (value) => (value ? Number(value) : undefined),
+          }}
           render={({ field }) => (
             <div>
               <label className="block mb-1 font-medium">City</label>
@@ -73,7 +80,10 @@ const LocationSelection = () => {
         <Controller
           control={control}
           name="districtId"
-          rules={{ required: true }}
+          rules={{
+            required: true,
+            setValueAs: (value) => (value ? Number(value) : undefined),
+          }}
           render={({ field }) => (
             <div>
               <label className="block mb-1 font-medium">District</label>
@@ -95,7 +105,10 @@ const LocationSelection = () => {
         <Controller
           control={control}
           name="subdistrictId"
-          rules={{ required: true }}
+          rules={{
+            required: true,
+            setValueAs: (value) => (value ? Number(value) : undefined),
+          }}
           render={({ field }) => (
             <div>
               <label className="block mb-1 font-medium">Subdistrict</label>
@@ -117,7 +130,10 @@ const LocationSelection = () => {
         <Controller
           control={control}
           name="postalCodeId"
-          rules={{ required: true }}
+          rules={{
+            required: true,
+            setValueAs: (value) => (value ? Number(value) : undefined),
+          }}
           render={({ field }) => (
             <div>
               <label className="block mb-1 font-medium">Postal Code</label>

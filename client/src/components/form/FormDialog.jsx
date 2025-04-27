@@ -1,3 +1,4 @@
+// src/components/form/FormDialog.jsx
 import {
   Dialog,
   DialogTitle,
@@ -6,11 +7,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { SubmitLoading } from "@/components/ui/SubmitLoading";
 import { SubmitButton } from "@/components/form/SubmitButton";
-import { SubmitLoading } from "../ui/SubmitLoading";
 
 export function FormDialog({
   title,
@@ -31,6 +32,7 @@ export function FormDialog({
   });
 
   const { formState, reset, handleSubmit } = methods;
+
   const isFormDirty = useMemo(() => formState.isDirty, [formState.isDirty]);
 
   const resetAndCloseDialog = useCallback(() => {
@@ -43,20 +45,34 @@ export function FormDialog({
     else resetAndCloseDialog();
   }, [isFormDirty, resetAndCloseDialog]);
 
-  const handleSave = useCallback(
-    async (data) => {
-      await action(data);
-      if (formState.isValid) resetAndCloseDialog();
-    },
-    [action, formState.isValid, resetAndCloseDialog]
-  );
-
   const handleConfirmation = useCallback(
     (confirmed) => {
       if (confirmed) resetAndCloseDialog();
       setShowConfirmation(false);
     },
     [resetAndCloseDialog]
+  );
+
+  useEffect(() => {
+    if (state) {
+      reset(state);
+    }
+  }, [state, reset]);
+
+  // const handleSave = useCallback(
+  //   async (data) => {
+  //     await action(data);
+  //     if (formState.isValid) resetAndCloseDialog();
+  //   },
+  //   [action, formState.isValid, resetAndCloseDialog]
+  // );
+  const handleSave = useCallback(
+    async (data) => {
+      await action(data);
+      if (formState.isValid) reset();
+      setIsOpen(false);
+    },
+    [action, formState.isValid, reset]
   );
 
   return (
@@ -66,9 +82,7 @@ export function FormDialog({
         open={isOpen}
         onOpenChange={(open) => (!open ? handleCancel() : setIsOpen(open))}
       >
-        <DialogTrigger asChild>
-          <Button>{buttonText}</Button>
-        </DialogTrigger>
+        <DialogTrigger asChild>{buttonText}</DialogTrigger>
 
         <DialogContent className="sm:max-w-lg p-0 overflow-hidden rounded-xl">
           {loading ? (
@@ -101,7 +115,7 @@ export function FormDialog({
                     <SubmitButton
                       text="Save Changes"
                       isLoading={loading}
-                      disabled={!formState.isValid || !isFormDirty}
+                      disabled={!formState.isValid}
                     />
                   </div>
                 </form>

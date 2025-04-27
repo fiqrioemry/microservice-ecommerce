@@ -3,7 +3,7 @@ import { registerSchema } from "@/lib/schema";
 import { registerState } from "@/lib/constant";
 import { useAuthStore } from "@/store/useAuthStore";
 import { FormInput } from "@/components/form/FormInput";
-import { SubmitButton } from "@/components/input/SubmitButton";
+import { SubmitButton } from "@/components/form/SubmitButton";
 import { InputElement } from "@/components/input/InputElement";
 
 const SignUp = () => {

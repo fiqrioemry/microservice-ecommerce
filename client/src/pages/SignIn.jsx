@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { FormInput } from "@/components/form/FormInput";
 import { InputElement } from "@/components/input/InputElement";
 import { SwitchElement } from "@/components/input/SwitchElement";
-import { SubmitButton } from "@/components/input/SubmitButton";
+import { SubmitButton } from "@/components/form/SubmitButton";
 
 const SignIn = () => {
   const { loading, login } = useAuthStore();

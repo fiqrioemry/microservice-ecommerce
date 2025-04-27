@@ -16,12 +16,14 @@ import { AuthRoute, NonAuthRoute } from "./middleware";
 import UserLayout from "./components/layout/UserLayout";
 import { Navigate, Route, Routes } from "react-router-dom";
 import InputPage from "./pages/InputPage";
+import CreateNewProduct from "./pages/CreateNewProduct";
 
 function App() {
   return (
     <>
       <Toaster />
       <Routes>
+        <Route path="/upload" element={<CreateNewProduct />} />
         <Route path="/input" element={<InputPage />} />
         <Route
           path="/signin"

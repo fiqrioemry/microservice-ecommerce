@@ -1,3 +1,4 @@
+// src/lib/constant.js
 export const addressState = {
   name: "",
   address: "",
@@ -7,7 +8,7 @@ export const addressState = {
   postalCodeId: "",
   cityId: "",
   phone: "",
-  isMain: "",
+  isMain: false,
 };
 
 export const registerState = {
@@ -20,4 +21,30 @@ export const signInState = {
   password: "",
   email: "",
   rememberMe: false,
+};
+
+export const createProductState = {
+  name: "",
+  description: "",
+  categoryId: "",
+  subcategoryId: "",
+  isFeatured: false,
+  weight: 0,
+  length: 0,
+  width: 0,
+  height: 0,
+  discount: 0,
+  images: [],
+  variants: [
+    {
+      sku: "",
+      price: 0,
+      stock: 0,
+      sold: 0,
+      isActive: true,
+      imageUrl: "",
+      options: {},
+    },
+  ],
+  attributes: [],
 };

@@ -3,14 +3,14 @@ import { Controller, useFormContext } from "react-hook-form";
 const InputElement = ({
   name,
   label,
-  rows = 4,
-  type = "text",
   placeholder = "",
+  type = "text",
+  rows = 4,
+  isTextArea = false,
   isNumber = false,
   disabled = false,
-  isTextArea = false,
   rules = { required: true },
-  maxLength, // ➡️ Tambahan baru
+  maxLength,
 }) => {
   const { control } = useFormContext();
 
@@ -22,6 +22,7 @@ const InputElement = ({
       render={({ field, fieldState }) => {
         const handleKeyDown = (e) => {
           if (isNumber) {
+            // Allow basic control keys
             if (
               [
                 "Backspace",
@@ -30,9 +31,9 @@ const InputElement = ({
                 "ArrowLeft",
                 "ArrowRight",
               ].includes(e.key)
-            ) {
+            )
               return;
-            }
+            // Prevent non-numeric keys
             if (!/^[0-9]$/.test(e.key)) {
               e.preventDefault();
             }
@@ -42,11 +43,17 @@ const InputElement = ({
         return (
           <div className="space-y-1">
             {label && (
-              <label className="block text-sm font-medium">{label}</label>
+              <label
+                htmlFor={name}
+                className="block text-sm font-medium text-gray-700"
+              >
+                {label}
+              </label>
             )}
 
             {isTextArea ? (
               <textarea
+                id={name}
                 {...field}
                 value={field.value ?? ""}
                 placeholder={placeholder}
@@ -57,10 +64,12 @@ const InputElement = ({
               />
             ) : (
               <input
+                id={name}
                 {...field}
                 value={field.value ?? ""}
-                type={isNumber ? "text" : type}
+                onChange={(e) => field.onChange(e.target.value)}
                 onKeyDown={handleKeyDown}
+                type={isNumber ? "text" : type}
                 placeholder={placeholder}
                 disabled={disabled}
                 inputMode={isNumber ? "numeric" : undefined}

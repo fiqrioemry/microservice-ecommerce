@@ -26,3 +26,57 @@ export const addressSchema = z.object({
     .max(12, "Nomor telepon maksimal 12 karakter"),
   isMain: z.boolean().optional(),
 });
+
+// Variant Schema
+const variantSchema = z.object({
+  sku: z.string().min(1, "SKU is required"),
+  price: z
+    .number({ required_error: "Price is required" })
+    .positive("Price must be greater than 0"),
+  stock: z
+    .number({ required_error: "Stock is required" })
+    .int()
+    .nonnegative("Stock cannot be negative"),
+  sold: z.number().int().nonnegative().default(0),
+  isActive: z.boolean().default(true),
+  imageUrl: z.string().url().optional(), // URL dari hasil upload gambar variant
+  options: z.record(z.string()).optional(), // Map {typeName: value}
+});
+
+// Attribute Schema
+const attributeSchema = z.object({
+  attributeId: z.number().int(),
+  attributeValueId: z.number().int(),
+});
+
+export const createProductSchema = z.object({
+  name: z.string().min(1, "Product name is required"),
+  description: z.string().optional(),
+  categoryId: z.string().uuid({ message: "Invalid category ID" }),
+  subcategoryId: z
+    .string()
+    .uuid({ message: "Invalid subcategory ID" })
+    .optional(),
+  isFeatured: z.boolean().default(false),
+  weight: z.number().nonnegative().default(0),
+  length: z.number().nonnegative().default(0),
+  width: z.number().nonnegative().default(0),
+  height: z.number().nonnegative().default(0),
+  discount: z.number().nonnegative().optional(),
+  images: z
+    .array(
+      z
+        .instanceof(File)
+        .refine((file) => file.type.startsWith("image/"), {
+          message: "File must be an image",
+        })
+        .refine((file) => file.size <= 5 * 1024 * 1024, {
+          message: "Max 5MB image size",
+        })
+    )
+    .min(1, { message: "At least 1 product image is required" }),
+  variants: z
+    .array(variantSchema)
+    .min(1, { message: "At least 1 variant is required" }),
+  attributes: z.array(attributeSchema).optional(),
+});
