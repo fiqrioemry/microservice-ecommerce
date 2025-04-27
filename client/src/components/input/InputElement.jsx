@@ -1,18 +1,19 @@
 // src/components/input/InputElement.jsx
-
+import { cn } from "@/lib/utils";
 import { Controller, useFormContext } from "react-hook-form";
 
 const InputElement = ({
   name,
   label,
-  placeholder = "",
-  type = "text",
   rows = 4,
-  isTextArea = false,
+  maxLength,
+  type = "text",
+  className = "",
+  placeholder = "",
   isNumber = false,
   disabled = false,
+  isTextArea = false,
   rules = { required: true },
-  maxLength,
 }) => {
   const { control } = useFormContext();
 
@@ -43,7 +44,7 @@ const InputElement = ({
         };
 
         return (
-          <div className="space-y-1">
+          <div className={(cn("space-y-1"), className)}>
             {label && (
               <label
                 htmlFor={name}
@@ -69,7 +70,12 @@ const InputElement = ({
                 id={name}
                 {...field}
                 value={field.value ?? ""}
-                onChange={(e) => field.onChange(e.target.value)}
+                onChange={(e) => {
+                  const value = isNumber
+                    ? Number(e.target.value)
+                    : e.target.value;
+                  field.onChange(value);
+                }}
                 onKeyDown={handleKeyDown}
                 type={isNumber ? "text" : type}
                 placeholder={placeholder}

@@ -14,23 +14,23 @@ const AddAddress = () => {
   const { addAddress, loading } = useProfileStore();
   const { invalidateUserAddresses } = useProfileManagement();
 
-  const handleAddAddress = async (formData) => {
-    const normalizedData = {
-      ...formData,
-      cityId: Number(formData.cityId),
-      provinceId: Number(formData.provinceId),
-      districtId: Number(formData.districtId),
-      subdistrictId: Number(formData.subdistrictId),
-      postalCodeId: Number(formData.postalCodeId),
-    };
-    await addAddress(normalizedData);
-    invalidateUserAddresses();
-  };
+  // const handleAddAddress = async (formData) => {
+  //   const normalizedData = {
+  //     ...formData,
+  //     cityId: Number(formData.cityId),
+  //     provinceId: Number(formData.provinceId),
+  //     districtId: Number(formData.districtId),
+  //     subdistrictId: Number(formData.subdistrictId),
+  //     postalCodeId: Number(formData.postalCodeId),
+  //   };
+  //   await addAddress(normalizedData);
+  //   invalidateUserAddresses();
+  // };
 
   return (
     <FormDialog
       loading={loading}
-      action={handleAddAddress}
+      action={addAddress}
       state={addressState}
       schema={addressSchema}
       title="Add New Address"
@@ -48,7 +48,7 @@ const AddAddress = () => {
       />
       <InputElement
         name="phone"
-        isNumber={true}
+        // isNumber={true}
         maxLength={12}
         label="Nomor Telepon"
         placeholder="Masukkan Nomor Penerima"

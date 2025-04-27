@@ -15,53 +15,52 @@ const CreateNewProduct = () => {
   const { mutateAsync: createProduct } = useCreateProduct();
 
   return (
-    <FormInput
-      action={createProduct}
-      state={createProductState}
-      schema={createProductSchema}
-    >
-      {(methods) => (
-        <>
-          <InputElement
-            name="name"
-            label="Product Name"
-            placeholder="Enter product name"
-          />
-          <InputElement
-            name="description"
-            label="Description"
-            placeholder="Enter description"
-            isTextArea
-            rows={4}
-          />
-          <div>
-            <SelectCategoryElement />
-          </div>
+    <div className="max-w-2xl p-2">
+      <h2 className="text-center">Create New Product</h2>
+      <FormInput
+        action={createProduct}
+        state={createProductState}
+        schema={createProductSchema}
+      >
+        {(methods) => (
+          <>
+            <InputElement
+              name="name"
+              label="Product Name"
+              placeholder="Enter product name"
+            />
+            <InputElement
+              rows={4}
+              isTextArea
+              name="description"
+              label="Description"
+              placeholder="Enter description"
+            />
+            <div>
+              <SelectCategoryElement />
+            </div>
 
-          <SwitchElement name="isFeatured" label="Featured Product" />
+            <SwitchElement name="isFeatured" label="Featured Product" />
 
-          <div className="grid grid-cols-2 gap-4">
-            <InputElement name="weight" label="Weight (g)" isNumber />
-            <InputElement name="length" label="Length (cm)" isNumber />
-            <InputElement name="width" label="Width (cm)" isNumber />
-            <InputElement name="height" label="Height (cm)" isNumber />
-          </div>
+            <div className="grid grid-cols-2 gap-4">
+              <InputElement isNumber name="weight" label="Weight (g)" />
+              <InputElement isNumber name="length" label="Length (cm)" />
+              <InputElement isNumber name="width" label="Width (cm)" />
+              <InputElement isNumber name="height" label="Height (cm)" />
+            </div>
 
-          <InputElement name="discount" label="Discount (%)" isNumber />
+            <InputElement name="discount" label="Discount (%)" isNumber />
 
-          <UploadElement name="images" label="Product Images" />
+            <UploadElement name="images" label="Product Images" />
 
-          <VariantSection />
-          <AttributeSection />
+            <VariantSection />
+            <AttributeSection />
 
-          <SubmitButton
-            text="Create Product"
-            disabled={!methods.formState.isValid}
-            className="mt-6"
-          />
-        </>
-      )}
-    </FormInput>
+            <SubmitButton text="Create Product" className="mt-6" />
+          </>
+        )}
+      </FormInput>
+    </div>
   );
 };
 
@@ -77,7 +76,7 @@ const VariantSection = () => {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <div className="flex justify-between items-center">
         <h4 className="font-semibold text-lg">Variants</h4>
         <Button
@@ -101,28 +100,41 @@ const VariantSection = () => {
 
       {fields.map((field, index) => (
         <div key={field.id} className="border p-4 rounded space-y-4">
-          <InputElement
-            name={`variants.${index}.sku`}
-            label="SKU"
-            placeholder="Enter SKU"
-          />
-          <InputElement
-            name={`variants.${index}.price`}
-            label="Price"
-            isNumber
-          />
-          <InputElement
-            name={`variants.${index}.stock`}
-            label="Stock"
-            isNumber
-          />
-          <InputElement name={`variants.${index}.sold`} label="Sold" isNumber />
+          <div className="grid grid-cols-6 gap-2">
+            <InputElement
+              label="SKU"
+              name={`variants.${index}.sku`}
+              className="col-span-3"
+              placeholder="Enter SKU"
+            />
+
+            <InputElement
+              name={`variants.${index}.price`}
+              label="Price"
+              isNumber
+            />
+            <InputElement
+              name={`variants.${index}.stock`}
+              label="Stock"
+              isNumber
+            />
+            <InputElement
+              name={`variants.${index}.sold`}
+              label="Sold"
+              isNumber
+            />
+          </div>
+
           <SwitchElement name={`variants.${index}.isActive`} label="Active" />
-          <InputElement
-            name={`variants.${index}.imageUrl`}
-            label="Image URL"
-            placeholder="Enter image URL"
-          />
+          <div className="flex gap-2">
+            <div className="w-1/2">
+              <UploadElement
+                name="imageUrl"
+                label="Variant Product Image"
+                isSingle
+              />
+            </div>
+          </div>
 
           {/* Options - dynamic key value */}
           <div className="grid grid-cols-2 gap-4">

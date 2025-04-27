@@ -1,23 +1,37 @@
 // src/components/category/AddCategory.jsx
-import React from "react";
+import React, { useState } from "react";
 import { PlusCircle } from "lucide-react";
 import { categorySchema } from "@/lib/schema";
 import { FormDialog } from "@/components/form/FormDialog";
 import { InputElement } from "@/components/input/InputElement";
 import { UploadElement } from "@/components/input/UploadElement";
-import { categoryState, subCategoryState } from "@/lib/constant";
+import { categoryState } from "@/lib/constant";
 import { useCategoryMutation } from "@/hooks/useCategoryMutation";
+import { toast } from "sonner";
 
 const AddCategory = () => {
-  const { mutateAsync: createCategory, isLoading } = useCategoryMutation();
+  const { createCategory } = useCategoryMutation();
+  const [loading, setLoading] = useState(false);
+
+  const handleAddCategory = async (data) => {
+    setLoading(true);
+    try {
+      await createCategory.mutateAsync(data);
+      toast.success("Category added successfully");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add category");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <FormDialog
-      loading={isLoading}
+      loading={loading}
       state={categoryState}
-      action={createCategory}
       schema={categorySchema}
-      title="Add New Category"
+      title="Add NewCategory"
+      action={handleAddCategory}
       buttonText={
         <button className="btn btn-primary gap-4">
           <PlusCircle size={18} />
@@ -30,7 +44,12 @@ const AddCategory = () => {
         label="Category"
         placeholder="Masukkan Nama Category"
       />
-      <UploadElement name="image" label="Category Image" maxImages={1} />
+      <UploadElement
+        name="image"
+        isSingle
+        maxImages={1}
+        label="Category Image"
+      />
     </FormDialog>
   );
 };

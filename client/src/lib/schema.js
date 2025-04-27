@@ -9,18 +9,18 @@ export const signInSchema = z.object({
 
 export const registerSchema = z.object({
   email: z.string().email("Email tidak valid"),
-  fullname: z.string().min(6, "Nama lengkap minimal 6 karakter"),
   password: z.string().min(6, "Password minimal 6 karakter"),
+  fullname: z.string().min(6, "Nama lengkap minimal 6 karakter"),
 });
 
 export const addressSchema = z.object({
+  cityId: z.string().min(1, "City harus dipilih"),
   name: z.string().min(6, "Nama minimal 6 karakter"),
   address: z.string().min(1, "Alamat tidak boleh kosong"),
-  provinceId: z.string().min(1, "Province harus dipilih"),
-  cityId: z.string().min(1, "City harus dipilih"),
   districtId: z.string().min(1, "District harus dipilih"),
-  subdistrictId: z.string().min(1, "Subdistrict harus dipilih"),
+  provinceId: z.string().min(1, "Province harus dipilih"),
   postalCodeId: z.string().min(1, "Postal code harus dipilih"),
+  subdistrictId: z.string().min(1, "Subdistrict harus dipilih"),
   phone: z
     .string()
     .min(10, "Nomor telepon minimal 10 karakter")
@@ -40,20 +40,22 @@ const variantSchema = z.object({
     .nonnegative("Stock cannot be negative"),
   sold: z.number().int().nonnegative().default(0),
   isActive: z.boolean().default(true),
-  imageUrl: z.string().url().optional(), // URL dari hasil upload gambar variant
-  options: z.record(z.string()).optional(), // Map {typeName: value}
+  imageUrl: z.string().url().optional(),
+  options: z.record(z.string()).optional(),
 });
 
-// Attribute Schema
 const attributeSchema = z.object({
   attributeId: z.number().int(),
   attributeValueId: z.number().int(),
 });
 
 export const createProductSchema = z.object({
-  name: z.string().min(1, "Product name is required"),
+  name: z.string().min(20, "Minimal nama product 20 arakter"),
   description: z.string().optional(),
-  categoryId: z.string().uuid({ message: "Invalid category ID" }),
+  categoryId: z
+    .string()
+    .uuid({ message: "Invalid category ID" })
+    .min(1, "Category wajib diisi"),
   subcategoryId: z
     .string()
     .uuid({ message: "Invalid subcategory ID" })
@@ -71,8 +73,8 @@ export const createProductSchema = z.object({
         .refine((file) => file.type.startsWith("image/"), {
           message: "File must be an image",
         })
-        .refine((file) => file.size <= 1 * 1024 * 1024, {
-          message: "Max 5MB image size",
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "Max 2MB image size",
         })
     )
     .min(1, { message: "At least 1 product image is required" }),
@@ -92,8 +94,8 @@ export const categorySchema = z.object({
         .refine((file) => file.type.startsWith("image/"), {
           message: "File must be an image",
         })
-        .refine((file) => file.size <= 5 * 1024 * 1024, {
-          message: "Max 5MB image size",
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "Max 2MB image size",
         })
     )
     .min(1, { message: "At least 1 product image is required" }),
@@ -109,8 +111,8 @@ export const subCategorySchema = z.object({
         .refine((file) => file.type.startsWith("image/"), {
           message: "File must be an image",
         })
-        .refine((file) => file.size <= 5 * 1024 * 1024, {
-          message: "Max 5MB image size",
+        .refine((file) => file.size <= 2 * 1024 * 1024, {
+          message: "Max 2MB image size",
         })
     )
     .min(1, { message: "At least 1 product image is required" }),
