@@ -1,26 +1,30 @@
 // src/components/header/CartDropdown.jsx
-import { useEffect } from "react";
-import { ShoppingCart } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { formatRupiah } from "@/lib/utils";
-import { useCartStore } from "@/store/useCartStore";
-import { Button } from "@/components/ui/button";
-
 import {
   DropdownMenu,
-  DropdownMenuContent,
   DropdownMenuTrigger,
+  DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
+import { useEffect } from "react";
+import { formatRupiah } from "@/lib/utils";
+import { ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useCartQuery } from "@/hooks/useCartQuery";
+import { useCartStore } from "@/store/useCartStore";
 
 const CartDropdown = () => {
   const navigate = useNavigate();
-  const { carts, fetchCart, loading, totalItems } = useCartStore();
+  const { setCart } = useCartStore();
+  const { data: cartData, isLoading } = useCartQuery();
 
   useEffect(() => {
-    fetchCart();
-  }, []);
+    if (cartData?.cart?.items) {
+      setCart(cartData.cart.items);
+    }
+  }, [cartData, setCart]);
 
-  const hasItems = carts.items && carts.items.length > 0;
+  const { items, totalItems } = useCartStore();
+  const hasItems = items.length > 0;
 
   return (
     <DropdownMenu>
@@ -39,14 +43,14 @@ const CartDropdown = () => {
         align="end"
         className="w-[320px] p-0 shadow-lg rounded-xl overflow-hidden"
       >
-        {loading ? (
+        {isLoading ? (
           <div className="p-4 text-center text-sm text-muted-foreground">
             Loading...
           </div>
         ) : hasItems ? (
           <>
             <ul className="max-h-64 overflow-y-auto divide-y">
-              {carts.items.map((item) => (
+              {items.map((item) => (
                 <li key={item.id} className="flex gap-3 p-4">
                   <img
                     src={item.imageUrl}
