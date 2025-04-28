@@ -61,7 +61,7 @@ func (h *AddressHandler) GetAddresses(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"addresses": addresses})
+	c.JSON(http.StatusOK, addresses)
 }
 
 func (ctrl *AddressHandler) DeleteAddress(c *gin.Context) {

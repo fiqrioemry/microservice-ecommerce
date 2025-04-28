@@ -27,7 +27,7 @@ func (ctrl *ProfileHandler) GetProfile(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"profile": user.Profile})
+	c.JSON(http.StatusOK, user.Profile)
 }
 
 func (ctrl *ProfileHandler) UpdateProfile(c *gin.Context) {

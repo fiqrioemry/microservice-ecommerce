@@ -24,7 +24,7 @@ func (h *CategoryHandler) GetAll(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to fetch categories"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"categories": categories})
+	c.JSON(http.StatusOK, categories)
 }
 
 func (h *CategoryHandler) Create(c *gin.Context) {

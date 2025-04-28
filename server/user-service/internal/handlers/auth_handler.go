@@ -76,9 +76,7 @@ func (ctrl *AuthHandler) Me(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"user": user,
-	})
+	c.JSON(http.StatusOK, user)
 }
 
 func (ctrl *AuthHandler) ForgotPassword(c *gin.Context) {
@@ -188,5 +186,5 @@ func (ctrl *AuthHandler) GetUserByIDAdmin(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"user": user})
+	c.JSON(http.StatusOK, user)
 }
