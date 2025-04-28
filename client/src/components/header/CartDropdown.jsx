@@ -15,13 +15,13 @@ import { useCartStore } from "@/store/useCartStore";
 const CartDropdown = () => {
   const navigate = useNavigate();
   const { setCart } = useCartStore();
-  const { data: cartData, isLoading } = useCartQuery();
-
+  const { data: cart = [], isLoading } = useCartQuery();
+  console.log(cart.items);
   useEffect(() => {
-    if (cartData?.cart?.items) {
-      setCart(cartData.cart.items);
+    if (cart.items) {
+      setCart(cart.items);
     }
-  }, [cartData, setCart]);
+  }, [cart, setCart]);
 
   const { items, totalItems } = useCartStore();
   const hasItems = items.length > 0;

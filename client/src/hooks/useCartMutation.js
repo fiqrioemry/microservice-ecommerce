@@ -1,7 +1,6 @@
-// src/hooks/useCartMutation.js
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import cart from "@/services/cart";
 import { toast } from "sonner";
+import cart from "@/services/carts";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useCartMutation = () => {
   const queryClient = useQueryClient();
@@ -20,25 +19,34 @@ export const useCartMutation = () => {
     },
   });
 
+  const { mutate: addToCart, ...addToCartRest } = useMutation({
+    mutationFn: cart.addToCart,
+    ...mutationOptions("Item added to cart"),
+  });
+
+  const { mutate: updateCartItem, ...updateCartItemRest } = useMutation({
+    mutationFn: ({ itemId, data }) => cart.updateCartItem(itemId, data),
+    ...mutationOptions("Cart item updated"),
+  });
+
+  const { mutate: removeCartItem, ...removeCartItemRest } = useMutation({
+    mutationFn: cart.removeCartItem,
+    ...mutationOptions("Cart item removed"),
+  });
+
+  const { mutate: clearCart, ...clearCartRest } = useMutation({
+    mutationFn: cart.clearCart,
+    ...mutationOptions("Cart cleared"),
+  });
+
   return {
-    addToCart: useMutation({
-      mutationFn: (data) => cart.addToCart(data),
-      ...mutationOptions("Item added to cart"),
-    }),
-
-    updateCartItem: useMutation({
-      mutationFn: ({ itemId, data }) => cart.updateCartItem(itemId, data),
-      ...mutationOptions("Cart item updated"),
-    }),
-
-    removeCartItem: useMutation({
-      mutationFn: (itemId) => cart.removeCartItem(itemId),
-      ...mutationOptions("Cart item removed"),
-    }),
-
-    clearCart: useMutation({
-      mutationFn: () => cart.clearCart(),
-      ...mutationOptions("Cart cleared"),
-    }),
+    addToCart,
+    updateCartItem,
+    removeCartItem,
+    clearCart,
+    ...addToCartRest,
+    ...updateCartItemRest,
+    ...removeCartItemRest,
+    ...clearCartRest,
   };
 };

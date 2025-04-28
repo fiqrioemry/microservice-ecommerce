@@ -3,7 +3,6 @@ import React from "react";
 import { formatRupiah } from "../../lib/utils";
 
 const ProductInfo = ({ product, selectedVariant }) => {
-  console.log(product);
   return (
     <div className="space-y-4">
       <div>

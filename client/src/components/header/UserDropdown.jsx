@@ -8,16 +8,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useLogout } from "@/hooks/useAuthMutation";
 import { LogOut, User, MapPin } from "lucide-react";
 
 const UserDropdown = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
-
-  const handleLogout = () => {
-    logout();
-    navigate("/signin");
-  };
+  const { user } = useAuthStore();
+  const { mutate: logout } = useLogout();
 
   return (
     <DropdownMenu>
@@ -45,7 +42,7 @@ const UserDropdown = () => {
           Address
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={handleLogout}
+          onClick={() => logout()}
           className="cursor-pointer text-red-500"
         >
           <LogOut className="w-4 h-4 mr-2" />

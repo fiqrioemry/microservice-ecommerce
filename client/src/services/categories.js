@@ -3,7 +3,6 @@ import { productInstance } from ".";
 
 // Public: Get all categories
 const getAllCategories = async () => {
-  console.log("getting the categories");
   const res = await productInstance.get("/categories");
   return res.data;
 };

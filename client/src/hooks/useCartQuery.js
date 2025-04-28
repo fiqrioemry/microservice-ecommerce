@@ -1,12 +1,12 @@
 // src/hooks/useCartQuery.js
-import { useQuery } from "@tanstack/react-query";
 import cart from "@/services/carts";
+import { useQuery } from "@tanstack/react-query";
 
 export const useCartQuery = () => {
   return useQuery({
     queryKey: ["cart"],
     queryFn: cart.getCart,
-    staleTime: 1000 * 60 * 5,
-    retry: 1,
+    staleTime: 1000 * 60 * 5, // cache 5 menit
+    retry: 1, // 1 x retry
   });
 };

@@ -4,32 +4,17 @@ import { PlusCircle } from "lucide-react";
 import { addressSchema } from "@/lib/schema";
 import { addressState } from "@/lib/constant";
 import { FormDialog } from "@/components/form/FormDialog";
-import { useProfileStore } from "@/store/useProfileStore";
 import { InputElement } from "@/components/input/InputElement";
 import { SwitchElement } from "@/components/input/SwitchElement";
-import { useProfileManagement } from "@/hooks/useProfileManagement";
+import { useAddAddressMutation } from "@/hooks/useUserMutation";
 import LocationSelection from "@/components/input/LocationSelection";
 
 const AddAddress = () => {
-  const { addAddress, loading } = useProfileStore();
-  const { invalidateUserAddresses } = useProfileManagement();
-
-  // const handleAddAddress = async (formData) => {
-  //   const normalizedData = {
-  //     ...formData,
-  //     cityId: Number(formData.cityId),
-  //     provinceId: Number(formData.provinceId),
-  //     districtId: Number(formData.districtId),
-  //     subdistrictId: Number(formData.subdistrictId),
-  //     postalCodeId: Number(formData.postalCodeId),
-  //   };
-  //   await addAddress(normalizedData);
-  //   invalidateUserAddresses();
-  // };
+  const { mutate: addAddress, isLoading } = useAddAddressMutation();
 
   return (
     <FormDialog
-      loading={loading}
+      loading={isLoading}
       action={addAddress}
       state={addressState}
       schema={addressSchema}
@@ -48,10 +33,10 @@ const AddAddress = () => {
       />
       <InputElement
         name="phone"
-        // isNumber={true}
         maxLength={12}
+        isNumeric={true}
         label="Nomor Telepon"
-        placeholder="Masukkan Nomor Penerima"
+        placeholder="Masukkan nomor telepon"
       />
       <InputElement
         name="address"

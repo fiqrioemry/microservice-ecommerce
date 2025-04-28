@@ -1,19 +1,19 @@
-// src/components/input/LocationSelection.jsx
 import {
   useProvincesQuery,
-  useCitiesByProvinceQuery,
   useDistrictsByCityQuery,
+  useCitiesByProvinceQuery,
   useSubdistrictsByDistrictQuery,
   usePostalCodesBySubdistrictQuery,
 } from "@/hooks/useLocationQuery";
 import { useFormContext, Controller } from "react-hook-form";
+import { useEffect, useRef } from "react";
 
 const LocationSelection = () => {
   const { control, watch } = useFormContext();
 
+  const selectedProvinceId = watch("provinceId");
   const selectedCityId = watch("cityId");
   const selectedDistrictId = watch("districtId");
-  const selectedProvinceId = watch("provinceId");
   const selectedSubdistrictId = watch("subdistrictId");
 
   const { data: provinces = [] } = useProvincesQuery();
@@ -25,128 +25,124 @@ const LocationSelection = () => {
     selectedSubdistrictId
   );
 
+  // Refs
+  const cityRef = useRef(null);
+  const districtRef = useRef(null);
+  const subdistrictRef = useRef(null);
+  const postalCodeRef = useRef(null);
+
+  // ScrollArea container ref
+  const scrollAreaContainer = useRef(null);
+
+  useEffect(() => {
+    // Cari parent ScrollArea
+    scrollAreaContainer.current = document.querySelector(".scroll-area");
+  }, []);
+
+  const scrollToRef = (ref) => {
+    if (ref.current && scrollAreaContainer.current) {
+      scrollAreaContainer.current.scrollTo({
+        top: ref.current.offsetTop - 100, // kasih jarak dikit biar enak
+        behavior: "smooth",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (selectedProvinceId) scrollToRef(cityRef);
+  }, [selectedProvinceId]);
+
+  useEffect(() => {
+    if (selectedCityId) scrollToRef(districtRef);
+  }, [selectedCityId]);
+
+  useEffect(() => {
+    if (selectedDistrictId) scrollToRef(subdistrictRef);
+  }, [selectedDistrictId]);
+
+  useEffect(() => {
+    if (selectedSubdistrictId) scrollToRef(postalCodeRef);
+  }, [selectedSubdistrictId]);
+
+  const SelectField = ({
+    name,
+    label,
+    options,
+    optionLabelKey = "name",
+    optionValueKey = "id",
+    innerRef,
+  }) => (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required: true }}
+      render={({ field }) => (
+        <div ref={innerRef}>
+          <label className="block mb-1 font-medium">{label}</label>
+          <select
+            {...field}
+            onChange={(e) => field.onChange(Number(e.target.value))}
+            value={field.value || ""}
+            className="w-full border p-2 rounded"
+          >
+            <option value="">Select {label}</option>
+            {options.map((option) => (
+              <option
+                key={option[optionValueKey]}
+                value={option[optionValueKey]}
+              >
+                {option[optionLabelKey]}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+    />
+  );
+
   return (
     <div className="space-y-4">
       {/* Province */}
-      <Controller
-        control={control}
-        name="provinceId"
-        rules={{
-          required: true,
-          setValueAs: (value) => (value ? Number(value) : undefined),
-        }}
-        render={({ field }) => (
-          <div>
-            <label className="block mb-1 font-medium">Province</label>
-            <select {...field} className="w-full border p-2 rounded">
-              <option value="">Select Province</option>
-              {provinces.map((prov) => (
-                <option key={prov.id} value={prov.id}>
-                  {prov.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-      />
+      <SelectField name="provinceId" label="Province" options={provinces} />
 
       {/* City */}
       {selectedProvinceId && (
-        <Controller
-          control={control}
+        <SelectField
           name="cityId"
-          rules={{
-            required: true,
-            setValueAs: (value) => (value ? Number(value) : undefined),
-          }}
-          render={({ field }) => (
-            <div>
-              <label className="block mb-1 font-medium">City</label>
-              <select {...field} className="w-full border p-2 rounded">
-                <option value="">Select City</option>
-                {cities.map((city) => (
-                  <option key={city.id} value={city.id}>
-                    {city.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+          label="City"
+          options={cities}
+          innerRef={cityRef}
         />
       )}
 
       {/* District */}
       {selectedCityId && (
-        <Controller
-          control={control}
+        <SelectField
           name="districtId"
-          rules={{
-            required: true,
-            setValueAs: (value) => (value ? Number(value) : undefined),
-          }}
-          render={({ field }) => (
-            <div>
-              <label className="block mb-1 font-medium">District</label>
-              <select {...field} className="w-full border p-2 rounded">
-                <option value="">Select District</option>
-                {districts.map((district) => (
-                  <option key={district.id} value={district.id}>
-                    {district.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+          label="District"
+          options={districts}
+          innerRef={districtRef}
         />
       )}
 
       {/* Subdistrict */}
       {selectedDistrictId && (
-        <Controller
-          control={control}
+        <SelectField
           name="subdistrictId"
-          rules={{
-            required: true,
-            setValueAs: (value) => (value ? Number(value) : undefined),
-          }}
-          render={({ field }) => (
-            <div>
-              <label className="block mb-1 font-medium">Subdistrict</label>
-              <select {...field} className="w-full border p-2 rounded">
-                <option value="">Select Subdistrict</option>
-                {subdistricts.map((subdistrict) => (
-                  <option key={subdistrict.id} value={subdistrict.id}>
-                    {subdistrict.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+          label="Subdistrict"
+          options={subdistricts}
+          innerRef={subdistrictRef}
         />
       )}
 
       {/* Postal Code */}
       {selectedSubdistrictId && (
-        <Controller
-          control={control}
+        <SelectField
           name="postalCodeId"
-          rules={{
-            required: true,
-            setValueAs: (value) => (value ? Number(value) : undefined),
-          }}
-          render={({ field }) => (
-            <div>
-              <label className="block mb-1 font-medium">Postal Code</label>
-              <select {...field} className="w-full border p-2 rounded">
-                <option value="">Select Postal Code</option>
-                {postalCodes.map((postal) => (
-                  <option key={postal.id} value={postal.id}>
-                    {postal.postalCode}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+          label="Postal Code"
+          options={postalCodes}
+          optionLabelKey="postalCode"
+          innerRef={postalCodeRef}
         />
       )}
     </div>

@@ -1,34 +1,33 @@
-/* eslint-disable react/prop-types */
 import { Fragment, useEffect } from "react";
-import Loading from "@/components/ui/Loading";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
 
-const AuthProvider = ({ children }) => {
-  const { authCheck, checkingAuth } = useAuthStore();
-
-  useEffect(() => {
-    authCheck();
-  }, [authCheck]);
-
-  if (checkingAuth) return <Loading />;
-
-  return <>{children}</>;
-};
-
-export default AuthProvider;
-
 export const AuthRoute = ({ children }) => {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
 
-  if (!user || user.role !== "customer") return window.location.href("/");
+  useEffect(() => {
+    if (!user || user.role !== "customer") {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  if (!user || user.role !== "customer") return null;
 
   return <Fragment>{children}</Fragment>;
 };
 
 export const NonAuthRoute = ({ children }) => {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
 
-  if (user) return window.location.href("/");
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  if (user) return null;
 
   return <Fragment>{children}</Fragment>;
 };

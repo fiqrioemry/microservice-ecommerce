@@ -7,15 +7,14 @@ import {
   SelectContent,
   SelectTrigger,
 } from "@/components/ui/select";
-import {
-  useSearchProductsQuery,
-  useCategoriesQuery,
-} from "@/hooks/useProductsQuery";
+
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Grid2X2, Grid3X3, X } from "lucide-react";
 import ErrorDialog from "@/components/ui/ErrorDialog";
 import FetchLoading from "@/components/ui/FetchLoading";
+import { useCategoriesQuery } from "@/hooks/useCategoryQuery";
+import { useSearchProductsQuery } from "@/hooks/useProductsQuery";
 import ProductCard from "@/components/product-results/ProductCard";
 import ProductList from "@/components/product-results/ProductList";
 import NoProductResult from "@/components/product-results/NoProductResult";

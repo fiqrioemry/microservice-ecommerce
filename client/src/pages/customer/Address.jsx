@@ -1,22 +1,20 @@
 import React from "react";
 import { MapPin } from "lucide-react";
 import ErrorDialog from "@/components/ui/ErrorDialog";
+import { useAddressesQuery } from "@/hooks/useUserQuery";
 import FetchLoading from "@/components/ui/FetchLoading";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import AddAddress from "@/components/address/AddAddress";
 import UpdateAddress from "@/components/address/UpdateAddress";
 import DeleteAddress from "@/components/address/DeleteAddress";
-import { useAddressesQuery } from "@/hooks/useProfileManagement";
 
 const Address = () => {
-  const { isError, isLoading, data: addresses } = useAddressesQuery();
+  const { data: addresses, isError, isLoading } = useAddressesQuery();
 
   if (isLoading) return <FetchLoading />;
 
   if (isError) return <ErrorDialog />;
-
-  const isEmpty = addresses.addresses.length === 0;
 
   return (
     <div className="space-y-6">
@@ -24,7 +22,7 @@ const Address = () => {
         <AddAddress />
       </div>
 
-      {isEmpty ? (
+      {addresses.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-96 text-center text-muted-foreground space-y-4">
           <MapPin className="w-16 h-16 text-primary" />
           <p className="text-lg font-semibold">No Address Found</p>
@@ -34,13 +32,13 @@ const Address = () => {
           <AddAddress />
         </div>
       ) : (
-        <ScrollArea className="h-[500px] space-y-4 pr-4">
-          {addresses.addresses.map((add) => (
+        <ScrollArea className="h-[500px]">
+          {addresses.map((add) => (
             <Card
               key={add.id}
-              className="border border-border hover:shadow-md transition"
+              className="border border-border mb-4 hover:shadow-md transition"
             >
-              <CardContent className="p-5 space-y-3">
+              <CardContent className="p-5 space-y-3 ">
                 <div className="flex justify-between items-start">
                   <div className="space-y-1">
                     <h4 className="text-base font-semibold capitalize">

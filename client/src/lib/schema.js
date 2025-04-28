@@ -14,17 +14,18 @@ export const registerSchema = z.object({
 });
 
 export const addressSchema = z.object({
-  cityId: z.string().min(1, "City harus dipilih"),
+  cityId: z.number({ required_error: "City harus dipilih" }),
+  provinceId: z.number({ required_error: "Province harus dipilih" }),
+  districtId: z.number({ required_error: "District harus dipilih" }),
+  subdistrictId: z.number({ required_error: "Subdistrict harus dipilih" }),
+  postalCodeId: z.number({ required_error: "Postal code harus dipilih" }),
   name: z.string().min(6, "Nama minimal 6 karakter"),
   address: z.string().min(1, "Alamat tidak boleh kosong"),
-  districtId: z.string().min(1, "District harus dipilih"),
-  provinceId: z.string().min(1, "Province harus dipilih"),
-  postalCodeId: z.string().min(1, "Postal code harus dipilih"),
-  subdistrictId: z.string().min(1, "Subdistrict harus dipilih"),
   phone: z
     .string()
     .min(10, "Nomor telepon minimal 10 karakter")
     .max(12, "Nomor telepon maksimal 12 karakter"),
+
   isMain: z.boolean().optional(),
 });
 

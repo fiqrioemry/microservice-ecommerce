@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
+import WebLogo from "@/components/ui/WebLogo";
 import { registerSchema } from "@/lib/schema";
 import { registerState } from "@/lib/constant";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useRegister } from "@/hooks/useAuthMutation";
 import { FormInput } from "@/components/form/FormInput";
 import { SubmitButton } from "@/components/form/SubmitButton";
 import { InputElement } from "@/components/input/InputElement";
-import WebLogo from "../components/ui/WebLogo";
 
 const SignUp = () => {
-  const { loading, register } = useAuthStore();
+  const { mutate: register, isLoading } = useRegister();
 
   return (
     <section className="flex justify-center items-center min-h-screen bg-gray-100">
@@ -29,14 +29,14 @@ const SignUp = () => {
             <h2 className="text-center">Register</h2>
           </div>
           <FormInput
-            action={register}
             state={registerState}
             schema={registerSchema}
+            action={register}
           >
             {(methods) => (
               <>
                 <InputElement
-                  name="name"
+                  name="fullname"
                   label="Nama Lengkap"
                   placeholder="Masukkan nama Lengkap"
                 />
@@ -56,8 +56,8 @@ const SignUp = () => {
                 <SubmitButton
                   text="Register"
                   className="w-full"
-                  isLoading={loading}
-                  disabled={!methods.formState.isValid}
+                  isLoading={isLoading}
+                  disabled={!methods.formState.isValid || isLoading}
                 />
               </>
             )}

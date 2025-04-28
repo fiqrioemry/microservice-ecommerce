@@ -1,14 +1,12 @@
-import {
-  useProductsQuery,
-  useCategoriesQuery,
-  useGetAllBannersQuery,
-} from "@/hooks/useProductsQuery";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ErrorDialog from "@/components/ui/ErrorDialog";
 import FetchLoading from "@/components/ui/FetchLoading";
+import { useProductsQuery } from "@/hooks/useProductsQuery";
+import { useCategoriesQuery } from "@/hooks/useCategoryQuery";
+import { useGetAllBannersQuery } from "@/hooks/useBannerQuery";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import ProductCard from "@/components/product-results/ProductCard";
 
@@ -19,12 +17,11 @@ const Home = () => {
     isLoading,
     data: banners = { results: [] },
   } = useGetAllBannersQuery();
+  const { data: categories = [] } = useCategoriesQuery();
   const { data: products = { results: [] } } = useProductsQuery({ limit: 50 });
-  const { data: { categories } = { results: [] } } = useCategoriesQuery({
-    limit: 50,
-  });
 
   if (isLoading) return <FetchLoading />;
+
   if (isError) return <ErrorDialog onRetry={refetch} />;
 
   const topBanners = banners?.filter((b) => b.position === "top");
@@ -44,13 +41,13 @@ const Home = () => {
       {topBanners.length > 0 && (
         <div className="mb-6">
           <Swiper
-            loop
-            spaceBetween={10}
-            centeredSlides
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
-            pagination={{ clickable: true }}
             navigation
+            centeredSlides
+            spaceBetween={10}
+            loop={topBanners.length > 1}
+            pagination={{ clickable: true }}
             modules={[Autoplay, Pagination, Navigation]}
+            autoplay={{ delay: 4000, disableOnInteraction: false }}
             className="rounded-xl overflow-hidden shadow-lg"
           >
             {topBanners.map((banner) => (

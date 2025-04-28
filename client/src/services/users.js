@@ -3,6 +3,7 @@ import { userInstance } from ".";
 
 const getProfile = async () => {
   const res = await userInstance.get("/user/profile");
+  console.log(res.data);
   return res.data;
 };
 
@@ -21,6 +22,7 @@ const getAddresses = async () => {
 };
 
 const addAddress = async (data) => {
+  console.log(data);
   const res = await userInstance.post("/user/addresses", data);
   return res.data;
 };

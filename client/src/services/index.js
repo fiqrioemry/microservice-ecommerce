@@ -29,11 +29,13 @@ export const cartInstance = axios.create({
 userInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log("coba");
     if (error.response?.status === 401) {
-      const { logout, user } = useAuthStore.getState();
+      console.log("getting");
+      const { clearUser, user } = useAuthStore.getState();
       if (user) {
         toast.error("Session expired, please login again.");
-        logout();
+        clearUser();
       }
     }
     return Promise.reject(error);
@@ -44,10 +46,10 @@ cartInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      const { logout, user } = useAuthStore.getState();
+      const { clearUser, user } = useAuthStore.getState();
       if (user) {
         toast.error("Session expired, please login again.");
-        logout();
+        clearUser();
       }
     }
     return Promise.reject(error);

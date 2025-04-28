@@ -1,30 +1,15 @@
 /* eslint-disable react/prop-types */
 // src/components/address/DeleteAddress.jsx
-import { useProfileStore } from "@/store/useProfileStore";
 import { FormDelete } from "@/components/form/FormDelete";
-import { useProfileManagement } from "@/hooks/useProfileManagement";
+import { useDeleteAddressMutation } from "@/hooks/useUserMutation";
 
 const DeleteAddress = ({ address }) => {
-  const { deleteAddress, loading } = useProfileStore();
-  const { invalidateUserAddresses } = useProfileManagement();
-
-  const handleDelete = async () => {
-    const normalizedData = {
-      ...formData,
-      cityId: Number(formData.cityId),
-      provinceId: Number(formData.provinceId),
-      districtId: Number(formData.districtId),
-      subdistrictId: Number(formData.subdistrictId),
-      postalCodeId: Number(formData.postalCodeId),
-    };
-    await deleteAddress(address.id);
-    invalidateUserAddresses();
-  };
+  const { mutation: deleteAddress, isLoading } = useDeleteAddressMutation();
 
   return (
     <FormDelete
-      loading={loading}
-      onClick={handleDelete}
+      loading={isLoading}
+      onClick={deleteAddress}
       title="Address Deletion"
       description="Are you sure want to delete this Address ?"
     />

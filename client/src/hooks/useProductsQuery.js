@@ -1,6 +1,4 @@
-import banner from "@/services/banners";
 import product from "@/services/products";
-import category from "@/services/categories";
 import { useQuery } from "@tanstack/react-query";
 
 export const useProductsQuery = (params = {}) =>
@@ -22,23 +20,4 @@ export const useSearchProductsQuery = (queryParams) =>
     queryKey: ["products", "search", queryParams],
     queryFn: () => product.searchProducts(queryParams),
     enabled: !!queryParams,
-  });
-
-export const useCategoriesQuery = () =>
-  useQuery({
-    queryKey: ["categories"],
-    queryFn: category.getAllCategories,
-  });
-
-export const useGetAllBannersQuery = () =>
-  useQuery({
-    queryKey: ["banners"],
-    queryFn: banner.getAllBanners,
-  });
-
-export const useGetBannerByPositionQuery = (position) =>
-  useQuery({
-    queryKey: ["banners", position],
-    queryFn: () => banner.getBannersByPosition(position),
-    enabled: !!position,
   });

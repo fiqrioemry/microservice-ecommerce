@@ -11,7 +11,6 @@ const Product = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
 
-  // Ambil slug dasar dan kombinasi opsi dari URL
   const parts = slug.split("+");
   const baseSlug = parts[0];
   const variantOptionsFromUrl = parts.slice(1).reduce((acc, part) => {
@@ -46,11 +45,9 @@ const Product = () => {
     }
   }, [product, slug]);
 
-  // Saat user pilih opsi variant (misal color atau size)
   const handleVariantOptionChange = (key, value) => {
     const updatedOptions = { ...selectedOptions, [key]: value };
 
-    // Jika ganti warna, reset size ke yang tersedia
     if (key === "colors") {
       const availableSizes = product.variants
         .filter((v) => v.options?.colors === value)

@@ -1,14 +1,13 @@
 import { useFormContext, Controller } from "react-hook-form";
-import { useCategoriesQuery } from "@/hooks/useCategoriesQuery";
 import AddCategory from "@/components/category/AddCategory";
+import { useCategoriesQuery } from "@/hooks/useCategoryQuery";
 import AddSubCategory from "@/components/category/AddSubCategory";
 
 export const SelectCategoryElement = () => {
-  const { control, watch, setValue } = useFormContext();
   const selectedCategoryId = watch("categoryId");
+  const { control, watch, setValue } = useFormContext();
 
-  const { data: rawCategories = { categories: [] } } = useCategoriesQuery();
-  const categories = rawCategories.categories || [];
+  const { data: categories = [] } = useCategoriesQuery();
 
   const selectedCategory = categories.find(
     (cat) => cat.ID === selectedCategoryId

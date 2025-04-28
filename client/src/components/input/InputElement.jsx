@@ -8,11 +8,12 @@ const InputElement = ({
   rows = 4,
   maxLength,
   type = "text",
-  className = "",
   placeholder = "",
+  className = "",
   isNumber = false,
   disabled = false,
   isTextArea = false,
+  isNumeric = false,
   rules = { required: true },
 }) => {
   const { control } = useFormContext();
@@ -24,7 +25,7 @@ const InputElement = ({
       rules={rules}
       render={({ field, fieldState }) => {
         const handleKeyDown = (e) => {
-          if (isNumber) {
+          if (isNumeric) {
             // Allow basic control keys
             if (
               [
@@ -70,12 +71,7 @@ const InputElement = ({
                 id={name}
                 {...field}
                 value={field.value ?? ""}
-                onChange={(e) => {
-                  const value = isNumber
-                    ? Number(e.target.value)
-                    : e.target.value;
-                  field.onChange(value);
-                }}
+                onChange={(e) => field.onChange(e.target.value)}
                 onKeyDown={handleKeyDown}
                 type={isNumber ? "text" : type}
                 placeholder={placeholder}

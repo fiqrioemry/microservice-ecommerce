@@ -8,12 +8,14 @@ export const useAuthStore = create(
     (set) => ({
       user: null,
       checkingAuth: true,
+
       setUser: (user) => set({ user }),
+
       clearUser: () => set({ user: null }),
 
       authCheck: async () => {
         try {
-          const { user } = await auth.me();
+          const user = await auth.me();
           set({ user });
         } catch {
           set({ user: null });

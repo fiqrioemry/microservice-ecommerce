@@ -8,7 +8,7 @@ import { cartInstance } from ".";
 
 const getCart = async () => {
   const res = await cartInstance.get("/cart");
-  return res.data;
+  return res.data.cart;
 };
 
 const addToCart = async (data) => {

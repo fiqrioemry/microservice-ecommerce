@@ -1,3 +1,4 @@
+// src/App.jsx
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -11,20 +12,26 @@ import ProductDetail from "./pages/ProductDetail";
 import ProductResults from "./pages/ProductResults";
 
 import { Toaster } from "sonner";
+import { useEffect } from "react";
+import Loading from "@/components/ui/Loading";
 import Layout from "./components/layout/Layout";
+import { useAuthStore } from "@/store/useAuthStore";
 import { AuthRoute, NonAuthRoute } from "./middleware";
 import UserLayout from "./components/layout/UserLayout";
 import { Navigate, Route, Routes } from "react-router-dom";
-import InputPage from "./pages/InputPage";
-// import CreateNewProduct from "./pages/CreateNewProduct";
 
 function App() {
+  const { authCheck, checkingAuth } = useAuthStore();
+
+  useEffect(() => {
+    authCheck();
+  }, [authCheck]);
+
+  if (checkingAuth) return <Loading />;
   return (
     <>
       <Toaster />
       <Routes>
-        {/* <Route path="/upload" element={<CreateNewProduct />} /> */}
-        <Route path="/input" element={<InputPage />} />
         <Route
           path="/signin"
           element={

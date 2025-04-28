@@ -1,26 +1,28 @@
-// src/components/form/FormDialog.jsx
 import {
   Dialog,
   DialogTitle,
   DialogTrigger,
   DialogContent,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useCallback, useMemo, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SubmitLoading } from "@/components/ui/SubmitLoading";
 import { SubmitButton } from "@/components/form/SubmitButton";
+import { useState, useCallback, useMemo, useEffect } from "react";
 
 export function FormDialog({
   title,
   state,
   schema,
   action,
-  loading = false,
-  buttonText = "Update",
   children,
+  resourceId = null,
+  loading = false,
+  shouldReset = true,
+  buttonText = "Update",
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -54,25 +56,20 @@ export function FormDialog({
   );
 
   useEffect(() => {
-    if (state) {
-      reset(state);
-    }
+    if (state) reset(state);
   }, [state, reset]);
 
-  // const handleSave = useCallback(
-  //   async (data) => {
-  //     await action(data);
-  //     if (formState.isValid) resetAndCloseDialog();
-  //   },
-  //   [action, formState.isValid, resetAndCloseDialog]
-  // );
   const handleSave = useCallback(
     async (data) => {
-      await action(data);
-      if (formState.isValid) reset();
+      if (resourceId !== null && resourceId !== undefined) {
+        await action({ id: resourceId, data });
+      } else {
+        await action(data);
+      }
+      if (formState.isValid && shouldReset) reset();
       setIsOpen(false);
     },
-    [action, formState.isValid, reset]
+    [action, formState.isValid, reset, shouldReset, resourceId]
   );
 
   return (
@@ -84,43 +81,40 @@ export function FormDialog({
       >
         <DialogTrigger asChild>{buttonText}</DialogTrigger>
 
-        <DialogContent className="sm:max-w-lg p-0 overflow-hidden rounded-xl">
+        <DialogContent className="sm:max-w-lg overflow-hidden rounded-xl p-0">
           {loading ? (
             <SubmitLoading />
           ) : (
-            <>
-              {/* Title */}
-              <div className="border-b px-6 py-4">
-                <DialogTitle className="text-lg font-semibold">
-                  {title}
-                </DialogTitle>
-                <p className="text-gray-500 text-sm">
-                  Submit button will activate when you make changes.
-                </p>
-              </div>
+            <FormProvider {...methods}>
+              <form
+                onSubmit={handleSubmit(handleSave)}
+                className="flex flex-col h-[65vh]"
+              >
+                {/* Header */}
+                <div className="border-b px-6 py-4">
+                  <DialogTitle className="text-lg font-semibold">
+                    {title}
+                  </DialogTitle>
+                  <DialogDescription className="text-gray-500 text-sm">
+                    Submit button will activate when you make changes.
+                  </DialogDescription>
+                </div>
 
-              {/* Form */}
-              <FormProvider {...methods}>
-                <form
-                  onSubmit={handleSubmit(handleSave)}
-                  className="flex flex-col h-full"
-                >
-                  {/* Scrollable Area */}
-                  <ScrollArea className="h-[400px] px-6 py-4">
-                    <div className="space-y-4">{children}</div>
-                  </ScrollArea>
+                {/* Scrollable Form Content */}
+                <ScrollArea className="flex-1 px-6 py-4">
+                  <div className="space-y-4">{children}</div>
+                </ScrollArea>
 
-                  {/* Submit Button */}
-                  <div className="border-t px-6 py-4 flex justify-end">
-                    <SubmitButton
-                      text="Save Changes"
-                      isLoading={loading}
-                      disabled={!formState.isValid}
-                    />
-                  </div>
-                </form>
-              </FormProvider>
-            </>
+                {/* Footer */}
+                <div className="border-t px-6 py-4 flex justify-end">
+                  <SubmitButton
+                    text="Save Changes"
+                    isLoading={loading}
+                    disabled={!formState.isValid || !formState.isDirty}
+                  />
+                </div>
+              </form>
+            </FormProvider>
           )}
         </DialogContent>
       </Dialog>

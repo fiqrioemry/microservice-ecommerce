@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useEffect } from "react";
 import clsx from "clsx";
-import { useCartStore } from "@/store/useCartStore";
-import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useCartMutation } from "@/hooks/useCartMutation";
+import React, { useMemo, useState, useEffect } from "react";
 
 const ProductVariantSelector = ({
   product,
@@ -10,19 +10,18 @@ const ProductVariantSelector = ({
   selectedOptions,
   onOptionChange,
 }) => {
+  const { addToCart } = useCartMutation();
   const [quantity, setQuantity] = useState(1);
-  const addItem = useCartStore((state) => state.addItem);
 
   const handleAddToCart = async () => {
     if (quantity > selectedVariant.stock) return;
-    await addItem({
+    await addToCart({
       productId: product.id,
       variantId: selectedVariant.id,
       quantity,
     });
   };
 
-  // Semua key opsi, misal: "colors", "clothing size"
   const optionKeys = useMemo(() => {
     const allOptions = product.variants.flatMap((v) =>
       Object.keys(v.options || {})
@@ -30,10 +29,8 @@ const ProductVariantSelector = ({
     return [...new Set(allOptions)];
   }, [product]);
 
-  // Untuk setiap opsi, hitung nilai unik yang tersedia
   const getAvailableOptionValues = (key) => {
     if (key === "clothing size" && selectedOptions?.colors) {
-      // Size hanya untuk color yang dipilih
       return [
         ...new Set(
           product.variants
